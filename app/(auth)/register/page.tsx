@@ -21,6 +21,7 @@ export default function RegisterPage() {
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
 
     // Form states
     const [formData, setFormData] = useState({
@@ -75,23 +76,52 @@ export default function RegisterPage() {
         setError("");
 
         try {
-            // 1. Aquí iría la llamada a un endpoint propio (por ejemplo POST /api/register) 
-            // que se encargue de crear el Company y posteriormente llamar a auth.signUp()
-            // pasándole el companyId generado.
-            // 
-            // Dado que el MVP en este paso se enfoca en la maqueta de selección de plan
-            // y la lógica de negocio real requerirá un API route, simulamos el registro.
+            // 1. Crear Company mediante backend proxy
+            const companyRes = await fetch("/api/register-company", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    companyName: formData.companyName,
+                    companyRuc: formData.companyRuc,
+                    companySlug: formData.companySlug,
+                    plan: formData.selectedPlan.toUpperCase(),
+                    adminEmail: formData.userEmail
+                })
+            });
 
-            // Mock implementation just to show the Flow working
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            const companyData = await companyRes.json();
 
-            // router.push(`/${formData.companySlug}/dashboard`);
-            router.push(`/demo-company/dashboard`);
+            if (!companyRes.ok) {
+                throw new Error(companyData.error || "Error al crear la empresa");
+            }
 
-        } catch (err: any) {
-            setError(err.message || "Ocurrió un error al registrar la empresa.");
+            const { companyId } = companyData;
+
+            // 2. Crear User y Sesión mediante Better Auth
+            const { error: authError } = await authClient.signUp.email({
+                email: formData.userEmail,
+                password: formData.userPassword,
+                name: formData.userName,
+                // @ts-expect-error Better Auth client no tiene inferidos localmente los additionalFields aún
+                companyId: companyId,
+                role: "ADMIN"
+            });
+
+            if (authError) {
+                throw new Error(authError.message || "Error al registrar el usuario");
+            }
+
+            router.push(`/${formData.companySlug}/dashboard`);
+
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                setError(err.message || "Ocurrió un error al registrar la empresa.");
+            } else {
+                setError("Ocurrió un error inesperado al registrar la empresa.");
+            }
+            // setLoading(false) se maneja en finally
         } finally {
-            if (error) setLoading(false);
+            setLoading(false);
         }
     };
 
@@ -112,22 +142,26 @@ export default function RegisterPage() {
                 <div className="w-full max-w-lg">
 
                     {/* Progress Indicator */}
-                    <div className="mb-8">
-                        <div className="flex items-center justify-between relative">
+                    <div className="mb-12">
+                        <div className="flex items-center justify-between relative mx-5">
                             <div className="absolute left-0 top-1/2 w-full h-1 bg-border -z-10 -translate-y-1/2"></div>
                             <div className="absolute left-0 top-1/2 h-1 bg-primary -z-10 -translate-y-1/2 transition-all duration-300" style={{ width: `${(step - 1) * 50}%` }}></div>
 
-                            {[1, 2, 3].map((num) => (
-                                <div key={num} className={`h-10 w-10 rounded-full flex items-center justify-center font-bold text-sm border-2 transition-colors ${step >= num ? 'bg-primary border-primary text-white' : 'bg-background border-border text-muted-foreground'
-                                    }`}>
-                                    {step > num ? <CheckCircle2 className="h-5 w-5" /> : num}
+                            {[
+                                { num: 1, label: "Administrador" },
+                                { num: 2, label: "Empresa" },
+                                { num: 3, label: "Plan" }
+                            ].map(({ num, label }) => (
+                                <div key={num} className="relative flex flex-col items-center">
+                                    <div className={`h-10 w-10 rounded-full flex items-center justify-center font-bold text-sm border-2 transition-colors ${step >= num ? 'bg-primary border-primary text-white' : 'bg-background border-border text-muted-foreground'
+                                        }`}>
+                                        {step > num ? <CheckCircle2 className="h-5 w-5" /> : num}
+                                    </div>
+                                    <span className={`absolute top-12 left-1/2 -translate-x-1/2 text-xs font-semibold whitespace-nowrap transition-colors ${step >= num ? 'text-foreground' : 'text-muted-foreground'}`}>
+                                        {label}
+                                    </span>
                                 </div>
                             ))}
-                        </div>
-                        <div className="flex justify-between mt-2 text-xs font-semibold text-muted-foreground">
-                            <span>Administrador</span>
-                            <span>Empresa</span>
-                            <span>Plan</span>
                         </div>
                     </div>
 
@@ -156,7 +190,29 @@ export default function RegisterPage() {
                                     </div>
                                     <div>
                                         <Label htmlFor="userPassword">Contraseña</Label>
-                                        <Input id="userPassword" name="userPassword" type="password" required className="mt-1.5" value={formData.userPassword} onChange={handleChange} />
+                                        <div className="relative mt-1.5">
+                                            <Input
+                                                id="userPassword"
+                                                name="userPassword"
+                                                type={showPassword ? "text" : "password"}
+                                                required
+                                                className="pr-10"
+                                                value={formData.userPassword}
+                                                onChange={handleChange}
+                                            />
+                                            <button
+                                                type="button"
+                                                className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground hover:text-foreground"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                tabIndex={-1}
+                                            >
+                                                {showPassword ? (
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" /><line x1="1" y1="1" x2="23" y2="23" /></svg>
+                                                ) : (
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+                                                )}
+                                            </button>
+                                        </div>
                                         <p className="text-xs text-muted-foreground mt-2">Mínimo 6 caracteres.</p>
                                     </div>
                                 </div>

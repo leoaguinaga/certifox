@@ -31,7 +31,7 @@ export function Sidebar({ companySlug }: SidebarProps) {
         <div className="flex h-full w-64 flex-col bg-sidebar border-r border-sidebar-border">
             <div className="flex h-16 shrink-0 items-center px-6 border-b border-sidebar-border">
                 <Link href={`/${companySlug}/dashboard`} className="flex items-center gap-2">
-                    <ShieldCheck className="h-6 w-6 text-primary" />
+                    <img src="/icon.png" className="h-8 w-auto" alt="" />
                     <span className="text-xl font-bold tracking-tight text-sidebar-foreground">CertiFox</span>
                 </Link>
             </div>

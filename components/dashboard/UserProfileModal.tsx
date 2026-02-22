@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { authClient } from "@/lib/auth-client";
 
 interface UserProfileModalProps {
     children?: React.ReactNode;
@@ -13,6 +14,8 @@ interface UserProfileModalProps {
 
 export function UserProfileModal({ children }: UserProfileModalProps) {
     const [open, setOpen] = useState(false);
+    const { data: session } = authClient.useSession();
+    const user = session?.user;
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -32,11 +35,11 @@ export function UserProfileModal({ children }: UserProfileModalProps) {
                         <h4 className="flex items-center gap-2 text-sm font-semibold text-foreground border-b pb-2"><User className="h-4 w-4" /> Datos Personales</h4>
                         <div className="grid gap-2">
                             <Label htmlFor="name">Nombre Completo</Label>
-                            <Input id="name" defaultValue="Admnistrador" />
+                            <Input id="name" defaultValue={user?.name || ""} placeholder="Cargando..." />
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="email">Correo Electrónico</Label>
-                            <Input id="email" type="email" defaultValue="admin@acme.com" disabled className="bg-muted" />
+                            <Input id="email" type="email" defaultValue={user?.email || ""} placeholder="Cargando..." disabled className="bg-muted" />
                         </div>
                     </div>
 

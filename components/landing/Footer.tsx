@@ -6,7 +6,7 @@ export function Footer() {
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-col md:flex-row justify-between items-center">
                     <div className="flex items-center space-x-2 mb-4 md:mb-0">
-                        <img src="/icon.png" className="h-17 w-auto" alt="" />
+                        <img src="/icon.png" className="h-15 w-auto" alt="" />
                         <span className="text-3xl font-bold text-primary">CertiFox</span>
                     </div>
 
@@ -26,7 +26,7 @@ export function Footer() {
                     </nav>
                 </div>
 
-                <div className="mt-8 border-t pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
+                <div className="pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
                     <p>© {new Date().getFullYear()} CertiFox. Todos los derechos reservados.</p>
                     <div className="flex gap-4 mt-4 md:mt-0">
                         <Link href="#" className="hover:text-foreground transition-colors">

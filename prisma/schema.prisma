@@ -12,6 +12,12 @@ enum UserRole {
   MANAGER
 }
 
+enum SubscriptionPlan {
+  STARTER
+  PROFESSIONAL
+  ENTERPRISE
+}
+
 enum CertificateStatus {
   VALID
   WARNING
@@ -23,34 +29,46 @@ enum NotificationChannel {
   EMAIL
 }
 
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+}
+
 model Company {
-  id                      String   @id @default(cuid())
+  id                      String           @id @default(cuid())
   name                    String
-  slug                    String   @unique
+  slug                    String           @unique
   ruc                     String?
   email                   String
   whatsappNumber          String?
-  defaultNotificationDays Int      @default(15)
-  createdAt               DateTime @default(now())
-  updatedAt               DateTime @updatedAt
+  defaultNotificationDays Int              @default(15)
+  plan                    SubscriptionPlan @default(STARTER)
+  isActive                Boolean          @default(true)
+  createdAt               DateTime         @default(now())
+  updatedAt               DateTime         @updatedAt
 
-  users   User[]
-  workers Worker[]
+  users            User[]
+  workers          Worker[]
+  appAlerts        AppAlert[]
+  auditLogs        AuditLog[]
+  certificateTypes CertificateType[]
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String     @id @default(cuid())
   name          String
-  email         String    @unique
-  role          UserRole  @default(ADMIN)
+  email         String     @unique
+  role          UserRole   @default(ADMIN)
   companyId     String
-  company       Company   @relation(fields: [companyId], references: [id])
-  createdAt     DateTime  @default(now())
-  emailVerified Boolean   @default(false)
+  company       Company    @relation(fields: [companyId], references: [id])
+  createdAt     DateTime   @default(now())
+  emailVerified Boolean    @default(false)
   image         String?
-  updatedAt     DateTime  @updatedAt
+  updatedAt     DateTime   @updatedAt
   sessions      Session[]
   accounts      Account[]
+  auditLogs     AuditLog[]
 
   @@map("user")
 }
@@ -60,9 +78,13 @@ model Worker {
   dni       String
   fullName  String
   position  String?
+  email     String?
+  phone     String?
+  isActive  Boolean  @default(true)
   companyId String
   company   Company  @relation(fields: [companyId], references: [id])
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   certificates Certificate[]
 
@@ -71,13 +93,17 @@ model Worker {
 
 model Certificate {
   id                     String            @id @default(cuid())
-  type                   String
+  certificateTypeId      String
+  certificateType        CertificateType   @relation(fields: [certificateTypeId], references: [id])
   issueDate              DateTime
   expirationDate         DateTime
   notificationDaysBefore Int?
+  notes                  String?
+  isArchived             Boolean           @default(false)
   workerId               String
   worker                 Worker            @relation(fields: [workerId], references: [id])
   createdAt              DateTime          @default(now())
+  updatedAt              DateTime          @updatedAt
   notificationLogs       NotificationLog[]
 }
 
@@ -88,6 +114,43 @@ model NotificationLog {
   channel       NotificationChannel
   sentAt        DateTime            @default(now())
   success       Boolean
+}
+
+model AppAlert {
+  id        String   @id @default(cuid())
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id])
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model AuditLog {
+  id        String      @id @default(cuid())
+  companyId String
+  company   Company     @relation(fields: [companyId], references: [id])
+  userId    String?
+  user      User?       @relation(fields: [userId], references: [id])
+  action    AuditAction
+  entity    String
+  entityId  String
+  details   Json?
+  createdAt DateTime    @default(now())
+}
+
+model CertificateType {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  certificates Certificate[]
+
+  @@unique([name, companyId])
 }
 
 model Session {

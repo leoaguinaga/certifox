@@ -34,7 +34,7 @@ export function HowItWorks() {
     ];
 
     return (
-        <section id="how-it-works" className="py-24 sm:py-32 bg-background relative overflow-hidden">
+        <section id="how-it-works" className="py-24 sm:py-32 relative overflow-hidden bg-muted/50">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div className="mx-auto max-w-2xl lg:text-center">
                     <h2 className="text-base font-semibold leading-7 text-primary uppercase tracking-wider">Metodología</h2>

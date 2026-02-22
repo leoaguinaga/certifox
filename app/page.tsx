@@ -4,6 +4,7 @@ import { Features } from "@/components/landing/Features";
 import { HowItWorks } from "@/components/landing/HowItWorks";
 import { Testimonials } from "@/components/landing/Testimonials";
 import { Footer } from "@/components/landing/Footer";
+import Pricing from "@/components/landing/Pricing";
 
 export default function LandingPage() {
   return (
@@ -12,6 +13,7 @@ export default function LandingPage() {
       <main className="flex-1">
         <Hero />
         <Features />
+        <Pricing />
         <HowItWorks />
         <Testimonials />
       </main>

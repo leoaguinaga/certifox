@@ -7,12 +7,13 @@ export function Navbar() {
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between">
                 <div className="flex items-center gap-2">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <Link href="/" className="flex items-center space-x-2">
+                    <Link href="/" className="flex items-center space-x-1">
+                        <img src="/icon.png" className="h-9 w-auto mb-1" alt="CertiFox Logo" />
                         <span className="text-2xl font-black text-primary">CertiFox</span>
                     </Link>
                 </div>
 
-                <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+                {/* <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
                     <Link href="#features" className="transition-colors hover:text-primary text-muted-foreground">
                         Características
                     </Link>
@@ -22,7 +23,7 @@ export function Navbar() {
                     <Link href="/pricing" className="transition-colors hover:text-primary text-muted-foreground">
                         Precios
                     </Link>
-                </nav>
+                </nav> */}
 
                 <div className="flex items-center gap-4">
                     <div className="hidden md:flex">

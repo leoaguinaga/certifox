@@ -1,21 +1,38 @@
-"use client";
-
 import { Settings, Bell, Shield, Building2, FileText } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
+import { db } from "@/lib/db";
+import { notFound } from "next/navigation";
+import { GeneralSettingsForm } from "@/components/dashboard/settings/GeneralSettingsForm";
+import { UsersSettingsTab } from "@/components/dashboard/settings/UsersSettingsTab";
+import { CertificatesSettingsTab } from "@/components/dashboard/settings/CertificatesSettingsTab";
 
-export default function SettingsPage() {
+export default async function SettingsPage(props: { params: Promise<{ companySlug: string }> }) {
+    const params = await props.params;
+    const companySlug = params.companySlug;
+
+    const company = await db.company.findUnique({
+        where: { slug: companySlug },
+        include: {
+            certificateTypes: true,
+            users: {
+                orderBy: { createdAt: "desc" }
+            }
+        }
+    });
+
+    if (!company) {
+        notFound();
+    }
+
     return (
         <div className="p-6 md:p-8 space-y-6 max-w-5xl">
             <div>
                 <h2 className="text-3xl font-bold tracking-tight text-foreground">Configuración</h2>
                 <p className="text-muted-foreground mt-1">
-                    Administra los ajustes de tu workspace (`Acme Industrial`).
+                    Administra los ajustes de tu workspace (`{company.name}`).
                 </p>
             </div>
 
@@ -39,56 +56,11 @@ export default function SettingsPage() {
                 </TabsList>
 
                 <TabsContent value="general" className="space-y-6">
-                    <Card className="border-border/50 shadow-sm">
-                        <CardHeader>
-                            <CardTitle>Perfil de Empresa</CardTitle>
-                            <CardDescription>
-                                Actualiza los datos públicos e internos de tu organización.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="companyName">Razón Social</Label>
-                                <Input id="companyName" defaultValue="Acme Industrial S.A.C." className="max-w-md" />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="ruc">RUC</Label>
-                                <Input id="ruc" defaultValue="20123456789" className="max-w-md" />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="email">Correo Institucional</Label>
-                                <Input id="email" type="email" defaultValue="admin@acme.com" className="max-w-md" />
-                            </div>
-                        </CardContent>
-                        <CardFooter className="border-t pt-6">
-                            <Button>Guardar Cambios</Button>
-                        </CardFooter>
-                    </Card>
+                    <GeneralSettingsForm company={company} />
                 </TabsContent>
 
                 <TabsContent value="certificates" className="space-y-6">
-                    <Card className="border-border/50 shadow-sm">
-                        <CardHeader>
-                            <CardTitle>Tipos de Certificados Permitidos</CardTitle>
-                            <CardDescription>
-                                Define la lista de los diferentes tipos de certificados que tu empresa maneja a nivel global.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="space-y-4">
-                                <div className="flex gap-2 max-w-md">
-                                    <Input placeholder="Ej. Trabajo en Altura, SCTR..." />
-                                    <Button variant="secondary">Añadir</Button>
-                                </div>
-                                <div className="flex flex-wrap gap-2 mt-4 p-4 border rounded-md min-h-[100px] bg-muted/10">
-                                    <Badge variant="secondary" className="px-3 py-1 text-sm bg-primary/10 text-primary hover:bg-primary/20 cursor-default">Examen Médico (EMO) <span className="ml-2 text-primary/50 hover:text-danger cursor-pointer px-1">×</span></Badge>
-                                    <Badge variant="secondary" className="px-3 py-1 text-sm bg-primary/10 text-primary hover:bg-primary/20 cursor-default">Trabajo en Altura <span className="ml-2 text-primary/50 hover:text-danger cursor-pointer px-1">×</span></Badge>
-                                    <Badge variant="secondary" className="px-3 py-1 text-sm bg-primary/10 text-primary hover:bg-primary/20 cursor-default">Manejo Defensivo <span className="ml-2 text-primary/50 hover:text-danger cursor-pointer px-1">×</span></Badge>
-                                    <Badge variant="secondary" className="px-3 py-1 text-sm bg-primary/10 text-primary hover:bg-primary/20 cursor-default">SCTR <span className="ml-2 text-primary/50 hover:text-danger cursor-pointer px-1">×</span></Badge>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
+                    <CertificatesSettingsTab companyId={company.id} companySlug={companySlug} initialTypes={company.certificateTypes} />
                 </TabsContent>
 
                 <TabsContent value="notifications" className="space-y-6">
@@ -117,21 +89,13 @@ export default function SettingsPage() {
                             </div>
                         </CardContent>
                         <CardFooter className="border-t pt-6 bg-muted/20">
-                            <Button>Guardar Configuración</Button>
+                            <Button disabled>Guardar Configuración</Button>
                         </CardFooter>
                     </Card>
                 </TabsContent>
 
                 <TabsContent value="users">
-                    <Card className="border-border/50 shadow-sm">
-                        <CardHeader>
-                            <CardTitle>Gestión de Usuarios Activos</CardTitle>
-                            <CardDescription>Administradores de la plataforma CertiFox de esta empresa.</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-sm text-muted-foreground p-8 text-center border border-dashed rounded-md">Tabla de administradores próximamente disponible en este módulo.</p>
-                        </CardContent>
-                    </Card>
+                    <UsersSettingsTab users={company.users} companyId={company.id} />
                 </TabsContent>
 
                 <TabsContent value="security">
@@ -146,12 +110,11 @@ export default function SettingsPage() {
                                     <h4 className="font-semibold text-sm">Eliminar Workspace</h4>
                                     <p className="text-xs text-muted-foreground w-3/4 mt-1">Esta acción borrará todos los certificados, alertas enviadas y trabajadores. Es irreversible.</p>
                                 </div>
-                                <Button variant="destructive">Eliminar Workspace</Button>
+                                <Button variant="destructive" disabled>Eliminar Workspace</Button>
                             </div>
                         </CardContent>
                     </Card>
                 </TabsContent>
-
             </Tabs>
         </div>
     );
