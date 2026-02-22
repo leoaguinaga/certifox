@@ -1,5 +1,3 @@
-"use client";
-
 import { Search, Plus, MoreHorizontal, FileText, CheckCircle2, AlertTriangle, Clock, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,16 +20,10 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CertificateFormModal } from "@/components/dashboard/CertificateFormModal";
+import { db } from "@/lib/db";
+import { notFound } from "next/navigation";
 
-const certificatesMock = [
-    { id: "CER-101", type: "Trabajo en Altura", workerName: "Carlos Rivera", issueDate: "15 Ene 2025", expDate: "15 Ene 2026", status: "VALID", alertDays: 30 },
-    { id: "CER-102", type: "Examen Médico (EMO)", workerName: "Elena Torres", issueDate: "01 Mar 2025", expDate: "01 Mar 2026", status: "WARNING", alertDays: 15 },
-    { id: "CER-103", type: "Manejo Defensivo", workerName: "Javier Mendoza", issueDate: "10 Feb 2024", expDate: "10 Feb 2025", status: "EXPIRED", alertDays: 15 },
-    { id: "CER-104", type: "Trabajo en Espacio Confinado", workerName: "Luisa Fernández", issueDate: "20 May 2025", expDate: "20 May 2026", status: "VALID", alertDays: 30 },
-    { id: "CER-105", type: "SCTR", workerName: "Miguel Sánchez", issueDate: "01 Abr 2025", expDate: "01 Abr 2026", status: "VALID", alertDays: 5 },
-];
-
-function getStatusBadge(status: string) {
+function getStatusBadge(status: "VALID" | "WARNING" | "EXPIRED" | string) {
     switch (status) {
         case "VALID":
             return <Badge className="bg-success text-success-foreground hover:bg-success/80 gap-1"><CheckCircle2 className="h-3 w-3" /> Vigente</Badge>;
@@ -44,7 +36,53 @@ function getStatusBadge(status: string) {
     }
 }
 
-export default function CertificatesPage() {
+export default async function CertificatesPage(props: { params: Promise<{ companySlug: string }> }) {
+    const params = await props.params;
+    const { companySlug } = params;
+
+    const company = await db.company.findUnique({
+        where: { slug: companySlug },
+        include: {
+            certificateTypes: true,
+            workers: {
+                where: { isActive: true },
+                select: { id: true, fullName: true, dni: true }
+            }
+        }
+    });
+
+    if (!company || !company.isActive) {
+        notFound();
+    }
+
+    const certificatesData = await db.certificate.findMany({
+        where: {
+            worker: { companyId: company.id },
+            isArchived: false,
+        },
+        include: {
+            worker: { select: { fullName: true } },
+            certificateType: true,
+        },
+        orderBy: { expirationDate: "asc" }
+    });
+
+    const now = new Date();
+    const warningDaysMs = company.defaultNotificationDays * 24 * 60 * 60 * 1000;
+
+    const certificates = certificatesData.map(cert => {
+        let status: "VALID" | "WARNING" | "EXPIRED" = "VALID";
+        const diff = cert.expirationDate.getTime() - now.getTime();
+
+        if (diff < 0) {
+            status = "EXPIRED";
+        } else if (diff <= (cert.notificationDaysBefore ? cert.notificationDaysBefore * 24 * 60 * 60 * 1000 : warningDaysMs)) {
+            status = "WARNING";
+        }
+
+        return { ...cert, status };
+    });
+
     return (
         <div className="p-6 md:p-8 space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -54,17 +92,18 @@ export default function CertificatesPage() {
                         Visualiza y administra todos los registros de certificaciones.
                     </p>
                 </div>
-                <CertificateFormModal />
+                <CertificateFormModal certificateTypes={company.certificateTypes} workers={company.workers} />
             </div>
 
             <Card className="border-border/50 shadow-sm">
-                <div className="p-4 border-b flex flex-col sm:flex-row items-center gap-4 justify-between">
+                <div className="p-4 border-b flex flex-col sm:flex-row items-center gap-4 justify-between bg-muted/20">
                     <div className="relative w-full sm:max-w-sm">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <Input placeholder="Buscar por tipo o trabajador..." className="pl-9 h-9" />
+                        {/* En el futuro esto puede ser un componente Cliente de filtrado real */}
+                        <Input placeholder="Buscar por tipo o trabajador..." className="pl-9 h-9 bg-background" />
                     </div>
                     <div className="flex items-center gap-2 w-full sm:w-auto">
-                        <Button variant="outline" className="h-9 w-full sm:w-auto">
+                        <Button variant="outline" className="h-9 w-full sm:w-auto bg-background">
                             <Filter className="mr-2 h-4 w-4 text-muted-foreground" /> Estado
                         </Button>
                     </div>
@@ -74,34 +113,40 @@ export default function CertificatesPage() {
                     <Table className="min-w-[800px]">
                         <TableHeader className="bg-muted/50">
                             <TableRow>
-                                <TableHead>Tipo de Certificado</TableHead>
+                                <TableHead className="pl-6">Tipo de Certificado</TableHead>
                                 <TableHead>Trabajador</TableHead>
                                 <TableHead>Emisión</TableHead>
                                 <TableHead>Vencimiento</TableHead>
                                 <TableHead>Estado</TableHead>
                                 <TableHead>Regla de Alerta</TableHead>
-                                <TableHead className="text-right">Acciones</TableHead>
+                                <TableHead className="text-right pr-6">Acciones</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {certificatesMock.map((cert) => (
+                            {certificates.length === 0 ? (
+                                <TableRow>
+                                    <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                                        No hay certificados registrados.
+                                    </TableCell>
+                                </TableRow>
+                            ) : certificates.map((cert) => (
                                 <TableRow key={cert.id} className="hover:bg-muted/30 transition-colors">
-                                    <TableCell className="font-medium text-primary">
+                                    <TableCell className="font-medium text-primary pl-6">
                                         <div className="flex items-center gap-2">
                                             <FileText className="h-4 w-4 text-muted-foreground" />
-                                            {cert.type}
+                                            {cert.certificateType.name}
                                         </div>
                                     </TableCell>
-                                    <TableCell className="font-medium">{cert.workerName}</TableCell>
-                                    <TableCell className="text-muted-foreground">{cert.issueDate}</TableCell>
-                                    <TableCell className="font-medium text-foreground">{cert.expDate}</TableCell>
+                                    <TableCell className="font-medium">{cert.worker.fullName}</TableCell>
+                                    <TableCell className="text-muted-foreground">{cert.issueDate.toLocaleDateString()}</TableCell>
+                                    <TableCell className="font-medium text-foreground">{cert.expirationDate.toLocaleDateString()}</TableCell>
                                     <TableCell>
                                         {getStatusBadge(cert.status)}
                                     </TableCell>
                                     <TableCell className="text-muted-foreground text-sm">
-                                        {cert.alertDays} días antes
+                                        {cert.notificationDaysBefore || company.defaultNotificationDays} días antes
                                     </TableCell>
-                                    <TableCell className="text-right">
+                                    <TableCell className="text-right pr-6">
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
                                                 <Button variant="ghost" className="h-8 w-8 p-0">
@@ -115,7 +160,9 @@ export default function CertificatesPage() {
                                                 <DropdownMenuItem>Modificar Fechas</DropdownMenuItem>
                                                 <DropdownMenuItem>Configurar Alerta</DropdownMenuItem>
                                                 <DropdownMenuSeparator />
-                                                <DropdownMenuItem className="text-danger">Eliminar</DropdownMenuItem>
+                                                <DropdownMenuItem className="text-danger flex items-center justify-between">
+                                                    Eliminar
+                                                </DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </TableCell>
@@ -124,12 +171,8 @@ export default function CertificatesPage() {
                         </TableBody>
                     </Table>
                 </CardContent>
-                <div className="p-4 border-t text-sm text-muted-foreground flex justify-between items-center">
-                    <span>Mostrando 1 a 5 de 5 registros</span>
-                    <div className="flex gap-2">
-                        <Button variant="outline" size="sm" disabled>Anterior</Button>
-                        <Button variant="outline" size="sm" disabled>Siguiente</Button>
-                    </div>
+                <div className="p-4 border-t text-sm text-muted-foreground flex justify-between items-center bg-muted/10">
+                    <span>Mostrando {certificates.length} registros</span>
                 </div>
             </Card>
         </div>

@@ -1,12 +1,59 @@
 import { Metadata } from "next";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Users, FileText, AlertTriangle, CheckCircle2, TrendingUp, Clock, Activity } from "lucide-react";
+import { Users, FileText, AlertTriangle, CheckCircle2, TrendingUp, Clock, Activity, BellRing } from "lucide-react";
+import { db } from "@/lib/db";
+import { notFound } from "next/navigation";
+import { DashboardChart } from "@/components/dashboard/DashboardChart";
 
 export const metadata: Metadata = {
     title: "Overview - CertiFox",
 };
 
-export default function DashboardPage() {
+export default async function DashboardPage(props: { params: Promise<{ companySlug: string }> }) {
+    const params = await props.params;
+    const { companySlug } = params;
+
+    const company = await db.company.findUnique({
+        where: { slug: companySlug },
+        include: {
+            workers: { where: { isActive: true } },
+            appAlerts: { orderBy: { createdAt: 'desc' }, take: 5 }
+        }
+    });
+
+    if (!company || !company.isActive) {
+        notFound();
+    }
+
+    // Process Certificates to Calculate KPIs
+    const certificates = await db.certificate.findMany({
+        where: {
+            isArchived: false,
+            worker: { companyId: company.id, isActive: true }
+        }
+    });
+
+    const now = new Date();
+    let warningCount = 0;
+    let expiredCount = 0;
+
+    certificates.forEach(cert => {
+        const thresholdDays = cert.notificationDaysBefore ?? company.defaultNotificationDays;
+        const diffMs = cert.expirationDate.getTime() - now.getTime();
+        const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+        if (diffDays <= 0) {
+            expiredCount++;
+        } else if (diffDays <= thresholdDays) {
+            warningCount++;
+        }
+    });
+
+    const totalWorkers = company.workers.length;
+    const totalCertificates = certificates.length;
+    const avgCertsPerWorker = totalWorkers > 0 ? (totalCertificates / totalWorkers).toFixed(1) : "0.0";
+    const validCount = totalCertificates - (warningCount + expiredCount);
+
     return (
         <div className="p-6 md:p-8 space-y-8">
             <div>
@@ -25,10 +72,9 @@ export default function DashboardPage() {
                         </div>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">1,248</div>
+                        <div className="text-2xl font-bold">{totalWorkers}</div>
                         <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-                            <TrendingUp className="h-3 w-3 text-success" />
-                            <span className="text-success font-medium">+15.2%</span> que el mes pasado
+                            <span className="font-medium">Personal activo</span>
                         </p>
                     </CardContent>
                 </Card>
@@ -43,10 +89,10 @@ export default function DashboardPage() {
                         </div>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">3,542</div>
+                        <div className="text-2xl font-bold">{totalCertificates}</div>
                         <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
                             <Activity className="h-3 w-3 text-muted-foreground" />
-                            <span>Promedio 2.8 por trabajador</span>
+                            <span>Promedio {avgCertsPerWorker} por trabajador</span>
                         </p>
                     </CardContent>
                 </Card>
@@ -61,9 +107,9 @@ export default function DashboardPage() {
                         </div>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-warning">142</div>
+                        <div className="text-2xl font-bold text-warning">{warningCount}</div>
                         <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-                            En los próximos 30 días
+                            Días críticos cercanos
                         </p>
                     </CardContent>
                 </Card>
@@ -78,7 +124,7 @@ export default function DashboardPage() {
                         </div>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-danger">34</div>
+                        <div className="text-2xl font-bold text-danger">{expiredCount}</div>
                         <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
                             Requiere acción inmediata
                         </p>
@@ -89,40 +135,39 @@ export default function DashboardPage() {
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
                 <Card className="col-span-4 border-border/50 shadow-sm">
                     <CardHeader>
-                        <CardTitle>Vencimientos por Mes</CardTitle>
+                        <CardTitle>Estado Actual</CardTitle>
                         <CardDescription>
-                            Proyección de certificados a renovar en los próximos 6 meses
+                            Distribución de vigencia en tus {totalCertificates} certificados registrados.
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="pl-2">
-                        <div className="h-[250px] w-full bg-muted/10 rounded-md border border-dashed border-border flex items-center justify-center text-muted-foreground text-sm">
-                            Gráfico de Vencimientos (Placeholder)
-                        </div>
+                        <DashboardChart
+                            validCount={validCount}
+                            warningCount={warningCount}
+                            expiredCount={expiredCount}
+                        />
                     </CardContent>
                 </Card>
 
                 <Card className="col-span-3 border-border/50 shadow-sm">
                     <CardHeader>
-                        <CardTitle>Timeline de Alertas</CardTitle>
-                        <CardDescription>
-                            Últimas notificaciones enviadas
-                        </CardDescription>
+                        <CardTitle>Últimas Alertas de la App</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="space-y-8">
-                            {[
-                                { worker: "Juan Pérez", desc: "Trabajo en Altura (vence en 5 días)", time: "Hace 2 horas", status: "warning" },
-                                { worker: "María Gómez", desc: "Examen Médico (vencido)", time: "Ayer, 09:00 AM", status: "danger" },
-                                { worker: "Carlos Ruiz", desc: "Manejo Defensivo (renovado)", time: "Hace 2 días", status: "success" },
-                            ].map((alert, i) => (
-                                <div key={i} className="flex items-start gap-4">
-                                    <div className={`mt-0.5 rounded-full p-1.5 ${alert.status === 'warning' ? 'bg-warning/20 text-warning' : alert.status === 'danger' ? 'bg-danger/20 text-danger' : 'bg-success/20 text-success'}`}>
-                                        {alert.status === 'warning' ? <Clock className="h-3.5 w-3.5" /> : alert.status === 'danger' ? <AlertTriangle className="h-3.5 w-3.5" /> : <CheckCircle2 className="h-3.5 w-3.5" />}
+                        <div className="space-y-4">
+                            {company.appAlerts.length === 0 ? (
+                                <p className="text-sm text-muted-foreground italic">No hay alertas in-app recientes.</p>
+                            ) : company.appAlerts.map(alert => (
+                                <div key={alert.id} className="flex items-start gap-4">
+                                    <div className={`mt-0.5 rounded-full p-1.5 bg-primary/10 text-primary`}>
+                                        <BellRing className="h-3.5 w-3.5" />
                                     </div>
                                     <div className="flex flex-col gap-1">
-                                        <p className="text-sm font-medium leading-none">{alert.worker}</p>
-                                        <p className="text-xs text-muted-foreground">{alert.desc}</p>
-                                        <p className="text-[10px] text-muted-foreground mt-1">{alert.time}</p>
+                                        <p className="text-sm font-medium leading-none">{alert.title}</p>
+                                        <p className="text-xs text-muted-foreground">{alert.message}</p>
+                                        <p className="text-[10px] text-muted-foreground mt-1">
+                                            {alert.createdAt.toLocaleDateString('es-ES')}
+                                        </p>
                                     </div>
                                 </div>
                             ))}

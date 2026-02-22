@@ -71,7 +71,6 @@ export function Header({ onMenuClick, companySlug }: HeaderProps) {
                                     Perfil
                                 </DropdownMenuItem>
                             </UserProfileModal>
-                            <DropdownMenuItem>Configuración de Empresa</DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem className="text-danger flex items-center">
                                 Cerrar Sesión

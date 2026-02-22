@@ -29,6 +29,11 @@ enum NotificationChannel {
   EMAIL
 }
 
+enum AlertType {
+  WARNING
+  EXPIRED
+}
+
 enum AuditAction {
   CREATE
   UPDATE
@@ -112,6 +117,7 @@ model NotificationLog {
   certificateId String
   certificate   Certificate         @relation(fields: [certificateId], references: [id])
   channel       NotificationChannel
+  type          AlertType           @default(WARNING)
   sentAt        DateTime            @default(now())
   success       Boolean
 }
