@@ -20,6 +20,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CertificateFormModal } from "@/components/dashboard/CertificateFormModal";
+import { BulkCertificateModal } from "@/components/dashboard/BulkCertificateModal";
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 
@@ -92,7 +93,10 @@ export default async function CertificatesPage(props: { params: Promise<{ compan
                         Visualiza y administra todos los registros de certificaciones.
                     </p>
                 </div>
-                <CertificateFormModal certificateTypes={company.certificateTypes} workers={company.workers} />
+                <div className="flex gap-2">
+                    <BulkCertificateModal certificateTypes={company.certificateTypes} workers={company.workers} />
+                    <CertificateFormModal certificateTypes={company.certificateTypes} workers={company.workers} />
+                </div>
             </div>
 
             <Card className="border-border/50 shadow-sm">

@@ -142,3 +142,71 @@ export async function deleteWorker(workerId: string, companySlug: string) {
         return { error: "Ocurrió un error al eliminar este registro." };
     }
 }
+
+// Bulk Worker Registration
+interface BulkWorkerRow {
+    dni: string;
+    fullName: string;
+    position?: string;
+}
+
+export async function addBulkWorkers(companySlug: string, workers: BulkWorkerRow[]) {
+    const session = await auth.api.getSession({
+        headers: await headers()
+    });
+
+    if (!session || !session.user) {
+        return { error: "No autorizado" };
+    }
+
+    if (!workers || workers.length === 0) {
+        return { error: "No se proporcionaron trabajadores." };
+    }
+
+    try {
+        const company = await db.company.findUnique({
+            where: { slug: companySlug }
+        });
+
+        if (!company) {
+            return { error: "Empresa no encontrada." };
+        }
+
+        // Validate all rows first
+        const errors: string[] = [];
+        workers.forEach((w, i) => {
+            if (!w.dni || !w.fullName) {
+                errors.push(`Fila ${i + 1}: DNI y Nombre son requeridos.`);
+            }
+        });
+
+        if (errors.length > 0) {
+            return { error: errors.join(" ") };
+        }
+
+        // Check for duplicate DNIs within the batch
+        const dnis = workers.map(w => w.dni);
+        const uniqueDnis = new Set(dnis);
+        if (uniqueDnis.size !== dnis.length) {
+            return { error: "Hay DNIs duplicados en la lista." };
+        }
+
+        // Use createMany with skipDuplicates for efficiency
+        const result = await db.worker.createMany({
+            data: workers.map(w => ({
+                dni: w.dni,
+                fullName: w.fullName,
+                position: w.position || null,
+                companyId: company.id,
+            })),
+            skipDuplicates: true,
+        });
+
+        revalidatePath(`/${companySlug}/workers`);
+        return { success: true, count: result.count };
+    } catch (error) {
+        console.error("Error al crear trabajadores en lote:", error);
+        return { error: "Ocurrió un error al registrar los trabajadores." };
+    }
+}
+

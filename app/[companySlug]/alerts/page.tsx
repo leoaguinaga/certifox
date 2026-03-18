@@ -20,9 +20,18 @@ export default async function AlertsPage(props: { params: Promise<{ companySlug:
 
     const alertsData = await db.notificationLog.findMany({
         where: {
-            certificate: {
-                worker: { companyId: company.id }
-            }
+            OR: [
+                {
+                    certificate: {
+                        worker: { companyId: company.id }
+                    }
+                },
+                {
+                    companyDocument: {
+                        companyId: company.id
+                    }
+                }
+            ]
         },
         include: {
             certificate: {
@@ -30,10 +39,15 @@ export default async function AlertsPage(props: { params: Promise<{ companySlug:
                     worker: { select: { fullName: true } },
                     certificateType: { select: { name: true } }
                 }
+            },
+            companyDocument: {
+                include: {
+                    certificateType: { select: { name: true } }
+                }
             }
         },
         orderBy: { sentAt: 'desc' },
-        take: 50 // Show last 50 alerts
+        take: 50
     });
 
     return (
@@ -92,7 +106,7 @@ export default async function AlertsPage(props: { params: Promise<{ companySlug:
                                                     <Badge className="bg-warning hover:bg-warning text-warning-foreground text-[10px] px-1.5 h-5 rounded-sm">X Vencer</Badge>
                                                 )}
 
-                                                <span className="text-sm font-semibold">{alert.certificate.worker.fullName}</span>
+                                                <span className="text-sm font-semibold">{alert.certificate?.worker.fullName ?? alert.companyDocument?.label ?? "Documento"}</span>
                                                 <span className="text-xs text-muted-foreground hidden sm:block">•</span>
                                                 <span className="text-xs text-muted-foreground font-medium flex items-center gap-1">
                                                     <Clock className="h-3 w-3" />
@@ -108,7 +122,7 @@ export default async function AlertsPage(props: { params: Promise<{ companySlug:
                                             </div>
                                         </div>
                                         <div className="mt-1">
-                                            <p className="text-sm text-muted-foreground"><span className="font-medium text-foreground">Certificado implicado:</span> {alert.certificate.certificateType.name}</p>
+                                            <p className="text-sm text-muted-foreground"><span className="font-medium text-foreground">{alert.certificate ? "Certificado:" : "Documento:"}</span> {alert.certificate?.certificateType.name ?? alert.companyDocument?.certificateType.name ?? ""}</p>
                                         </div>
                                     </div>
                                 </div>

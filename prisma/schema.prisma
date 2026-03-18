@@ -58,6 +58,7 @@ model Company {
   appAlerts        AppAlert[]
   auditLogs        AuditLog[]
   certificateTypes CertificateType[]
+  companyDocuments CompanyDocument[]
 }
 
 model User {
@@ -112,14 +113,33 @@ model Certificate {
   notificationLogs       NotificationLog[]
 }
 
+model CompanyDocument {
+  id                     String            @id @default(cuid())
+  certificateTypeId      String
+  certificateType        CertificateType   @relation(fields: [certificateTypeId], references: [id])
+  label                  String
+  issueDate              DateTime
+  expirationDate         DateTime
+  notificationDaysBefore Int?
+  notes                  String?
+  isArchived             Boolean           @default(false)
+  companyId              String
+  company                Company           @relation(fields: [companyId], references: [id])
+  createdAt              DateTime          @default(now())
+  updatedAt              DateTime          @updatedAt
+  notificationLogs       NotificationLog[]
+}
+
 model NotificationLog {
-  id            String              @id @default(cuid())
-  certificateId String
-  certificate   Certificate         @relation(fields: [certificateId], references: [id])
-  channel       NotificationChannel
-  type          AlertType           @default(WARNING)
-  sentAt        DateTime            @default(now())
-  success       Boolean
+  id                String              @id @default(cuid())
+  certificateId     String?
+  certificate       Certificate?        @relation(fields: [certificateId], references: [id])
+  companyDocumentId String?
+  companyDocument   CompanyDocument?    @relation(fields: [companyDocumentId], references: [id])
+  channel           NotificationChannel
+  type              AlertType           @default(WARNING)
+  sentAt            DateTime            @default(now())
+  success           Boolean
 }
 
 model AppAlert {
@@ -154,7 +174,8 @@ model CertificateType {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  certificates Certificate[]
+  certificates     Certificate[]
+  companyDocuments CompanyDocument[]
 
   @@unique([name, companyId])
 }

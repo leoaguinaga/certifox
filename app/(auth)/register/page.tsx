@@ -6,20 +6,23 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ShieldCheck, ArrowRight, ArrowLeft, Loader2, CheckCircle2 } from "lucide-react";
+import { ShieldCheck, ArrowRight, ArrowLeft, Loader2, CheckCircle2, Wand2, Lock, Info } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { toast } from "sonner";
 
-// Mocks for plans in Step 3
+// Plans configuration
 const plans = [
-    { id: "starter", name: "Starter", price: "$49/mes", desc: "Hasta 50 trabajadores" },
-    { id: "professional", name: "Professional", price: "$99/mes", desc: "Hasta 250 trabajadores" },
-    { id: "enterprise", name: "Enterprise", price: "Custom", desc: "Ilimitado" },
+    { id: "starter", name: "Demo", price: "Gratis", desc: "Hasta 50 trabajadores", locked: false },
+    { id: "professional", name: "Professional", price: "$99/mes", desc: "Hasta 250 trabajadores", locked: true },
+    { id: "enterprise", name: "Enterprise", price: "Custom", desc: "Ilimitado", locked: true },
 ];
 
 export default function RegisterPage() {
     const router = useRouter();
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
+    const [checking, setChecking] = useState(false);
     const [error, setError] = useState("");
     const [showPassword, setShowPassword] = useState(false);
 
@@ -30,36 +33,97 @@ export default function RegisterPage() {
         userPassword: "",
         companyName: "",
         companyRuc: "",
-        companySlug: "", // Generado o ingresado
+        companySlug: "",
         selectedPlan: "starter",
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => {
-            const newData = { ...prev, [name]: value };
-            // Auto-generate slug from company name if step 2 and field is companyName
-            if (name === "companyName" && step === 2 && !prev.companySlug) {
-                newData.companySlug = value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-            }
-            return newData;
-        });
+        setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const setPlan = (planId: string) => {
-        setFormData(prev => ({ ...prev, selectedPlan: planId }));
+    const generateSlug = () => {
+        if (!formData.companyName) return;
+        const slug = formData.companyName
+            .toLowerCase()
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Remove accents
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/(^-|-$)+/g, '');
+        setFormData(prev => ({ ...prev, companySlug: slug }));
     };
 
-    const nextStep = () => {
+    // Password strength calculation
+    const getPasswordStrength = (pw: string): { label: string; color: string; width: string } => {
+        if (pw.length === 0) return { label: "", color: "bg-muted", width: "0%" };
+        if (pw.length < 8) return { label: "Débil", color: "bg-danger", width: "33%" };
+        const hasUpper = /[A-Z]/.test(pw);
+        const hasNumber = /[0-9]/.test(pw);
+        const hasSpecial = /[^A-Za-z0-9]/.test(pw);
+        const score = [hasUpper, hasNumber, hasSpecial].filter(Boolean).length;
+        if (score >= 2) return { label: "Fuerte", color: "bg-success", width: "100%" };
+        return { label: "Aceptable", color: "bg-warning", width: "66%" };
+    };
+
+    const pwStrength = getPasswordStrength(formData.userPassword);
+
+    // Check availability (email or slug)
+    const checkAvailability = async (type: "email" | "slug", value: string): Promise<boolean> => {
+        try {
+            const res = await fetch("/api/check-availability", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ type, value })
+            });
+            const data = await res.json();
+            return data.available;
+        } catch {
+            return true; // Don't block on network errors
+        }
+    };
+
+    const nextStep = async () => {
         setError("");
+
         if (step === 1) {
-            if (!formData.userName || !formData.userEmail || formData.userPassword.length < 6) {
-                setError("Por favor completa todos los campos. La contraseña debe tener al menos 6 caracteres.");
+            if (!formData.userName || !formData.userEmail || formData.userPassword.length < 8) {
+                setError("Por favor completa todos los campos. La contraseña debe tener al menos 8 caracteres.");
+                return;
+            }
+
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(formData.userEmail)) {
+                setError("El correo electrónico no tiene un formato válido.");
+                return;
+            }
+
+            // Check email availability
+            setChecking(true);
+            const emailAvailable = await checkAvailability("email", formData.userEmail);
+            setChecking(false);
+            if (!emailAvailable) {
+                setError("Este correo electrónico ya está registrado. Intenta con otro o inicia sesión.");
                 return;
             }
         } else if (step === 2) {
             if (!formData.companyName || !formData.companySlug) {
                 setError("El nombre de la empresa y el URL identificador (slug) son obligatorios.");
+                return;
+            }
+
+            // Validate slug format
+            const slugRegex = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+            if (!slugRegex.test(formData.companySlug)) {
+                setError("El URL del workspace solo puede contener letras minúsculas, números y guiones.");
+                return;
+            }
+
+            // Check slug availability
+            setChecking(true);
+            const slugAvailable = await checkAvailability("slug", formData.companySlug);
+            setChecking(false);
+            if (!slugAvailable) {
+                setError("Este URL de workspace ya está en uso. Escoge otro o usa el botón mágico ✨ para generar uno.");
                 return;
             }
         }
@@ -76,7 +140,7 @@ export default function RegisterPage() {
         setError("");
 
         try {
-            // 1. Crear Company mediante backend proxy
+            // 1. Crear Company
             const companyRes = await fetch("/api/register-company", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -97,12 +161,12 @@ export default function RegisterPage() {
 
             const { companyId } = companyData;
 
-            // 2. Crear User y Sesión mediante Better Auth
+            // 2. Crear User y Sesión
             const { error: authError } = await authClient.signUp.email({
                 email: formData.userEmail,
                 password: formData.userPassword,
                 name: formData.userName,
-                // @ts-expect-error Better Auth client no tiene inferidos localmente los additionalFields aún
+                // @ts-expect-error Better Auth additionalFields
                 companyId: companyId,
                 role: "ADMIN"
             });
@@ -111,6 +175,7 @@ export default function RegisterPage() {
                 throw new Error(authError.message || "Error al registrar el usuario");
             }
 
+            toast.success("¡Workspace creado exitosamente!");
             router.push(`/${formData.companySlug}/dashboard`);
 
         } catch (err: unknown) {
@@ -119,7 +184,6 @@ export default function RegisterPage() {
             } else {
                 setError("Ocurrió un error inesperado al registrar la empresa.");
             }
-            // setLoading(false) se maneja en finally
         } finally {
             setLoading(false);
         }
@@ -127,7 +191,7 @@ export default function RegisterPage() {
 
     return (
         <div className="flex min-h-screen flex-col bg-muted/30">
-            {/* Header minimalista */}
+            {/* Header */}
             <header className="flex h-16 shrink-0 items-center justify-between border-b bg-background px-6">
                 <Link href="/" className="flex items-center gap-2">
                     <ShieldCheck className="h-6 w-6 text-primary" />
@@ -185,7 +249,17 @@ export default function RegisterPage() {
                                         <Input id="userName" name="userName" required placeholder="Juan Pérez" value={formData.userName} onChange={handleChange} className="mt-1.5" />
                                     </div>
                                     <div>
-                                        <Label htmlFor="userEmail">Correo Electrónico (Trabajo)</Label>
+                                        <div className="flex items-center gap-1.5">
+                                            <Label htmlFor="userEmail">Correo Electrónico (Trabajo)</Label>
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                                                </TooltipTrigger>
+                                                <TooltipContent side="top" className="max-w-[260px] text-xs">
+                                                    Este correo será el punto de contacto principal de la empresa. Las alertas de vencimiento se enviarán a esta dirección.
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </div>
                                         <Input id="userEmail" name="userEmail" type="email" required placeholder="juan@tuempresa.com" value={formData.userEmail} onChange={handleChange} className="mt-1.5" />
                                     </div>
                                     <div>
@@ -213,11 +287,31 @@ export default function RegisterPage() {
                                                 )}
                                             </button>
                                         </div>
-                                        <p className="text-xs text-muted-foreground mt-2">Mínimo 6 caracteres.</p>
+                                        {/* Password strength indicator */}
+                                        <div className="mt-2 space-y-1">
+                                            <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                                                <div
+                                                    className={`h-full rounded-full transition-all duration-300 ${pwStrength.color}`}
+                                                    style={{ width: pwStrength.width }}
+                                                />
+                                            </div>
+                                            <div className="flex justify-between items-center">
+                                                <p className="text-xs text-muted-foreground">Mínimo 8 caracteres.</p>
+                                                {pwStrength.label && (
+                                                    <p className={`text-xs font-medium ${pwStrength.color === 'bg-danger' ? 'text-danger' : pwStrength.color === 'bg-warning' ? 'text-warning' : 'text-success'}`}>
+                                                        {pwStrength.label}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <Button className="w-full h-12" onClick={nextStep}>
-                                    Siguiente <ArrowRight className="ml-2 h-4 w-4" />
+                                <Button className="w-full h-12" onClick={nextStep} disabled={checking}>
+                                    {checking ? (
+                                        <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Verificando...</>
+                                    ) : (
+                                        <>Siguiente <ArrowRight className="ml-2 h-4 w-4" /></>
+                                    )}
                                 </Button>
                             </div>
                         )}
@@ -248,11 +342,25 @@ export default function RegisterPage() {
                                                 id="companySlug"
                                                 name="companySlug"
                                                 required
-                                                className="rounded-l-none border-l-0 focus-visible:ring-0 focus-visible:border-primary px-3"
+                                                className="rounded-l-none rounded-r-none border-l-0 border-r-0 focus-visible:ring-0 focus-visible:border-primary px-3"
                                                 placeholder="tu-empresa"
                                                 value={formData.companySlug}
                                                 onChange={handleChange}
                                             />
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <Button
+                                                        type="button"
+                                                        variant="outline"
+                                                        size="icon"
+                                                        className="rounded-l-none border-l-0 h-10 w-10 shrink-0"
+                                                        onClick={generateSlug}
+                                                    >
+                                                        <Wand2 className="h-4 w-4 text-primary" />
+                                                    </Button>
+                                                </TooltipTrigger>
+                                                <TooltipContent>Generar slug a partir del nombre</TooltipContent>
+                                            </Tooltip>
                                         </div>
                                     </div>
                                 </div>
@@ -260,8 +368,12 @@ export default function RegisterPage() {
                                     <Button variant="outline" className="w-1/3 h-12" onClick={prevStep}>
                                         <ArrowLeft className="mr-2 h-4 w-4" /> Atrás
                                     </Button>
-                                    <Button className="w-2/3 h-12" onClick={nextStep}>
-                                        Siguiente <ArrowRight className="ml-2 h-4 w-4" />
+                                    <Button className="w-2/3 h-12" onClick={nextStep} disabled={checking}>
+                                        {checking ? (
+                                            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Verificando...</>
+                                        ) : (
+                                            <>Siguiente <ArrowRight className="ml-2 h-4 w-4" /></>
+                                        )}
                                     </Button>
                                 </div>
                             </div>
@@ -279,27 +391,36 @@ export default function RegisterPage() {
                                     {plans.map((plan) => (
                                         <div
                                             key={plan.id}
-                                            onClick={() => setPlan(plan.id)}
-                                            className={`relative flex cursor-pointer rounded-xl p-4 border-2 transition-all ${formData.selectedPlan === plan.id ? 'border-primary bg-primary/5' : 'border-border hover:border-border/80'
-                                                }`}
+                                            onClick={() => !plan.locked && setFormData(prev => ({ ...prev, selectedPlan: plan.id }))}
+                                            className={`relative flex rounded-xl p-4 border-2 transition-all ${
+                                                plan.locked
+                                                    ? 'border-border opacity-50 cursor-not-allowed'
+                                                    : formData.selectedPlan === plan.id
+                                                        ? 'border-primary bg-primary/5 cursor-pointer'
+                                                        : 'border-border hover:border-border/80 cursor-pointer'
+                                            }`}
                                         >
                                             <div className="flex flex-1 items-center justify-between">
                                                 <div className="flex flex-col">
-                                                    <span className={`block text-sm font-semibold ${formData.selectedPlan === plan.id ? 'text-primary' : 'text-foreground'}`}>
+                                                    <span className={`block text-sm font-semibold ${!plan.locked && formData.selectedPlan === plan.id ? 'text-primary' : 'text-foreground'}`}>
                                                         {plan.name}
                                                     </span>
                                                     <span className="mt-1 flex items-center text-xs text-muted-foreground">
-                                                        {plan.desc}
+                                                        {plan.locked ? "Próximamente" : plan.desc}
                                                     </span>
                                                 </div>
-                                                <div className={`font-medium ${formData.selectedPlan === plan.id ? 'text-primary' : 'text-foreground'}`}>
-                                                    {plan.price}
+                                                <div className="flex items-center gap-2">
+                                                    {plan.locked && <Lock className="h-4 w-4 text-muted-foreground" />}
+                                                    <span className={`font-medium ${!plan.locked && formData.selectedPlan === plan.id ? 'text-primary' : 'text-foreground'}`}>
+                                                        {plan.price}
+                                                    </span>
                                                 </div>
                                             </div>
                                             {/* Check icon */}
-                                            <div className={`ml-4 flex h-5 w-5 items-center justify-center rounded-full border ${formData.selectedPlan === plan.id ? 'bg-primary border-primary text-white' : 'border-border'
-                                                }`}>
-                                                {formData.selectedPlan === plan.id && <CheckCircle2 className="h-3 w-3" />}
+                                            <div className={`ml-4 flex h-5 w-5 items-center justify-center rounded-full border ${
+                                                !plan.locked && formData.selectedPlan === plan.id ? 'bg-primary border-primary text-white' : 'border-border'
+                                            }`}>
+                                                {!plan.locked && formData.selectedPlan === plan.id && <CheckCircle2 className="h-3 w-3" />}
                                             </div>
                                         </div>
                                     ))}

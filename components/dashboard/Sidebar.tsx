@@ -6,6 +6,7 @@ import {
     BarChart3,
     Users,
     FileText,
+    FolderOpen,
     BellRing,
     Settings,
     ShieldCheck
@@ -23,6 +24,7 @@ export function Sidebar({ companySlug }: SidebarProps) {
         { name: "Dashboard", href: `/${companySlug}/dashboard`, icon: BarChart3 },
         { name: "Trabajadores", href: `/${companySlug}/workers`, icon: Users },
         { name: "Certificados", href: `/${companySlug}/certificates`, icon: FileText },
+        { name: "Documentos", href: `/${companySlug}/documents`, icon: FolderOpen },
         { name: "Alertas", href: `/${companySlug}/alerts`, icon: BellRing },
         { name: "Configuración", href: `/${companySlug}/settings`, icon: Settings },
     ];

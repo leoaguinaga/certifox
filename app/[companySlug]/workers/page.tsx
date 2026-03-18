@@ -12,6 +12,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { WorkerFormModal } from "@/components/dashboard/WorkerFormModal";
+import { BulkWorkerModal } from "@/components/dashboard/BulkWorkerModal";
 import { WorkerRowActions } from "@/components/dashboard/WorkerRowActions";
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
@@ -98,7 +99,10 @@ export default async function WorkersPage(props: { params: Promise<{ companySlug
                         Gestiona tu plantilla y la salud de sus certificados.
                     </p>
                 </div>
-                <WorkerFormModal mode="create" />
+                <div className="flex gap-2">
+                    <BulkWorkerModal />
+                    <WorkerFormModal mode="create" />
+                </div>
             </div>
 
             <Card className="border-border/50 shadow-sm">
