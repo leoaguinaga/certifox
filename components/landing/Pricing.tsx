@@ -1,13 +1,12 @@
+"use client";
+
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Navbar } from "@/components/landing/Navbar";
-import { Footer } from "@/components/landing/Footer";
-
-const frequencies = [
-  { value: "monthly", label: "Monthly", priceSuffix: "/month" },
-  { value: "annually", label: "Annually", priceSuffix: "/year" },
-];
+import SpotlightCard from "@/components/bits/SpotlightCard";
+import StarBorder from "@/components/bits/StarBorder";
+import Particles from "@/components/bits/Particles";
+import AnimatedList from "@/components/bits/AnimatedList";
 
 const tiers = [
   {
@@ -61,8 +60,25 @@ const tiers = [
 
 export default function Pricing() {
   return (
-    <section className="flex-1">
-      <div className="py-24 sm:py-32">
+    <section className="relative flex-1 overflow-hidden bg-muted/30">
+      <div className="pointer-events-none absolute inset-0 opacity-35">
+        <Particles
+          className="pointer-events-auto h-full w-full opacity-100"
+          particleCount={240}
+          particleSpread={12}
+          speed={0.03}
+          particleColors={["#1e3a8a", "#3b82f6", "#38bdf8"]}
+          moveParticlesOnHover
+          particleHoverFactor={0.75}
+          alphaParticles
+          particleBaseSize={480}
+          sizeRandomness={0.9}
+          cameraDistance={24}
+          disableRotation={false}
+        />
+      </div>
+
+      <div className="py-20 sm:py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-4xl text-center">
             <h2 className="text-base font-semibold leading-7 text-primary">
@@ -72,20 +88,21 @@ export default function Pricing() {
               Planes diseñados para operaciones de cualquier tamaño
             </p>
           </div>
-          <p className="mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-muted-foreground">
+          <p className="mx-auto mt-5 max-w-2xl text-center text-lg leading-8 text-muted-foreground">
             Elige el plan ideal para automatizar los procesos de cumplimiento y
             no volver a tener paralizaciones.
           </p>
 
-          <div className="isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3 lg:gap-x-8 lg:gap-y-0">
+          <div className="isolate relative mx-auto mt-14 grid max-w-md grid-cols-1 items-start gap-y-6 sm:mt-16 lg:mx-0 lg:max-w-none lg:grid-cols-3 lg:gap-x-6 lg:gap-y-0">
             {tiers.map((tier) => (
-              <div
+              <SpotlightCard
                 key={tier.id}
-                className={`rounded-3xl p-8 ring-1 xl:p-10 transition-shadow hover:shadow-lg bg-card ${
+                className={`rounded-3xl! border-border! bg-card! p-6 ring-1 transition-all hover:-translate-y-1 hover:shadow-xl ${
                   tier.mostPopular
-                    ? "ring-2 ring-primary relative"
+                    ? "relative overflow-visible ring-2! ring-primary! shadow-[0_20px_45px_rgba(30,58,138,0.18)]"
                     : "ring-border"
                 }`}
+                spotlightColor="rgba(59, 130, 246, 0.14)"
               >
                 {tier.mostPopular ? (
                   <span className="absolute top-0 right-1/2 translate-x-1/2 -translate-y-1/2 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white">
@@ -103,10 +120,10 @@ export default function Pricing() {
                     {tier.name}
                   </h3>
                 </div>
-                <p className="mt-4 text-sm leading-6 text-muted-foreground">
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">
                   {tier.description}
                 </p>
-                <p className="mt-6 flex items-baseline gap-x-1">
+                <p className="mt-5 flex items-baseline gap-x-1">
                   <span className="text-4xl font-bold tracking-tight text-foreground">
                     {tier.price.monthly}
                   </span>
@@ -116,28 +133,49 @@ export default function Pricing() {
                     </span>
                   ) : null}
                 </p>
-                <Button
-                  asChild
-                  variant={tier.mostPopular ? "default" : "outline"}
-                  className="mt-6 w-full h-12"
-                >
-                  <Link href={tier.href}>Comenzar con {tier.name}</Link>
-                </Button>
-                <ul
-                  role="list"
-                  className="mt-8 space-y-3 text-sm leading-6 text-muted-foreground"
-                >
-                  {tier.features.map((feature) => (
-                    <li key={feature} className="flex gap-x-3">
-                      <Check
-                        className="h-6 w-5 flex-none text-primary"
-                        aria-hidden="true"
-                      />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+
+                <div className="mt-5">
+                  {tier.mostPopular ? (
+                    <StarBorder
+                      as={Link}
+                      href={tier.href}
+                      color="#60a5fa"
+                      speed="2.4s"
+                      thickness={2}
+                      className="w-full"
+                    >
+                      <span className="inline-flex w-full items-center justify-center font-semibold">
+                        Comenzar con {tier.name}
+                      </span>
+                    </StarBorder>
+                  ) : (
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="h-11 w-full"
+                    >
+                      <Link href={tier.href}>Comenzar con {tier.name}</Link>
+                    </Button>
+                  )}
+                </div>
+
+                <AnimatedList
+                  items={tier.features}
+                  className="mt-5"
+                  itemWrapperClassName="mb-2 last:mb-0"
+                  listClassName="max-h-none overflow-visible p-0"
+                  showGradients={false}
+                  displayScrollbar={false}
+                  enableArrowNavigation={false}
+                  selectOnHover={false}
+                  renderItem={(feature) => (
+                    <div className="flex items-start gap-x-3 rounded-lg bg-muted/35 px-3 py-2 text-sm leading-5 text-muted-foreground">
+                      <Check className="mt-0.5 h-5 w-5 flex-none text-primary" aria-hidden="true" />
+                      <span>{feature}</span>
+                    </div>
+                  )}
+                />
+              </SpotlightCard>
             ))}
           </div>
         </div>

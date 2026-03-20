@@ -4,6 +4,7 @@ import {
     BellRing,
     ShieldCheck
 } from "lucide-react";
+import Stepper, { Step } from "@/components/bits/Stepper";
 
 export function HowItWorks() {
     const steps = [
@@ -47,31 +48,41 @@ export function HowItWorks() {
                     </p>
                 </div>
 
-                <div className="mx-auto mt-16 max-w-5xl sm:mt-20 lg:mt-24">
-                    <div className="grid grid-cols-1 gap-y-10 lg:grid-cols-4 lg:gap-x-8">
-                        {steps.map((step, index) => (
-                            <div key={step.id} className="relative flex flex-col items-center text-center">
-                                {/* Connecting Line */}
-                                {index !== steps.length - 1 && (
-                                    <div className="hidden lg:block absolute top-[2.5rem] left-[60%] w-[80%] h-[2px] bg-border z-0" aria-hidden="true" />
-                                )}
+                <div className="mx-auto mt-16 max-w-6xl sm:mt-20 lg:mt-24">
+                    <Stepper
+                        initialStep={1}
+                        fixedContentHeight={165}
+                        backButtonText="Anterior"
+                        nextButtonText="Siguiente"
+                        stepCircleContainerClassName="max-w-xl bg-card/95"
+                        stepContainerClassName="bg-card"
+                        contentClassName="pb-8"
+                        footerClassName="bg-card"
+                    >
+                        {steps.map((step) => (
+                            <Step key={step.id}>
+                                <div className="grid w-full items-center gap-7 md:grid-cols-[170px_1fr] md:text-left">
+                                    <div className="flex flex-row justify-center items-center h-full border-r-2 border-primary/20 pr-7">
+                                        <span className="text-6xl font-black leading-none text-primary/75 md:text-7xl">
+                                            {step.id}
+                                        </span>
+                                        <div className="mt-3 flex h-24 w-24 items-center justify-center bg-card">
+                                            <step.icon className="h-10 w-10 text-primary/75" aria-hidden="true" />
+                                        </div>
+                                    </div>
 
-                                <div className="relative z-10 flex h-20 w-20 items-center justify-center rounded-full bg-card shadow-md border border-border">
-                                    <step.icon className="h-8 w-8 text-primary" aria-hidden="true" />
-                                    <div className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold text-white shadow-sm">
-                                        {step.id}
+                                    <div>
+                                        <h3 className="text-2xl font-semibold leading-tight text-foreground">
+                                            {step.name}
+                                        </h3>
+                                        <p className="mt-4 text-lg leading-8 text-muted-foreground">
+                                            {step.description}
+                                        </p>
                                     </div>
                                 </div>
-
-                                <h3 className="mt-6 text-xl font-semibold leading-7 text-foreground">
-                                    {step.name}
-                                </h3>
-                                <p className="mt-3 text-base leading-7 text-muted-foreground">
-                                    {step.description}
-                                </p>
-                            </div>
+                            </Step>
                         ))}
-                    </div>
+                    </Stepper>
                 </div>
             </div>
         </section>

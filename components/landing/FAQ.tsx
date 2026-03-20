@@ -1,9 +1,8 @@
-import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
-} from "@/components/ui/accordion";
+"use client";
+
+import { useState } from "react";
+import { ChevronDown } from "lucide-react";
+import AnimatedList from "@/components/bits/AnimatedList";
 
 const faqs = [
     {
@@ -41,6 +40,8 @@ const faqs = [
 ];
 
 export function FAQ() {
+    const [openIndex, setOpenIndex] = useState<number>(-1);
+
     return (
         <section id="faq" className="py-24 bg-muted/30">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -55,22 +56,40 @@ export function FAQ() {
                         </p>
                     </div>
 
-                    <Accordion type="single" collapsible className="w-full space-y-4">
-                        {faqs.map((faq, index) => (
-                            <AccordionItem
-                                key={index}
-                                value={`item-${index}`}
-                                className="bg-card border border-border/60 rounded-xl px-6 data-[state=open]:shadow-sm transition-shadow"
-                            >
-                                <AccordionTrigger className="text-left text-base font-semibold hover:no-underline py-5">
-                                    {faq.question}
-                                </AccordionTrigger>
-                                <AccordionContent className="text-muted-foreground leading-relaxed pb-5">
-                                    {faq.answer}
-                                </AccordionContent>
-                            </AccordionItem>
-                        ))}
-                    </Accordion>
+                    <AnimatedList
+                        items={faqs}
+                        className="w-full"
+                        listClassName="max-h-none p-0"
+                        showGradients={false}
+                        displayScrollbar={false}
+                        enableArrowNavigation={false}
+                        selectOnHover={false}
+                        allowDeselect
+                        selectedIndex={openIndex}
+                        onSelectedIndexChange={setOpenIndex}
+                        renderItem={(faq, index, selected) => (
+                            <div className="mb-4 overflow-hidden rounded-xl border border-border/60 bg-card px-6 transition-shadow data-[open=true]:shadow-sm" data-open={selected}>
+                                <button
+                                    type="button"
+                                    className="flex w-full items-center justify-between py-5 text-left text-base font-semibold text-foreground"
+                                    aria-expanded={selected}
+                                    aria-controls={`faq-content-${index}`}
+                                >
+                                    <span>{faq.question}</span>
+                                    <ChevronDown className={`h-4 w-4 transition-transform ${selected ? 'rotate-180' : ''}`} />
+                                </button>
+
+                                <div
+                                    id={`faq-content-${index}`}
+                                    className={`grid transition-all duration-300 ease-out ${selected ? 'grid-rows-[1fr] pb-5' : 'grid-rows-[0fr]'}`}
+                                >
+                                    <div className="overflow-hidden">
+                                        <p className="leading-relaxed text-muted-foreground">{faq.answer}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    />
                 </div>
             </div>
         </section>
