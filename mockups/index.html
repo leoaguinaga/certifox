@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="es" style="">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet">
+    <style>
+        @layer base {
+
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                overscroll-behavior: none;
+            }
+
+            main>:first-child {
+                margin-top: 0 !important;
+            }
+
+            main>:last-child {
+                margin-bottom: 0 !important;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script
+        id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-tint": "#585e6f", "inverse-on-surface": "#ebf1ff", "inverse-surface": "#233144", "on-error": "#ffffff", "error": "#ba1a1a", "on-tertiary-container": "#497cff", "tertiary-fixed": "#dbe1ff", "surface-container": "#e6eeff", "primary-fixed": "#dce2f6", "outline": "#76777d", "primary-fixed-dim": "#c0c6da", "tertiary-container": "#00174b", "surface-container-low": "#eff4ff", "surface-container-highest": "#d5e3fd", "on-background": "#0d1c2f", "outline-variant": "#c6c6cc", "primary-container": "#151b2a", "surface-container-lowest": "#ffffff", "surface-bright": "#f8f9ff", "secondary-container": "#fd761a", "surface-variant": "#d5e3fd", "on-primary-container": "#7d8496", "on-primary-fixed-variant": "#404757", "on-surface-variant": "#45474c", "secondary": "#9d4300", "on-secondary-fixed": "#341100", "tertiary-fixed-dim": "#b4c5ff", "on-tertiary": "#ffffff", "secondary-fixed-dim": "#ffb690", "on-tertiary-fixed-variant": "#003ea8", "inverse-primary": "#c0c6da", "on-secondary-container": "#5c2400", "surface-container-high": "#dde9ff", "background": "#FFFDF9", "on-error-container": "#93000a", "primary": "#000000", "on-surface": "#0d1c2f", "surface": "#FFFDF9", "tertiary": "#000000", "on-primary": "#ffffff", "surface-dim": "#ccdbf4", "error-container": "#ffdad6", "secondary-fixed": "#ffdbca", "on-primary-fixed": "#151b2a", "on-secondary-fixed-variant": "#783200", "on-secondary": "#ffffff", "on-tertiary-fixed": "#00174b" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-xs": "0.5rem", "max-width-content": "1280px", "table-gutter": "0.75rem", "grid-margin-desktop": "2rem", "space-2xl": "3rem", "grid-margin-mobile": "1rem", "space-lg": "1.5rem", "space-sm": "0.75rem", "space-xl": "2rem", "space-2xs": "0.25rem", "max-width-editorial": "840px", "space-md": "1rem", "space-3xl": "4rem" }, "fontFamily": { "body-lg": ["Manrope"], "display-hero": ["Manrope"], "caption-caps": ["Manrope"], "display-hero-mobile": ["Manrope"], "label-md": ["Manrope"], "headline-xl": ["Manrope"], "headline-lg": ["Manrope"], "body-md": ["Manrope"], "body-sm": ["Manrope"], "headline-md": ["Manrope"], "headline-sm": ["Manrope"], "headline-xl-mobile": ["Manrope"], "label-sm": ["Manrope"] }, "fontSize": { "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }], "display-hero": ["52px", { "lineHeight": "60px", "letterSpacing": "-0.035em", "fontWeight": "800" }], "caption-caps": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700" }], "display-hero-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "600" }], "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "700" }], "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }], "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "600" }], "headline-xl-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600" }] } } } };</script>
+</head>
+
+<body class="bg-[#FFFDF9] font-body-md text-body-md text-on-surface antialiased">
+    <header
+        class="fixed top-0 left-0 right-0 z-50 bg-[#FFFDF9]/90 backdrop-blur-md border-b border-stone-200/60 transition-all">
+        <div
+            class="h-16 max-w-max-width-content mx-auto px-grid-margin-mobile lg:px-grid-margin-desktop flex items-center justify-between gap-space-md">
+            <div class="flex items-center gap-space-xl"><a class="flex items-center gap-2 group"
+                    data-path="explorar-cursos" href="#"><img alt="Certifox" class="h-8 w-auto object-contain"
+                        src="https://lh3.googleusercontent.com/aida/AEtjO1XafEiwEi7fRIYQdPd4QoOJFA27Mos42p1B7iEeSdlJZ-CBzVn1s8JBqf8wdzHZT0b_K-rr-OYduF4szFxPqDEcrpfdN3N0FBG-zQnZMOASXweEUs5qeMit1r4ikmWchiZxtby3n3Y_BsIZwCGFvP1ihIVur_gVtxQQBkNI8dfhyxBCpvNYq-RVNLAzqZ-hZTkksIyNVqsvdGag0BYHSOqXx7JwxMhTwvF-Y_hxdiYnXTRW9c1QDPY9dws"></a>
+                <nav class="hidden md:flex items-center gap-1"><a
+                        class="px-space-sm py-space-xs rounded-lg font-label-md text-label-md text-stone-600 hover:text-stone-900 hover:bg-stone-100/80 transition-colors"
+                        data-path="explorar-cursos" href="#cursos">Explorar cursos</a><a
+                        class="px-space-sm py-space-xs rounded-lg font-label-md text-label-md text-stone-600 hover:text-stone-900 hover:bg-stone-100/80 transition-colors"
+                        data-path="verificar-certificado" href="#verificacion">Verificar certificado</a><a
+                        class="px-space-sm py-space-xs rounded-lg font-label-md text-label-md text-stone-600 hover:text-stone-900 hover:bg-stone-100/80 transition-colors"
+                        data-path="mi-aprendizaje" href="#">Mi aprendizaje</a></nav>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2 pl-2 border-l border-stone-200"><img alt="Profile"
+                        class="w-8 h-8 rounded-full object-cover ring-2 ring-orange-500/20 shadow-sm"
+                        src="https://lh3.googleusercontent.com/aida/AEtjO1UcsVlSjtfMChF53ZjY37UWU4UWV9CbuOqwVdB1xtHh4iX7QJDEO2JY3N3oR803kNIXE-PCzpaC4yj1tIziPVjphxRlHMfzpyUCME7gFRxIVtp3ZGGowIcziwTZfZWWuR6Y3LxbhmgtofvYEPC1-lTOAyn53-D3IECneVotkyIDRJ8Ub-NZebhsrFx4iG7IqAW7uR-BmluYkN0wlQ7WEbY9PN77NdblwNCmEc5K2t8x7B6P_hih7ahf-Q"><span
+                        class="hidden lg:inline font-label-sm text-label-sm font-medium text-stone-700">Brunella
+                        E.</span></div>
+            </div>
+        </div>
+    </header>
+    <main class="w-full pt-16 bg-[#FFFDF9] min-h-screen">
+        <div class="flex flex-col w-full">
+            <!-- HERO SECTION: ASSEMBLE-INSPIRED FLOATING SPATIAL CANVAS -->
+            <section class="relative overflow-hidden bg-[#FFFDF9] pt-14 pb-20 lg:pt-20 lg:pb-28">
+                <!-- Subtle assemble horizontal linear grid background -->
+                <div class="absolute inset-0 pointer-events-none opacity-60"
+                    style="background-image: linear-gradient(to bottom, transparent 39px, #EAE5DE 40px); background-size: 100% 40px;">
+                </div>
+                <!-- Subtle radial ambient gradient to lift the center -->
+                <div
+                    class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_35%,rgba(255,247,237,0.7)_0%,rgba(255,253,249,0)_70%)]">
+                </div>
+                <div class="relative max-w-max-width-content mx-auto px-grid-margin-mobile lg:px-grid-margin-desktop">
+                    <div class="relative flex flex-col items-center text-center max-w-4xl mx-auto">
+                        <!-- Floating badges around title (Assemble aesthetic) -->
+                        <!-- Floating badge 1 (Top Left) -->
+                        <div class="hidden lg:flex absolute -left-12 top-4 flex-col items-center bg-white/95 backdrop-blur-md px-3.5 py-2.5 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-stone-200/70 rotate-[-4deg] animate-pulse"
+                            style="animation-duration: 6s;">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+                                <span class="font-mono text-xs font-bold text-stone-800">ISO 17024</span>
+                            </div>
+                            <span class="text-[10px] uppercase font-bold text-stone-600 tracking-wider mt-0.5">Compliant
+                                System</span>
+                        </div>
+                        <!-- Floating badge 2 (Mid Left) -->
+                        <div
+                            class="hidden md:flex absolute -left-20 top-36 items-center gap-2.5 bg-white/95 backdrop-blur-md px-4 py-2.5 rounded-2xl shadow-[0_10px_35px_rgb(0,0,0,0.08)] border border-stone-200/70 rotate-[3deg]">
+                            <div
+                                class="w-8 h-8 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center font-bold">
+                                <span class="material-symbols-outlined text-lg">qr_code_2</span>
+                            </div>
+                            <div class="text-left">
+                                <p class="text-xs font-bold text-stone-900 leading-tight">Código QR 2025</p>
+                                <p class="text-[10px] text-stone-600 font-medium">Validación Instantánea</p>
+                            </div>
+                        </div>
+                        <!-- Floating badge 3 (Top Right) -->
+                        <div
+                            class="hidden lg:flex absolute -right-10 top-6 items-center gap-2 bg-white/95 backdrop-blur-md px-4 py-2.5 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-stone-200/70 rotate-[5deg]">
+                            <span class="material-symbols-outlined text-emerald-600 text-base">verified</span>
+                            <div class="text-left">
+                                <p class="text-xs font-bold text-stone-900 leading-tight">SHA-256 Inmutable</p>
+                                <p class="text-[10px] text-stone-600 font-mono">8a9f..c24e</p>
+                            </div>
+                        </div>
+                        <!-- Floating badge 4 (Mid Right) -->
+                        <div
+                            class="hidden md:flex absolute -right-20 top-40 items-center gap-2 bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-2xl shadow-[0_10px_35px_rgb(0,0,0,0.08)] border border-stone-200/70 rotate-[-2deg]">
+                            <div
+                                class="w-7 h-7 rounded-lg bg-orange-500/10 text-orange-600 flex items-center justify-center font-bold">
+                                <span class="material-symbols-outlined text-base">payments_off</span>
+                            </div>
+                            <div class="text-left">
+                                <p class="text-xs font-bold text-stone-900">0% Comisiones</p>
+                                <p class="text-[10px] text-stone-600 font-medium">Cobros P2P Directos</p>
+                            </div>
+                        </div>
+                        <!-- Central Announce Pill -->
+                        <div
+                            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-stone-200/90 shadow-[0_2px_10px_rgba(0,0,0,0.04)] mb-7 hover:border-orange-200 transition-all cursor-pointer">
+                            <span
+                                class="px-2 py-0.5 rounded-full bg-orange-100 text-orange-700 text-xs font-bold tracking-tight">Novedad</span>
+                            <span class="text-xs sm:text-sm font-medium text-stone-700">Acreditación técnica instantánea
+                                con FoxCode 2025</span>
+                            <span class="material-symbols-outlined text-sm text-stone-600">arrow_forward</span>
+                        </div>
+                        <!-- Main Headline with softly highlighted pill like Assemble -->
+                        <h1
+                            class="font-display-hero text-3xl sm:text-5xl lg:text-[54px] lg:leading-[62px] text-stone-900 tracking-tight max-w-3xl mb-5 font-extrabold">
+                            Aprende, demuestra y <span
+                                class="inline-block relative px-3 py-0.5 rounded-xl bg-orange-100/90 text-orange-800 font-extrabold">certifica</span>
+                            tus habilidades.
+                        </h1>
+                        <!-- Subtitle -->
+                        <p class="font-body-lg text-base sm:text-lg text-stone-600 max-w-2xl mb-8 leading-relaxed">
+                            Cursos técnicos y vocacionales dictados por instructores calificados. Sin pasarelas de pago
+                            invasivas ni comisiones arbitrarias.
+                        </p>
+                        <!-- Centered CTAs -->
+                        <div class="flex flex-wrap items-center justify-center gap-3.5 mb-14">
+                            <a class="inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-[#0D1C2F] text-white font-label-md text-sm font-semibold hover:bg-stone-800 transition-all shadow-[0_6px_20px_rgba(13,28,47,0.22)] gap-2.5 group"
+                                href="#cursos">
+                                <span class="w-2 h-2 rounded-full bg-orange-400"></span>
+                                <span class="">Comenzar formación</span>
+                                <span
+                                    class="material-symbols-outlined text-base group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+                            </a>
+                            <a class="inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-white text-stone-800 font-label-md text-sm font-semibold hover:bg-stone-100 border border-stone-200/90 transition-all shadow-sm gap-2"
+                                href="#verificacion">
+                                <span class="material-symbols-outlined text-stone-600 text-base">verified_user</span>
+                                <span class="">Verificar certificado</span>
+                            </a>
+                        </div>
+                        <!-- Spatial Floating Window Product Preview (Assemble style) -->
+                        <div
+                            class="w-full relative mx-auto rounded-3xl bg-stone-900/5 p-2 sm:p-3 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.12)] border border-stone-200/80">
+                            <div class="bg-white rounded-2xl overflow-hidden border border-stone-200/90 shadow-sm">
+                                <!-- Window Top Bar -->
+                                <div
+                                    class="flex items-center justify-between px-4 py-3 bg-stone-50 border-b border-stone-200/80">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-3 h-3 rounded-full bg-red-400"></span>
+                                        <span class="w-3 h-3 rounded-full bg-amber-400"></span>
+                                        <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
+                                        <span
+                                            class="ml-2 font-mono text-[11px] text-stone-600 font-medium">certifox.app/acreditacion/CFX-2025-9831</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 font-semibold text-[11px]">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Registro
+                                            Activo
+                                        </span>
+                                    </div>
+                                </div>
+                                <!-- Window Canvas Content: Split Interactive Preview -->
+                                <div
+                                    class="grid grid-cols-1 lg:grid-cols-12 gap-0 text-left divide-y lg:divide-y-0 lg:divide-x divide-stone-200">
+                                    <!-- Left: Technical Classroom Module Track -->
+                                    <div class="lg:col-span-7 p-5 sm:p-7 bg-white">
+                                        <div class="flex items-center justify-between mb-4">
+                                            <div class="flex items-center gap-2">
+                                                <span
+                                                    class="w-8 h-8 rounded-lg bg-orange-100 text-orange-700 flex items-center justify-center font-bold text-xs">01</span>
+                                                <div>
+                                                    <h4 class="font-bold text-stone-900 text-sm">Aula Técnica en Vivo
+                                                    </h4>
+                                                    <p class="text-xs text-stone-600">Módulo 4: Protocolos Críticos de
+                                                        Maquinaria</p>
+                                                </div>
+                                            </div>
+                                            <span
+                                                class="text-xs font-mono font-semibold bg-stone-100 px-2 py-1 rounded text-stone-700">Progreso
+                                                100%</span>
+                                        </div>
+                                        <!-- Interactive timeline / modules rows -->
+                                        <div class="space-y-2.5 mb-5">
+                                            <div
+                                                class="flex items-center justify-between p-3 rounded-xl bg-stone-50 border border-stone-200/70 hover:bg-orange-50/40 transition-colors">
+                                                <div class="flex items-center gap-3">
+                                                    <span
+                                                        class="material-symbols-outlined text-emerald-600 text-sm">check_circle</span>
+                                                    <span class="text-xs font-semibold text-stone-800">Inspección
+                                                        Preoperacional &amp; Checklists ISO</span>
+                                                </div>
+                                                <span class="text-[11px] text-stone-600 font-mono">12 hrs •
+                                                    Aprobado</span>
+                                            </div>
+                                            <div
+                                                class="flex items-center justify-between p-3 rounded-xl bg-stone-50 border border-stone-200/70 hover:bg-orange-50/40 transition-colors">
+                                                <div class="flex items-center gap-3">
+                                                    <span
+                                                        class="material-symbols-outlined text-emerald-600 text-sm">check_circle</span>
+                                                    <span class="text-xs font-semibold text-stone-800">Diagnóstico
+                                                        Hidráulico en Terreno</span>
+                                                </div>
+                                                <span class="text-[11px] text-stone-600 font-mono">18 hrs •
+                                                    Aprobado</span>
+                                            </div>
+                                            <div
+                                                class="flex items-center justify-between p-3 rounded-xl bg-orange-50/50 border border-orange-200/60">
+                                                <div class="flex items-center gap-3">
+                                                    <span
+                                                        class="material-symbols-outlined text-orange-600 text-sm">verified_user</span>
+                                                    <span class="text-xs font-bold text-stone-900">Auditoría Final de
+                                                        Competencias Prácticas</span>
+                                                </div>
+                                                <span
+                                                    class="text-[11px] font-bold text-orange-700 bg-white px-2 py-0.5 rounded border border-orange-200">Nota:
+                                                    19.4/20</span>
+                                            </div>
+                                        </div>
+                                        <!-- Instructor Sign-off footer inside card -->
+                                        <div class="flex items-center justify-between pt-3 border-t border-stone-100">
+                                            <div class="flex items-center gap-2.5">
+                                                <img alt="Docente" class="w-7 h-7 rounded-full object-cover"
+                                                    src="https://lh3.googleusercontent.com/aida/AEtjO1UcsVlSjtfMChF53ZjY37UWU4UWV9CbuOqwVdB1xtHh4iX7QJDEO2JY3N3oR803kNIXE-PCzpaC4yj1tIziPVjphxRlHMfzpyUCME7gFRxIVtp3ZGGowIcziwTZfZWWuR6Y3LxbhmgtofvYEPC1-lTOAyn53-D3IECneVotkyIDRJ8Ub-NZebhsrFx4iG7IqAW7uR-BmluYkN0wlQ7WEbY9PN77NdblwNCmEc5K2t8x7B6P_hih7ahf-Q">
+                                                <div>
+                                                    <p class="text-xs font-bold text-stone-900 leading-none">Ing. Marco
+                                                        Viteri</p>
+                                                    <p class="text-[10px] text-stone-600">Instructor Homologado MaqOps
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <span class="text-[11px] font-mono text-stone-600 flex items-center gap-1">
+                                                <span
+                                                    class="material-symbols-outlined text-xs text-emerald-600">lock</span>
+                                                Firma Digital Verificada
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <!-- Right: Interactive Live Certificate Preview with QR -->
+                                    <div class="lg:col-span-5 p-5 sm:p-7 bg-[#FFFDF9] flex flex-col justify-between">
+                                        <div
+                                            class="border border-stone-200 rounded-xl p-4 bg-white shadow-sm relative overflow-hidden">
+                                            <div
+                                                class="absolute -right-8 -top-8 w-24 h-24 bg-orange-500/5 rounded-full blur-xl pointer-events-none">
+                                            </div>
+                                            <div class="flex justify-between items-start mb-3">
+                                                <div>
+                                                    <span
+                                                        class="text-[9px] font-mono uppercase tracking-widest text-stone-600 font-bold block">Acreditación
+                                                        Pública</span>
+                                                    <h5 class="text-xs font-bold text-stone-900">CERTIFOX AUDIT REGISTRY
+                                                    </h5>
+                                                </div>
+                                                <div
+                                                    class="w-6 h-6 rounded-md bg-stone-900 text-white flex items-center justify-center text-[10px] font-extrabold">
+                                                    C
+                                                </div>
+                                            </div>
+                                            <div class="my-2 py-2 border-y border-stone-100">
+                                                <p class="text-[10px] text-stone-600">Estudiante acreditado:</p>
+                                                <p class="text-sm font-extrabold text-stone-900">Alejandro Morales P.
+                                                </p>
+                                                <p class="text-[11px] font-semibold text-orange-600 mt-0.5">Seguridad
+                                                    Operativa en Maquinaria Pesada</p>
+                                            </div>
+                                            <div class="flex items-center justify-between pt-1">
+                                                <div>
+                                                    <span class="text-[9px] text-stone-600 font-mono block">CÓDIGO
+                                                        ÚNICO</span>
+                                                    <span
+                                                        class="text-xs font-mono font-bold text-stone-900">CFX-2025-9831</span>
+                                                    <span class="text-[9px] text-emerald-600 font-medium block mt-0.5">●
+                                                        Válido sin expiración</span>
+                                                </div>
+                                                <div class="p-1 bg-stone-900 rounded-lg text-white">
+                                                    <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path
+                                                            d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm14 0h4v4h-4v-4zm-4-2h2v2h-2v-2zm4 4v4h2v-4h-2zm-6-2h2v4h-2v-4zm4-2h4v2h-4v-2zm-8-8h2v2H8V6zm0 12h2v2H8v-2z">
+                                                        </path>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Quick Action to test audit -->
+                                        <a class="mt-3.5 w-full py-2 px-3 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-800 font-label-sm text-xs font-semibold text-center transition-colors flex items-center justify-center gap-1.5"
+                                            href="#verificacion">
+                                            <span
+                                                class="material-symbols-outlined text-sm text-orange-600">search</span>
+                                            <span class="">Probar visor de auditoría en vivo</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Quick Metrics Strip below Canvas -->
+                        <div
+                            class="w-full grid grid-cols-2 md:grid-cols-4 gap-4 mt-10 pt-6 border-t border-stone-200/80 text-center">
+                            <div>
+                                <p class="font-extrabold text-2xl text-stone-900">14,200+</p>
+                                <p class="text-xs text-stone-600 font-medium mt-0.5">Certificados emitidos</p>
+                            </div>
+                            <div>
+                                <p class="font-extrabold text-2xl text-stone-900">99.4%</p>
+                                <p class="text-xs text-stone-600 font-medium mt-0.5">Validez comprobable</p>
+                            </div>
+                            <div>
+                                <p class="font-extrabold text-2xl text-stone-900">45+</p>
+                                <p class="text-xs text-stone-600 font-medium mt-0.5">Centros técnicos</p>
+                            </div>
+                            <div>
+                                <p class="font-extrabold text-2xl text-stone-900">0%</p>
+                                <p class="text-xs text-stone-600 font-medium mt-0.5">Comisión por matrícula</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- CÓMO FUNCIONA -->
+            <section class="py-space-3xl bg-surface relative overflow-hidden" id="como-funciona">
+              <!-- Subtle technical grid decoration background -->
+              <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: radial-gradient(#0d1c2f 0.75px, transparent 0.75px); background-size: 28px 28px;"></div>
+
+              <div class="relative max-w-max-width-content mx-auto px-grid-margin-mobile lg:px-grid-margin-desktop">
+                <!-- Editorial Header with Section Meta, Headline & Navigation Controls -->
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-space-xl gap-space-md">
+                  <div class="max-w-2xl">
+                    <div class="inline-flex items-center gap-space-xs px-space-sm py-1 rounded-full bg-secondary-container/10 border border-secondary-container/20 text-secondary mb-space-sm">
+                      <span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span>
+                      <span class="font-caption-caps uppercase tracking-wider font-bold">PROCESO PASO A PASO</span>
+                    </div>
+                    <h2 class="font-headline-xl text-headline-xl md:font-display-hero md:text-display-hero text-on-surface tracking-tight mt-1 mb-space-xs leading-tight">
+                      Cómo funciona Certifox
+                    </h2>
+                    <p class="font-body-lg text-body-lg text-on-surface-variant">
+                      Diseñado para una formación técnica ágil, auditable y sin comisiones abusivas: desde la postulación directa hasta la credencial inviolable.
+                    </p>
+                  </div>
+
+                  <!-- Interactive Scroll Arrows & Hint -->
+                  <div class="flex items-center gap-space-sm">
+                    <span class="hidden sm:inline-flex text-caption-caps uppercase tracking-wider text-on-surface-variant font-mono text-xs">
+                      Desliza para explorar →
+                    </span>
+                    <div class="flex items-center gap-2">
+                      <button id="step-scroll-prev" aria-label="Paso anterior" class="w-10 h-10 rounded-full border border-surface-container bg-surface-container-lowest flex items-center justify-center text-on-surface hover:bg-surface-container hover:text-secondary transition-colors shadow-sm focus:outline-none" onclick="const c = document.getElementById('cards-carousel'); if(c) c.scrollBy({ left: -420, behavior: 'smooth' });">
+                        <span class="material-symbols-outlined text-sm">arrow_back</span>
+                      </button>
+                      <button id="step-scroll-next" aria-label="Paso siguiente" class="w-10 h-10 rounded-full border border-surface-container bg-surface-container-lowest flex items-center justify-center text-on-surface hover:bg-surface-container hover:text-secondary transition-colors shadow-sm focus:outline-none" onclick="const c = document.getElementById('cards-carousel'); if(c) c.scrollBy({ left: 420, behavior: 'smooth' });">
+                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Quick Step Filter / Navigation Pills -->
+                <div class="flex items-center gap-2 overflow-x-auto pb-space-sm mb-space-lg" style="scrollbar-width: none; -ms-overflow-style: none;">
+                  <button onclick="document.getElementById('cards-carousel').scrollTo({ left: 0, behavior: 'smooth' })" class="px-space-md py-1.5 rounded-full bg-primary-container text-surface-container-lowest font-label-sm text-label-sm whitespace-nowrap shadow-sm transition-all hover:opacity-90">
+                    01. Selección y Solicitud
+                  </button>
+                  <button onclick="document.getElementById('cards-carousel').scrollTo({ left: 420, behavior: 'smooth' })" class="px-space-md py-1.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm whitespace-nowrap hover:bg-surface-container-high transition-all">
+                    02. Validación Docente
+                  </button>
+                  <button onclick="document.getElementById('cards-carousel').scrollTo({ left: 840, behavior: 'smooth' })" class="px-space-md py-1.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm whitespace-nowrap hover:bg-surface-container-high transition-all">
+                    03. Práctica &amp; Rúbricas
+                  </button>
+                  <button onclick="document.getElementById('cards-carousel').scrollTo({ left: 1260, behavior: 'smooth' })" class="px-space-md py-1.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm whitespace-nowrap hover:bg-surface-container-high transition-all">
+                    04. Credencial QR Inviolable
+                  </button>
+                </div>
+
+                <!-- Horizontal Snap Scroll Container -->
+                <div id="cards-carousel" class="flex gap-space-lg overflow-x-auto pb-space-xl snap-x snap-mandatory" style="scrollbar-width: thin; scroll-behavior: smooth;">
+                  
+                  <!-- CARD 01: Solicitud y Selección Directa -->
+                  <div class="min-w-[340px] sm:min-w-[400px] lg:min-w-[420px] max-w-[440px] flex-shrink-0 snap-start flex flex-col justify-between rounded-2xl p-space-xl bg-[#0F172A] text-white shadow-xl border border-slate-800 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-secondary-container/10 rounded-full blur-3xl pointer-events-none"></div>
+                    
+                    <div>
+                      <!-- Top metadata row -->
+                      <div class="flex items-center justify-between mb-space-lg">
+                        <div class="flex items-center gap-space-xs">
+                          <span class="w-8 h-8 rounded-lg bg-secondary-container text-white font-headline-sm font-bold flex items-center justify-center text-sm">
+                            01
+                          </span>
+                          <span class="font-mono text-xs uppercase tracking-widest text-slate-400 font-semibold">ETAPA INICIAL</span>
+                        </div>
+                      </div>
+
+                      <!-- Headline / Key Statement -->
+                      <h3 class="text-2xl font-bold text-white tracking-tight mb-space-sm leading-snug">
+                        Explora el programa y postula sin comisiones abusivas.
+                      </h3>
+                      <p class="text-slate-300 text-sm leading-relaxed mb-space-lg">
+                        Selecciona especializaciones homologadas con temarios técnicos certificados. Acuerdas el pago directo con el formador y reservas tu cupo en tiempo récord.
+                      </p>
+
+                      <!-- Graphic/Interactive Preview Micro-Card -->
+                      <div class="p-space-md rounded-xl bg-slate-900/90 border border-slate-800 space-y-2 mb-space-md">
+                        <div class="flex items-center justify-between text-xs font-mono text-slate-400">
+                          <span class="">PLAN DE ESTUDIOS HOMOLOGADO<br></span>
+                        </div>
+                        <div class="flex items-center gap-space-xs text-white text-sm font-medium">
+                          <span class="material-symbols-outlined text-secondary-container text-base">check_circle</span>
+                          <span class="">Temario práctico con horas de maquinaria</span>
+                        </div>
+                        <div class="flex items-center gap-space-xs text-white text-sm font-medium">
+                          <span class="material-symbols-outlined text-secondary-container text-base">check_circle</span>
+                          <span class="">Sin pasarelas bancarias retenedoras (0% fee)</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Card Footer -->
+                    <div class="pt-space-md border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400 font-mono">
+                      <span class="flex items-center gap-1 text-slate-300">
+                        <span class="material-symbols-outlined text-sm text-secondary-container">timer</span> Tiempo: ~2 minutos
+                      </span>
+                      <span class="text-secondary-container font-semibold">Paso 1 de 4</span>
+                    </div>
+                  </div>
+
+                  <!-- CARD 02: Confirmación Directa y Cupo Inmediato -->
+                  <div class="min-w-[340px] sm:min-w-[400px] lg:min-w-[420px] max-w-[440px] flex-shrink-0 snap-start flex flex-col justify-between rounded-2xl p-space-xl bg-[#0F172A] text-white shadow-xl border border-slate-800 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-[#10B981]/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                    <div>
+                      <!-- Top metadata row -->
+                      <div class="flex items-center justify-between mb-space-lg">
+                        <div class="flex items-center gap-space-xs">
+                          <span class="w-8 h-8 rounded-lg bg-slate-800 text-white font-headline-sm font-bold flex items-center justify-center text-sm border border-slate-700">
+                            02
+                          </span>
+                          <span class="font-mono text-xs uppercase tracking-widest text-slate-400 font-semibold">AUTORIZACIÓN</span>
+                        </div>
+                      </div>
+
+                      <!-- Headline / Key Statement -->
+                      <h3 class="text-2xl font-bold text-white tracking-tight mb-space-sm leading-snug">
+                        Validación docente persona a persona sin demoras.
+                      </h3>
+                      <p class="text-slate-300 text-sm leading-relaxed mb-space-lg">
+                        El instructor valida tu postulación, recibe el comprobante directo y te activa la plataforma en su panel de administración de un solo clic.
+                      </p>
+
+                      <!-- Graphic/Interactive Preview Micro-Card -->
+                      <div class="p-space-md rounded-xl bg-slate-900/90 border border-slate-800 mb-space-md">
+                        <div class="flex items-center gap-space-sm mb-2 pb-2 border-b border-slate-800">
+                          <div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-white text-xs font-bold">
+                            DR
+                          </div>
+                          <div class="flex-1">
+                            <p class="text-xs font-bold text-white">Ing. Daniela Ramos</p>
+                            <p class="text-[10px] text-slate-400 font-mono">Termografía &amp; Mtto. Industrial</p>
+                          </div>
+                          <span class="px-1.5 py-0.5 rounded text-[10px] bg-emerald-500/20 text-emerald-400 font-mono">Aprobado</span>
+                        </div>
+                        <p class="text-xs text-slate-300 flex items-center gap-1">
+                          <span class="material-symbols-outlined text-xs text-secondary-container">lock_open</span> Enlace y accesos al simulador remitidos
+                        </p>
+                      </div>
+                    </div>
+
+                    <!-- Card Footer -->
+                    <div class="pt-space-md border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400 font-mono">
+                      <span class="flex items-center gap-1 text-slate-300">
+                        <span class="material-symbols-outlined text-sm text-secondary-container">sync_alt</span> Directo con instructor
+                      </span>
+                      <span class="text-secondary-container font-semibold">Paso 2 de 4</span>
+                    </div>
+                  </div>
+
+                  <!-- CARD 03: Aula Práctica y Evaluación Rigurosa -->
+                  <div class="min-w-[340px] sm:min-w-[400px] lg:min-w-[420px] max-w-[440px] flex-shrink-0 snap-start flex flex-col justify-between rounded-2xl p-space-xl bg-[#0F172A] text-white shadow-xl border border-slate-800 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                    <div>
+                      <!-- Top metadata row -->
+                      <div class="flex items-center justify-between mb-space-lg">
+                        <div class="flex items-center gap-space-xs">
+                          <span class="w-8 h-8 rounded-lg bg-slate-800 text-white font-headline-sm font-bold flex items-center justify-center text-sm border border-slate-700">
+                            03
+                          </span>
+                          <span class="font-mono text-xs uppercase tracking-widest text-slate-400 font-semibold">FORMACIÓN &amp; RÚBRICA</span>
+                        </div>
+                      </div>
+
+                      <!-- Headline / Key Statement -->
+                      <h3 class="text-2xl font-bold text-white tracking-tight mb-space-sm leading-snug">
+                        Talleres aplicados y evaluaciones con trazabilidad.
+                      </h3>
+                      <p class="text-slate-300 text-sm leading-relaxed mb-space-lg">
+                        Participa de clases en vivo o en taller presencial. Cada tarea y examen de competencia es calificado bajo los estándares exigidos por la industria.
+                      </p>
+
+                      <!-- Graphic/Interactive Preview Micro-Card -->
+                      <div class="p-space-md rounded-xl bg-slate-900/90 border border-slate-800 space-y-2 mb-space-md font-mono text-xs">
+                        <div class="flex justify-between items-center text-slate-300">
+                          <span class="flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-xs text-sky-400">task_alt</span> Módulo Práctico de Campo
+                          </span>
+                          <span class="text-sky-400 font-bold">100%</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                          <div class="bg-sky-500 h-full w-full rounded-full"></div>
+                        </div>
+                        <div class="flex justify-between text-[11px] text-slate-400 pt-1">
+                          <span class="">Asistencia Auditada: 48/48 hrs</span>
+                          <span class="text-emerald-400 font-semibold">Aprobado</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Card Footer -->
+                    <div class="pt-space-md border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400 font-mono">
+                      <span class="flex items-center gap-1 text-slate-300">
+                        <span class="material-symbols-outlined text-sm text-secondary-container">workspace_premium</span> Rúbrica ISO 17024
+                      </span>
+                      <span class="text-secondary-container font-semibold">Paso 3 de 4</span>
+                    </div>
+                  </div>
+
+                  <!-- CARD 04: Credencial Criptográfica con QR Inviolable -->
+                  <div class="min-w-[340px] sm:min-w-[400px] lg:min-w-[420px] max-w-[440px] flex-shrink-0 snap-start flex flex-col justify-between rounded-2xl p-space-xl bg-[#0F172A] text-white shadow-xl border border-emerald-500/30 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-36 h-36 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
+
+                    <div>
+                      <!-- Top metadata row -->
+                      <div class="flex items-center justify-between mb-space-lg">
+                        <div class="flex items-center gap-space-xs">
+                          <span class="w-8 h-8 rounded-lg bg-emerald-500 text-slate-950 font-headline-sm font-bold flex items-center justify-center text-sm">
+                            04
+                          </span>
+                          <span class="font-mono text-xs uppercase tracking-widest text-emerald-400 font-semibold">ACREDITACIÓN FINAL</span>
+                        </div>
+                      </div>
+
+                      <!-- Headline / Key Statement -->
+                      <h3 class="text-2xl font-bold text-white tracking-tight mb-space-sm leading-snug">
+                        Emisión de credencial digital con QR inviolable.
+                      </h3>
+                      <p class="text-slate-300 text-sm leading-relaxed mb-space-lg">
+                        Al graduarte obtienes un certificado oficial permanente con código registral único indexado en la base de datos pública para consulta de empleadores.
+                      </p>
+
+                      <!-- Graphic/Interactive Preview Micro-Card -->
+                      <div class="p-space-md rounded-xl bg-slate-900/90 border border-emerald-500/20 flex items-center justify-between mb-space-md">
+                        <div>
+                          <p class="text-[10px] font-mono text-slate-400 uppercase">ID REGISTRAL INMUTABLE</p>
+                          <p class="text-sm font-mono text-white font-bold tracking-wider">CFX-2025-9831</p>
+                          <span class="inline-flex items-center gap-1 text-[11px] text-emerald-400 mt-1">
+                            <span class="material-symbols-outlined text-xs">verified</span> Verificable de por vida
+                          </span>
+                        </div>
+                        <div class="w-12 h-12 bg-white p-1 rounded flex items-center justify-center">
+                          <svg class="w-full h-full text-slate-950" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm14 0h4v4h-4v-4zm-4-2h2v2h-2v-2zm4 4v4h2v-4h-2zm-6-2h2v4h-2v-4zm4-2h4v2h-4v-2zm-8-8h2v2H8V6zm0 12h2v2H8v-2z"></path>
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Card Footer -->
+                    <div class="pt-space-md border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400 font-mono">
+                      <span class="flex items-center gap-1 text-emerald-400 font-semibold">
+                        <span class="material-symbols-outlined text-sm">qr_code_scanner</span> Validez Nacional e Internacional
+                      </span>
+                      <span class="text-emerald-400 font-semibold">Completado</span>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </section>
+
+            <!-- CURSOS DESTACADOS -->
+            <section class="py-space-3xl bg-surface-container-low" id="cursos">
+                <div class="max-w-max-width-content mx-auto px-grid-margin-mobile lg:px-grid-margin-desktop">
+                    <div class="flex flex-col md:flex-row md:items-end justify-between mb-space-2xl gap-space-md">
+                        <div>
+                            <span
+                                class="font-caption-caps text-caption-caps uppercase text-secondary tracking-wider">Oferta
+                                Académica Especializada</span>
+                            <h2 class="font-headline-xl text-headline-xl text-on-surface mt-1">Cursos técnicos de alta
+                                demanda</h2>
+                            <p class="font-body-md text-body-md text-on-surface-variant mt-2 max-w-xl">
+                                Programas estructurados impartidos por profesionales activos con experiencia comprobable
+                                en terreno.
+                            </p>
+                        </div>
+                        <a class="inline-flex items-center gap-space-xs font-label-md text-label-md text-secondary hover:underline"
+                            href="#">
+                            <span class="">Ver catálogo completo</span>
+                            <span class="material-symbols-outlined text-body-md">arrow_forward</span>
+                        </a>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
+                        <!-- Curso 1 -->
+                        <div
+                            class="flex flex-col bg-surface-container-lowest rounded-xl shadow-sm border border-stone-200/70 overflow-hidden group hover:shadow-md transition-shadow">
+                            <div class="relative h-48 overflow-hidden">
+                                <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    data-alt="Heavy industrial machinery in a modern open-pit construction and mining site with excavators and loaders, professional cinematography, sharp focus and industrial realism"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBATXmZ_lcK_1sJzzOeIvRjWlAYN9zXPN_FKWSlt9C2eH_Ne4dVjlIHETJ3yZI3rg3HKYtD_r9e2crodOweebnB3EFP9bEZ1T07FzI-hEqYhjLz8IqLIf3Lc0OUEZhiWb1Tfh9UQjSu6AWajdpgcDJC5pumGMceZVwpiwlr8VkAWyRke_iuhxCDC1_R-hQ2j45lTJKy8CyRLAvoX_6ZdEH4MGi5ThcFuZ6BOxKtjaX47jYXRy5aXANf">
+                                <span
+                                    class="absolute top-3 right-3 px-space-xs py-1 rounded-full bg-[#D1FAE5] text-[#065F46] font-label-sm text-label-sm flex items-center gap-1 shadow-sm">
+                                    <span class="material-symbols-outlined text-xs">verified</span>
+                                    Certificado verificable
+                                </span>
+                            </div>
+                            <div class="p-space-lg flex flex-col flex-grow justify-between">
+                                <div>
+                                    <div
+                                        class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm mb-space-xs">
+                                        <span class="material-symbols-outlined text-sm">person</span>
+                                        <span class="">Ing. Marco Viteri</span>
+                                    </div>
+                                    <h3 class="font-headline-sm text-headline-sm text-on-surface mb-space-sm">
+                                        Seguridad Operativa en Maquinaria Pesada
+                                    </h3>
+                                    <div
+                                        class="flex items-center gap-space-md text-on-surface-variant font-body-sm text-body-sm mb-space-md">
+                                        <span class="flex items-center gap-1"><span
+                                                class="material-symbols-outlined text-xs">schedule</span> 48 hrs</span>
+                                        <span class="flex items-center gap-1"><span
+                                                class="material-symbols-outlined text-xs">menu_book</span> 12
+                                            lecciones</span>
+                                    </div>
+                                </div>
+                                <div
+                                    class="pt-space-md flex items-center justify-between bg-surface-container-low p-space-sm rounded-lg">
+                                    <div>
+                                        <span
+                                            class="font-caption-caps text-caption-caps text-on-surface-variant block">INVERSIÓN</span>
+                                        <span class="font-headline-md text-headline-md text-on-surface">180 USD</span>
+                                    </div>
+                                    <button
+                                        class="px-space-md py-space-xs rounded-lg bg-primary-container text-surface-container-lowest font-label-md text-label-md hover:bg-surface-tint transition-colors">
+                                        Ver Detalles
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Curso 2 -->
+                        <div
+                            class="flex flex-col bg-surface-container-lowest rounded-xl shadow-sm border border-stone-200/70 overflow-hidden group hover:shadow-md transition-shadow">
+                            <div class="relative h-48 overflow-hidden">
+                                <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    data-alt="Industrial technician engineer using a modern thermal imaging thermography camera on electrical substation panels in a clean manufacturing plant, blue and amber tech aesthetics"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2HUg52eK_gByYfuXeUhfOrcNza-VbixV3eOiz_1Ooag9UKzM7K-SUSslvogrB_3mv_m6RHl1GQpGDXvCMbGBMhPfr-2i-lYCv8ADJmcsQkgStphguUeAHXVVR2_J6oXeMsUJHwI3MymbTRb3FNo9dzSt1E1uEiCwesau6AXShifmK7BW7zHzzyPLGM9xGZPXhvs07eZ8_Xv6te_C9-RqMwzG7nlu6mOtX4xkLrPO_C4orfRP6sK-a">
+                                <span
+                                    class="absolute top-3 right-3 px-space-xs py-1 rounded-full bg-[#D1FAE5] text-[#065F46] font-label-sm text-label-sm flex items-center gap-1 shadow-sm">
+                                    <span class="material-symbols-outlined text-xs">verified</span>
+                                    Certificado verificable
+                                </span>
+                            </div>
+                            <div class="p-space-lg flex flex-col flex-grow justify-between">
+                                <div>
+                                    <div
+                                        class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm mb-space-xs">
+                                        <span class="material-symbols-outlined text-sm">person</span>
+                                        <span class="">Ing. Daniela Ramos</span>
+                                    </div>
+                                    <h3 class="font-headline-sm text-headline-sm text-on-surface mb-space-sm">
+                                        Mantenimiento Predictivo y Termografía Industrial
+                                    </h3>
+                                    <div
+                                        class="flex items-center gap-space-md text-on-surface-variant font-body-sm text-body-sm mb-space-md">
+                                        <span class="flex items-center gap-1"><span
+                                                class="material-symbols-outlined text-xs">schedule</span> 36 hrs</span>
+                                        <span class="flex items-center gap-1"><span
+                                                class="material-symbols-outlined text-xs">menu_book</span> 10
+                                            lecciones</span>
+                                    </div>
+                                </div>
+                                <div
+                                    class="pt-space-md flex items-center justify-between bg-surface-container-low p-space-sm rounded-lg">
+                                    <div>
+                                        <span
+                                            class="font-caption-caps text-caption-caps text-on-surface-variant block">INVERSIÓN</span>
+                                        <span class="font-headline-md text-headline-md text-on-surface">150 USD</span>
+                                    </div>
+                                    <button
+                                        class="px-space-md py-space-xs rounded-lg bg-primary-container text-surface-container-lowest font-label-md text-label-md hover:bg-surface-tint transition-colors">
+                                        Ver Detalles
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Curso 3 -->
+                        <div
+                            class="flex flex-col bg-surface-container-lowest rounded-xl shadow-sm border border-stone-200/70 overflow-hidden group hover:shadow-md transition-shadow">
+                            <div class="relative h-48 overflow-hidden">
+                                <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    data-alt="Mining health and safety officer with hard hat and reflective vest briefing workers underground in a copper and gold mining complex, documentary realism and strict compliance context"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCa37R4MbafIZQpc12n9lMo3itB21MaI2LvpnEbNcpskd1hH3hMls7VsjE7TQti3iQCR5BHawxzZ_BdVKqTKzqjwga5K9dzopo806sjaw5g-gTbqagor3CTQXHvOuMpARSzfpU8fnqvTz4Ufx4ePcRdcBWDeUISn9TgdLFBxZg0NeB_nSPJUxKN5TLE-_jBmMqsQRkv4GRPaWZ_24pXewUb94FVOTuas7fSm6GwiEOEPoFh88m1V0qq">
+                                <span
+                                    class="absolute top-3 right-3 px-space-xs py-1 rounded-full bg-[#D1FAE5] text-[#065F46] font-label-sm text-label-sm flex items-center gap-1 shadow-sm">
+                                    <span class="material-symbols-outlined text-xs">verified</span>
+                                    Certificado verificable
+                                </span>
+                            </div>
+                            <div class="p-space-lg flex flex-col flex-grow justify-between">
+                                <div>
+                                    <div
+                                        class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm mb-space-xs">
+                                        <span class="material-symbols-outlined text-sm">person</span>
+                                        <span class="">Carlos Benítez</span>
+                                    </div>
+                                    <h3 class="font-headline-sm text-headline-sm text-on-surface mb-space-sm">
+                                        Gestión de Riesgos Laborales en Minería (ISO 45001)
+                                    </h3>
+                                    <div
+                                        class="flex items-center gap-space-md text-on-surface-variant font-body-sm text-body-sm mb-space-md">
+                                        <span class="flex items-center gap-1"><span
+                                                class="material-symbols-outlined text-xs">schedule</span> 60 hrs</span>
+                                        <span class="flex items-center gap-1"><span
+                                                class="material-symbols-outlined text-xs">menu_book</span> 16
+                                            lecciones</span>
+                                    </div>
+                                </div>
+                                <div
+                                    class="pt-space-md flex items-center justify-between bg-surface-container-low p-space-sm rounded-lg">
+                                    <div>
+                                        <span
+                                            class="font-caption-caps text-caption-caps text-on-surface-variant block">INVERSIÓN</span>
+                                        <span class="font-headline-md text-headline-md text-on-surface">210 USD</span>
+                                    </div>
+                                    <button
+                                        class="px-space-md py-space-xs rounded-lg bg-primary-container text-surface-container-lowest font-label-md text-label-md hover:bg-surface-tint transition-colors">
+                                        Ver Detalles
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- SECCIÓN VISUAL DE VERIFICACIÓN DE CERTIFICADOS -->
+            <section class="py-space-3xl bg-surface relative overflow-hidden" id="verificacion">
+                <div class="max-w-max-width-content mx-auto px-grid-margin-mobile lg:px-grid-margin-desktop">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-2xl items-center">
+                        <!-- Left: Form & Audit Explanation -->
+                        <div class="lg:col-span-5">
+                            <span
+                                class="font-caption-caps text-caption-caps uppercase text-secondary tracking-wider">Validación
+                                Pública Universal</span>
+                            <h2 class="font-headline-xl text-headline-xl text-on-surface mt-1 mb-space-md">
+                                Cero falsificaciones. Confianza institucional absoluta.
+                            </h2>
+                            <p class="font-body-md text-body-md text-on-surface-variant mb-space-xl">
+                                Cualquier empleador o entidad puede ingresar el código de credencial o escanear el QR
+                                para auditar la vigencia, notas y horas pedagógicas aprobadas.
+                            </p>
+                            <!-- Input Demo -->
+                            <div
+                                class="bg-surface-container-low p-space-lg rounded-xl shadow-sm mb-space-lg border border-stone-200/70">
+                                <label class="block font-label-sm text-label-sm text-on-surface mb-2"
+                                    for="cert-id">Ingresa código de credencial</label>
+                                <div class="flex gap-2">
+                                    <input
+                                        class="flex-1 px-3 py-2 bg-surface-container-lowest text-on-surface font-mono rounded-lg outline-none text-body-sm shadow-sm border border-stone-200"
+                                        id="cert-id" type="text" value="CFX-2025-9831">
+                                    <button
+                                        class="px-space-md py-2 bg-primary-container text-surface-container-lowest rounded-lg font-label-md text-label-md hover:bg-surface-tint transition-colors">
+                                        Comprobar
+                                    </button>
+                                </div>
+                                <p
+                                    class="font-caption-caps text-caption-caps text-on-surface-variant mt-2 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-xs text-secondary-container">info</span>
+                                    Respuesta en menos de 200 milisegundos
+                                </p>
+                            </div>
+                        </div>
+                        <!-- Right: Realist Mockup of Certifox Certificate -->
+                        <div class="lg:col-span-7">
+                            <div
+                                class="relative bg-surface-container-lowest p-space-xl rounded-2xl shadow-xl border border-stone-200/80 max-w-2xl mx-auto">
+                                <!-- Simulated Certificate Frame -->
+                                <div
+                                    class="p-space-lg rounded-lg bg-surface-bright border border-stone-200/60 flex flex-col justify-between">
+                                    <!-- Top bar of certificate -->
+                                    <div class="flex justify-between items-start pb-space-md">
+                                        <div class="flex items-center gap-space-xs">
+                                            <div
+                                                class="w-8 h-8 rounded bg-primary-container flex items-center justify-center text-surface-container-lowest font-headline-md text-headline-md">
+                                                C
+                                            </div>
+                                            <div>
+                                                <h4
+                                                    class="font-headline-sm text-headline-sm text-on-surface leading-tight">
+                                                    CERTIFOX ACADEMIC AUDIT</h4>
+                                                <p class="font-caption-caps text-caption-caps text-on-surface-variant">
+                                                    SISTEMA NACIONAL DE CERTIFICACIÓN TÉCNICA</p>
+                                            </div>
+                                        </div>
+                                        <!-- Status Badge Switch -->
+                                        <div
+                                            class="flex items-center gap-2 px-3 py-1 rounded-full bg-[#D1FAE5] text-[#065F46] font-label-sm text-label-sm shadow-sm">
+                                            <span class="w-2 h-2 rounded-full bg-[#059669]"></span>
+                                            <span class="">Estado: Válido</span>
+                                        </div>
+                                    </div>
+                                    <!-- Certificate Body -->
+                                    <div class="my-space-md text-center py-space-md">
+                                        <p
+                                            class="font-caption-caps text-caption-caps text-on-surface-variant uppercase tracking-widest">
+                                            SE OTORGA LA PRESENTE CERTIFICACIÓN A</p>
+                                        <h3 class="font-headline-xl text-headline-xl text-on-surface mt-1 mb-space-xs">
+                                            Alejandro Morales Peñaloza</h3>
+                                        <p class="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto">
+                                            Por haber cumplido y superado satisfactoriamente los requerimientos
+                                            teórico-prácticos del programa:
+                                        </p>
+                                        <p class="font-headline-sm text-headline-sm text-secondary mt-2">
+                                            Seguridad Operativa en Maquinaria Pesada
+                                        </p>
+                                    </div>
+                                    <!-- Certificate Footer with QR and Code -->
+                                    <div
+                                        class="pt-space-md flex items-end justify-between bg-surface-container-lowest p-space-md rounded-lg border border-stone-200/60">
+                                        <div>
+                                            <p class="font-caption-caps text-caption-caps text-on-surface-variant">
+                                                CÓDIGO ÚNICO REGISTRAL</p>
+                                            <p
+                                                class="font-headline-sm text-headline-sm text-on-surface font-mono tracking-wider">
+                                                CFX-2025-9831</p>
+                                            <p class="font-caption-caps text-caption-caps text-on-surface-variant mt-1">
+                                                EMISIÓN: 14 OCT 2024 • CARGA: 48 HORAS</p>
+                                        </div>
+                                        <!-- Inline Stylized QR Simulation -->
+                                        <div class="flex flex-col items-center">
+                                            <div
+                                                class="w-16 h-16 bg-on-surface p-1 rounded flex items-center justify-center">
+                                                <!-- Crisp minimal SVG QR representation -->
+                                                <svg class="w-full h-full text-surface-container-lowest"
+                                                    fill="currentColor" viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm14 0h4v4h-4v-4zm-4-2h2v2h-2v-2zm4 4v4h2v-4h-2zm-6-2h2v4h-2v-4zm4-2h4v2h-4v-2zm-8-8h2v2H8V6zm0 12h2v2H8v-2z">
+                                                    </path>
+                                                </svg>
+                                            </div>
+                                            <span
+                                                class="font-caption-caps text-caption-caps text-on-surface-variant mt-1 text-[9px]">ESCANEAR
+                                                VALIDACIÓN</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- SECCIÓN: PARA ORGANIZACIONES E INSTRUCTORES -->
+            <section class="py-space-3xl bg-primary-container text-surface-container-lowest relative">
+                <div class="max-w-max-width-content mx-auto px-grid-margin-mobile lg:px-grid-margin-desktop">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-2xl items-center">
+                        <div class="lg:col-span-7">
+                            <div
+                                class="inline-flex items-center gap-space-xs px-space-sm py-space-2xs rounded-full bg-surface-container-highest/20 text-surface-container-lowest mb-space-md">
+                                <span
+                                    class="material-symbols-outlined text-secondary-container text-sm">business_center</span>
+                                <span class="font-caption-caps text-caption-caps uppercase tracking-wider">Ecosistema
+                                    Institucional</span>
+                            </div>
+                            <h2 class="font-headline-xl text-headline-xl text-surface-container-lowest mb-space-md">
+                                Gestiona tus propios cursos, control de alumnos y emisión instantánea sin costes
+                                ocultos.
+                            </h2>
+                            <p class="font-body-lg text-body-lg text-on-primary-container mb-space-xl">
+                                Diseñado para academias técnicas, asociaciones industriales e instructores
+                                independientes que buscan autonomía sin lidiar con integraciones bancarias complejas ni
+                                retenciones arbitrarias.
+                            </p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-lg mb-space-2xl">
+                                <div class="bg-surface-tint/20 p-space-md rounded-xl">
+                                    <span
+                                        class="material-symbols-outlined text-secondary-container mb-space-xs">badge</span>
+                                    <h4 class="font-headline-sm text-headline-sm text-surface-container-lowest">
+                                        Generador de Firmas en Lote</h4>
+                                    <p class="font-body-sm text-body-sm text-on-primary-container mt-1">
+                                        Firma y emite cientos de certificados homologados con un solo clic tras auditar
+                                        asistencias.
+                                    </p>
+                                </div>
+                                <div class="bg-surface-tint/20 p-space-md rounded-xl">
+                                    <span
+                                        class="material-symbols-outlined text-secondary-container mb-space-xs">payments</span>
+                                    <h4 class="font-headline-sm text-headline-sm text-surface-container-lowest">Cobros
+                                        directos a tu cuenta</h4>
+                                    <p class="font-body-sm text-body-sm text-on-primary-container mt-1">
+                                        Tus alumnos te transfieren directamente; tú apruebas su ingreso desde la consola
+                                        de control.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-space-md">
+                                <a class="px-space-lg py-space-sm bg-secondary-container text-surface-container-lowest font-label-md text-label-md rounded-lg hover:bg-secondary transition-colors shadow-sm"
+                                    href="#">
+                                    Solicitar acceso de instructor
+                                </a>
+                                <a class="px-space-lg py-space-sm bg-transparent text-surface-container-lowest font-label-md text-label-md hover:bg-surface-container-highest/10 transition-colors"
+                                    href="#">
+                                    Conocer planes y volumen
+                                </a>
+                            </div>
+                        </div>
+                        <div class="lg:col-span-5">
+                            <div class="rounded-2xl overflow-hidden shadow-2xl relative">
+                                <img class="w-full h-80 object-cover"
+                                    data-alt="Technical institute instructor in safety uniform reviewing mechanical engineering blueprints and teaching apprentices in an advanced training facility, clean composition, high authoritative focus"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaBzXmDengFhcPBgfVPMvELOZsYsg0ltKMaIsUSIalNLXeviSzHtRExwu8Hy3jJye_YQ_qX7oLHnvzm81uN9odZcsheBOyYOx7zCBI2khIY_M5fyJGWGKhhjHPDYgVFIF6t5d2nGhE2PLXvcmvDEaCYgymUUV77bPyTIVow0m6oIzKoFfFGkFDEXqLBf-BhXdWpazqFVs0SJDEDh_6onNd12qSgfO7re0W5Z0mNbE8iOOM04xwS6n9">
+                                <div class="p-space-lg bg-surface-container-low text-on-surface">
+                                    <p class="font-headline-sm text-headline-sm">"Certifox eliminó semanas de burocracia
+                                        para emitir credenciales a nuestros técnicos mecánicos."</p>
+                                    <div class="mt-space-md flex items-center gap-space-sm">
+                                        <div
+                                            class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-surface-container-lowest font-bold">
+                                            MV
+                                        </div>
+                                        <div>
+                                            <p class="font-label-sm text-label-sm font-semibold">Ing. Marco Viteri</p>
+                                            <p class="font-caption-caps text-caption-caps text-on-surface-variant">
+                                                Director Técnico - MaqOps Latam</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- FAQ CONCISO -->
+            <section class="py-space-3xl bg-surface">
+                <div class="max-w-max-width-content mx-auto px-grid-margin-mobile lg:px-grid-margin-desktop">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-2xl items-start">
+                        <div class="lg:col-span-5 flex flex-col items-start">
+                            <div
+                                class="inline-flex items-center gap-space-xs px-space-sm py-space-2xs rounded-full bg-surface-container-high text-on-surface mb-space-md shadow-sm">
+                                <span class="material-symbols-outlined text-secondary text-sm">help</span><span
+                                    class="font-caption-caps text-caption-caps uppercase tracking-wider text-secondary">Resolvemos
+                                    tus dudas</span>
+                            </div>
+                            <h2 class="font-headline-xl text-headline-xl text-on-surface tracking-tight mb-space-sm">
+                                Preguntas Frecuentes</h2>
+                            <p class="font-body-lg text-body-lg text-on-surface-variant mb-space-xl">Descubre cómo
+                                funciona la validación descentralizada, los cobros directos sin intermediarios y las
+                                normativas que respaldan cada certificado emitido en Certifox.</p>
+                            <div
+                                class="w-full bg-surface-container-low p-space-lg rounded-2xl border border-surface-container-highest/20 shadow-sm flex flex-col gap-space-sm">
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-secondary-container/10 flex items-center justify-center text-secondary mb-space-2xs">
+                                    <span class="material-symbols-outlined text-headline-sm">support_agent</span>
+                                </div>
+                                <h4 class="font-headline-sm text-headline-sm text-on-surface">¿Tienes una consulta
+                                    específica?</h4>
+                                <p class="font-body-sm text-body-sm text-on-surface-variant">Habla directamente con
+                                    nuestro equipo de soporte institucional y auditoría técnica para resolver cualquier
+                                    inquietud.</p><a
+                                    class="inline-flex items-center gap-space-xs font-label-md text-label-md text-secondary hover:underline mt-space-2xs"
+                                    href="#"><span class="">Contactar soporte institucional</span><span
+                                        class="material-symbols-outlined text-body-sm">arrow_forward</span></a>
+                            </div>
+                        </div>
+                        <div class="lg:col-span-7 flex flex-col gap-space-md">
+                            <div
+                                class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-surface-container-highest/20">
+                                <div class="flex items-start justify-between gap-space-md">
+                                    <div class="flex items-start gap-space-sm">
+                                        <div
+                                            class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center text-secondary shrink-0 mt-0.5">
+                                            <span class="material-symbols-outlined text-body-lg">verified_user</span>
+                                        </div>
+                                        <h3 class="font-headline-sm text-headline-sm text-on-surface pt-1">¿Cómo se
+                                            valida la autenticidad de un certificado?</h3>
+                                    </div><span
+                                        class="material-symbols-outlined text-on-surface-variant mt-1 text-headline-sm shrink-0">expand_more</span>
+                                </div>
+                                <div class="mt-space-sm pl-12">
+                                    <p class="font-body-md text-body-md text-on-surface-variant">Cada certificado
+                                        emitido cuenta con un código alfanumérico inmutable y un código QR que apunta a
+                                        la base de datos oficial de Certifox. Cualquier empleador puede consultar el
+                                        enlace público y validar las horas lectivas, instructor y fecha de expedición en
+                                        tiempo real.</p>
+                                </div>
+                            </div>
+                            <div
+                                class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-surface-container-highest/20">
+                                <div class="flex items-start justify-between gap-space-md">
+                                    <div class="flex items-start gap-space-sm">
+                                        <div
+                                            class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center text-secondary shrink-0 mt-0.5">
+                                            <span
+                                                class="material-symbols-outlined text-body-lg">account_balance_wallet</span>
+                                        </div>
+                                        <h3 class="font-headline-sm text-headline-sm text-on-surface pt-1">¿Por qué no
+                                            utilizan pasarelas de pago automatizadas?</h3>
+                                    </div><span
+                                        class="material-symbols-outlined text-on-surface-variant mt-1 text-headline-sm shrink-0">expand_more</span>
+                                </div>
+                                <div class="mt-space-sm pl-12">
+                                    <p class="font-body-md text-body-md text-on-surface-variant">Nuestros instructores y
+                                        centros asociados gestionan directamente sus pagos mediante transferencias
+                                        locales o convenios corporativos. Esto reduce comisiones bancarias del 7% al 0%
+                                        y permite validar cupos técnicos de forma rigurosa.</p>
+                                </div>
+                            </div>
+                            <div
+                                class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-surface-container-highest/20">
+                                <div class="flex items-start justify-between gap-space-md">
+                                    <div class="flex items-start gap-space-sm">
+                                        <div
+                                            class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center text-secondary shrink-0 mt-0.5">
+                                            <span class="material-symbols-outlined text-body-lg">event_available</span>
+                                        </div>
+                                        <h3 class="font-headline-sm text-headline-sm text-on-surface pt-1">¿Los
+                                            certificados tienen fecha de caducidad?</h3>
+                                    </div><span
+                                        class="material-symbols-outlined text-on-surface-variant mt-1 text-headline-sm shrink-0">expand_more</span>
+                                </div>
+                                <div class="mt-space-sm pl-12">
+                                    <p class="font-body-md text-body-md text-on-surface-variant">La credencial emitida
+                                        en Certifox permanece registrada permanentemente. No obstante, ciertos cursos de
+                                        seguridad industrial (como Minería o Maquinaria) exhiben un período de
+                                        recertificación recomendado según normativas laborales vigentes.</p>
+                                </div>
+                            </div>
+                            <div
+                                class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-surface-container-highest/20">
+                                <div class="flex items-start justify-between gap-space-md">
+                                    <div class="flex items-start gap-space-sm">
+                                        <div
+                                            class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center text-secondary shrink-0 mt-0.5">
+                                            <span class="material-symbols-outlined text-body-lg">school</span>
+                                        </div>
+                                        <h3 class="font-headline-sm text-headline-sm text-on-surface pt-1">¿Cómo puedo
+                                            publicar mis propios cursos como instructor?</h3>
+                                    </div><span
+                                        class="material-symbols-outlined text-on-surface-variant mt-1 text-headline-sm shrink-0">expand_more</span>
+                                </div>
+                                <div class="mt-space-sm pl-12">
+                                    <p class="font-body-md text-body-md text-on-surface-variant">Debes postular en la
+                                        sección de instructores presentando tus acreditaciones técnicas o
+                                        institucionales. Tras la revisión del comité técnico, tendrás acceso a tu panel
+                                        de control para enrolar alumnos y emitir credenciales.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- BANNER CTA FINAL -->
+            <section class="py-space-2xl bg-surface-container-high">
+                <div
+                    class="max-w-max-width-content mx-auto px-grid-margin-mobile lg:px-grid-margin-desktop text-center">
+                    <h2 class="font-headline-xl text-headline-xl text-on-surface mb-space-sm">
+                        Comienza hoy tu formación técnica respaldada.
+                    </h2>
+                    <p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl mx-auto mb-space-lg">
+                        Únete a los miles de especialistas que impulsan su carrera con credenciales auditables y
+                        seguras.
+                    </p>
+                    <div class="flex justify-center gap-space-md">
+                        <a class="px-space-xl py-space-sm bg-secondary-container text-surface-container-lowest font-label-md text-label-md rounded-lg hover:bg-secondary transition-colors shadow-sm"
+                            href="#cursos">
+                            Explorar cursos técnicos
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    <footer class="w-full bg-[#FFFDF9] border-t border-stone-200 mt-space-3xl pt-space-3xl pb-space-xl">
+        <div class="max-w-max-width-content mx-auto px-grid-margin-mobile lg:px-grid-margin-desktop">
+            <div
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-space-2xl pb-space-2xl border-b border-stone-200">
+                <div class="lg:col-span-4 flex flex-col items-start">
+                    <div class="mb-space-md"><img alt="Certifox" class="h-8 w-auto object-contain"
+                            src="https://lh3.googleusercontent.com/aida/AEtjO1XafEiwEi7fRIYQdPd4QoOJFA27Mos42p1B7iEeSdlJZ-CBzVn1s8JBqf8wdzHZT0b_K-rr-OYduF4szFxPqDEcrpfdN3N0FBG-zQnZMOASXweEUs5qeMit1r4ikmWchiZxtby3n3Y_BsIZwCGFvP1ihIVur_gVtxQQBkNI8dfhyxBCpvNYq-RVNLAzqZ-hZTkksIyNVqsvdGag0BYHSOqXx7JwxMhTwvF-Y_hxdiYnXTRW9c1QDPY9dws">
+                    </div>
+                    <p class="font-body-md text-body-md text-on-surface-variant mb-space-lg max-w-sm">Plataforma líder
+                        en capacitación y acreditación técnica profesional con validación criptográfica y registro
+                        público inmutable.</p>
+                    <div
+                        class="inline-flex items-center gap-2 px-space-sm py-1.5 rounded-full bg-surface-container-lowest border border-stone-200 shadow-sm">
+                        <span class="w-2 h-2 rounded-full bg-[#059669]"></span><span
+                            class="font-label-sm text-label-sm text-on-surface">Red de Acreditación En Línea</span><span
+                            class="font-mono text-caption-caps text-on-surface-variant font-semibold ml-1">99.9%
+                            Uptime</span>
+                    </div>
+                </div>
+                <div class="lg:col-span-2">
+                    <h4 class="font-headline-sm text-headline-sm text-on-surface mb-space-md">Programas</h4>
+                    <ul class="space-y-2 font-body-sm text-body-sm text-on-surface-variant">
+                        <li class=""><a class="hover:text-secondary transition-colors" href="#cursos">Maquinaria y
+                                Minería</a></li>
+                        <li class=""><a class="hover:text-secondary transition-colors" href="#cursos">Seguridad
+                                Ocupacional (ISO)</a></li>
+                        <li class=""><a class="hover:text-secondary transition-colors" href="#cursos">Electricidad y
+                                Automatización</a></li>
+                        <li class=""><a class="hover:text-secondary transition-colors" href="#cursos">Diplomados
+                                Técnicos</a></li>
+                        <li class=""><a
+                                class="hover:text-secondary transition-colors font-semibold text-secondary flex items-center gap-1 mt-space-xs"
+                                href="#cursos"><span class="">Catálogo completo</span><span
+                                    class="material-symbols-outlined text-xs">arrow_forward</span></a></li>
+                    </ul>
+                </div>
+                <div class="lg:col-span-2">
+                    <h4 class="font-headline-sm text-headline-sm text-on-surface mb-space-md">Validación</h4>
+                    <ul class="space-y-2 font-body-sm text-body-sm text-on-surface-variant">
+                        <li class=""><a class="hover:text-secondary transition-colors" href="#verificacion">Verificar
+                                con QR Oficial</a></li>
+                        <li class=""><a class="hover:text-secondary transition-colors" href="#verificacion">Buscador de
+                                Código Único</a></li>
+                        <li class=""><a class="hover:text-secondary transition-colors" href="#">Estándar
+                                Criptográfico</a></li>
+                        <li class=""><a class="hover:text-secondary transition-colors" href="#">Docentes Homologados</a>
+                        </li>
+                        <li class=""><a class="hover:text-secondary transition-colors" href="#">Certificados para
+                                Empresas</a></li>
+                    </ul>
+                </div>
+                <div class="lg:col-span-2">
+                    <h4 class="font-headline-sm text-headline-sm text-on-surface mb-space-md">Plataforma</h4>
+                    <ul class="space-y-2 font-body-sm text-body-sm text-on-surface-variant">
+                        <li class=""><a class="hover:text-secondary transition-colors" href="#">Para Instructores</a>
+                        </li>
+                        <li class=""><a class="hover:text-secondary transition-colors" href="#">Centros y Gremios</a>
+                        </li>
+                        <li class=""><a class="hover:text-secondary transition-colors" href="#">Matrícula Directa
+                                P2P</a></li>
+                        <li class=""><a class="hover:text-secondary transition-colors" href="#">Aula Virtual</a></li>
+                        <li class=""><a class="hover:text-secondary transition-colors" href="#">Preguntas Frecuentes</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="lg:col-span-2">
+                    <h4 class="font-headline-sm text-headline-sm text-on-surface mb-space-md">Soporte &amp; Legal</h4>
+                    <ul class="space-y-2 font-body-sm text-body-sm text-on-surface-variant">
+                        <li class=""><a class="hover:text-secondary transition-colors" href="#">Centro de Ayuda</a></li>
+                        <li class=""><a class="hover:text-secondary transition-colors" href="#">Auditoría Académica</a>
+                        </li>
+                        <li class=""><a class="hover:text-secondary transition-colors" href="#">Términos del
+                                Servicio</a></li>
+                        <li class=""><a class="hover:text-secondary transition-colors" href="#">Política de
+                                Privacidad</a></li>
+                        <li class=""><a class="hover:text-secondary transition-colors" href="#">Canal de Integridad
+                                Ética</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div
+                class="pt-space-xl flex flex-col md:flex-row items-center justify-between gap-space-md font-body-sm text-body-sm text-on-surface-variant">
+                <div class="flex flex-col sm:flex-row items-center gap-space-xs text-center sm:text-left"><span
+                        class="">© 2025 Certifox Academy &amp; Foxcode Technologies Inc.</span><span
+                        class="hidden sm:inline">•</span><span class="">Todos los derechos reservados.</span></div>
+                <div
+                    class="flex flex-wrap items-center justify-center gap-space-md font-caption-caps text-caption-caps tracking-wider uppercase">
+                    <span class="flex items-center gap-1"><span
+                            class="material-symbols-outlined text-xs text-secondary">shield</span> ISO/IEC
+                        17024</span><span class="">•</span><span class="flex items-center gap-1"><span
+                            class="material-symbols-outlined text-xs text-secondary">lock</span> SHA-256</span><span
+                        class="">•</span><span class="flex items-center gap-1"><span
+                            class="material-symbols-outlined text-xs text-secondary">qr_code_scanner</span> QR
+                        Instantáneo</span>
+                </div>
+                <div class="flex items-center gap-space-xs"><span
+                        class="material-symbols-outlined text-body-md">language</span><span
+                        class="font-label-sm text-label-sm text-on-surface">Español (Latinoamérica)</span></div>
+            </div>
+        </div>
+    </footer>
+
+
+</body>
+
+</html>

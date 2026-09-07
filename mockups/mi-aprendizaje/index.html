@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet">
+    <style>
+        @layer base {
+
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                overscroll-behavior: none;
+            }
+
+            main>:first-child {
+                margin-top: 0 !important;
+            }
+
+            main>:last-child {
+                margin-bottom: 0 !important;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+        id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-tint": "#585e6f", "inverse-on-surface": "#ebf1ff", "inverse-surface": "#233144", "on-error": "#ffffff", "error": "#ba1a1a", "on-tertiary-container": "#497cff", "tertiary-fixed": "#dbe1ff", "surface-container": "#e6eeff", "primary-fixed": "#dce2f6", "outline": "#76777d", "primary-fixed-dim": "#c0c6da", "tertiary-container": "#00174b", "surface-container-low": "#eff4ff", "surface-container-highest": "#d5e3fd", "on-background": "#0d1c2f", "outline-variant": "#c6c6cc", "primary-container": "#151b2a", "surface-container-lowest": "#ffffff", "surface-bright": "#f8f9ff", "secondary-container": "#fd761a", "surface-variant": "#d5e3fd", "on-primary-container": "#7d8496", "on-primary-fixed-variant": "#404757", "on-surface-variant": "#45474c", "secondary": "#9d4300", "on-secondary-fixed": "#341100", "tertiary-fixed-dim": "#b4c5ff", "on-tertiary": "#ffffff", "secondary-fixed-dim": "#ffb690", "on-tertiary-fixed-variant": "#003ea8", "inverse-primary": "#c0c6da", "on-secondary-container": "#5c2400", "surface-container-high": "#dde9ff", "background": "#f8f9ff", "on-error-container": "#93000a", "primary": "#000000", "on-surface": "#0d1c2f", "surface": "#f8f9ff", "tertiary": "#000000", "on-primary": "#ffffff", "surface-dim": "#ccdbf4", "error-container": "#ffdad6", "secondary-fixed": "#ffdbca", "on-primary-fixed": "#151b2a", "on-secondary-fixed-variant": "#783200", "on-secondary": "#ffffff", "on-tertiary-fixed": "#00174b" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-xs": "0.5rem", "max-width-content": "1280px", "table-gutter": "0.75rem", "grid-margin-desktop": "2rem", "space-2xl": "3rem", "grid-margin-mobile": "1rem", "space-lg": "1.5rem", "space-sm": "0.75rem", "space-xl": "2rem", "space-2xs": "0.25rem", "max-width-editorial": "840px", "space-md": "1rem", "space-3xl": "4rem" }, "fontFamily": { "body-lg": ["Manrope"], "display-hero": ["Manrope"], "caption-caps": ["Manrope"], "display-hero-mobile": ["Manrope"], "label-md": ["Manrope"], "headline-xl": ["Manrope"], "headline-lg": ["Manrope"], "body-md": ["Manrope"], "body-sm": ["Manrope"], "headline-md": ["Manrope"], "headline-sm": ["Manrope"], "headline-xl-mobile": ["Manrope"], "label-sm": ["Manrope"] }, "fontSize": { "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }], "display-hero": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.03em", "fontWeight": "800" }], "caption-caps": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700" }], "display-hero-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "600" }], "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "700" }], "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }], "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "600" }], "headline-xl-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600" }] } } } };</script>
+</head>
+
+<body class="bg-surface font-body-md text-body-md text-on-surface antialiased">
+    <header
+        class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+        <div
+            class="h-16 max-w-max-width-content mx-auto px-grid-margin-mobile lg:px-grid-margin-desktop flex items-center justify-between gap-space-md">
+            <div class="flex items-center gap-space-lg"><a class="flex items-center gap-space-xs"
+                    data-path="explorar-cursos" href="#"><span
+                        class="font-headline-md text-headline-md text-on-surface tracking-tight">Certifox</span></a>
+                <nav class="hidden md:flex items-center gap-space-xs"
+                    data-active-classes="bg-secondary-container text-on-secondary rounded-lg font-label-md text-label-md">
+                    <a class="px-space-sm py-space-xs rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
+                        data-path="explorar-cursos" href="#">Explorar cursos</a><a
+                        class="px-space-sm py-space-xs rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
+                        data-path="verificar-certificado" href="#">Verificar certificado</a><a aria-current="page"
+                        class="px-space-sm py-space-xs transition-colors bg-secondary-container text-on-secondary rounded-lg font-label-md text-label-md"
+                        data-path="mi-aprendizaje" href="#">Mi aprendizaje</a></nav>
+            </div>
+            <div class="flex items-center gap-space-sm"><a
+                    class="hidden sm:inline-flex items-center px-space-sm py-space-xs font-label-sm text-label-sm rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors"
+                    data-path="instructor-dashboard" href="#">Modo Instructor</a>
+                <div class="flex items-center gap-space-xs pl-space-xs"><img alt="Profile"
+                        class="w-8 h-8 rounded-full object-cover"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvT0f5tOAo6x9184v_9Kxm36XxP-G9sanLxUf9WrCGrlpZf2FPd_I2f30VrHSJGwxB_pvvsffmRgM_RaBPJdZC7aA03JJuHBtUXXYyfxdIejHN0k0CYbbwK_SJbalvssCxnVgl8b5BjOOXh7Ixp-gweb_HFjad2Ru65XFF8eEmofG2mLneeAjjW7cjtV_oERlcYoEYYA7eIAQVvXKxgEEWxRzaBEIXfokcXL-1o6s5zDn--zouiSyP"><span
+                        class="hidden lg:inline font-label-sm text-label-sm text-on-surface">Estudiante</span></div>
+            </div>
+        </div>
+    </header>
+    <main class="w-full pt-16 bg-surface min-h-screen">
+        <div class="flex flex-col w-full">
+            <div
+                class="max-w-max-width-content mx-auto w-full px-grid-margin-mobile lg:px-grid-margin-desktop py-space-xl">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+                    <!-- Panel de Navegación Lateral del Estudiante -->
+                    <aside class="lg:col-span-3 flex flex-col gap-space-md">
+                        <!-- Tarjeta Perfil Rápido -->
+                        <div
+                            class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col items-center text-center relative overflow-hidden">
+                            <div class="w-20 h-20 rounded-full overflow-hidden shadow-sm mb-space-sm">
+                                <img class="w-full h-full object-cover"
+                                    data-alt="Portrait photography of Alejandro, a professional adult student with a confident and focused gaze, neutral studio background with soft warm architectural backlighting, high detail editorial profile."
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCr8Cs2V0mR2YyfQX3GFFe_I__XuoKazEOOB0dDj_GHmnarRiLXTM2dMSbcUlIRx18SHRYY8vmb8Rlh28NuFzlbwLBsJv-nSiNGSpJqHF-hKP8U2PEjbgP_PcXLY1iT8vHgrLttggjWYyol9yCopSi2Kjc5AYQDruFBp4bdxiJmyaoGr0e10Lr_IutdhhonCm-XO5ilVrwx0-2mCyvj6MCB4ouZYFripoUuKvi3VORbrhvrShG_vw2D">
+                            </div>
+                            <h2 class="font-headline-sm text-headline-sm text-on-surface">Alejandro Morales</h2>
+                            <p
+                                class="font-caption-caps text-caption-caps text-on-surface-variant uppercase tracking-wider mt-space-2xs">
+                                ID Matrícula: CFX-88219</p>
+                            <div
+                                class="mt-space-sm px-space-sm py-space-2xs rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm inline-flex items-center gap-space-2xs">
+                                <span class="material-symbols-outlined text-base text-secondary-container"
+                                    style="font-variation-settings: 'FILL' 1;">verified</span>
+                                Estudiante Acreditado
+                            </div>
+                        </div>
+                        <!-- Menú de Navegación -->
+                        <nav
+                            class="bg-surface-container-lowest p-space-xs rounded-xl shadow-sm flex flex-col gap-space-2xs">
+                            <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg bg-surface-container text-on-surface font-label-md text-label-md transition-colors"
+                                href="#">
+                                <span class="material-symbols-outlined text-xl text-secondary-container"
+                                    style="font-variation-settings: 'FILL' 1;">menu_book</span>
+                                <span class="flex-1">Mi aprendizaje</span>
+                                <span class="w-2 h-2 rounded-full bg-secondary-container"></span>
+                            </a>
+                            <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low font-label-md text-label-md transition-colors"
+                                href="#">
+                                <span class="material-symbols-outlined text-xl">workspace_premium</span>
+                                <span class="flex-1">Mis certificados</span>
+                                <span
+                                    class="px-space-xs py-0.5 rounded-full bg-surface-container-high font-label-sm text-label-sm text-on-surface">1</span>
+                            </a>
+                            <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low font-label-md text-label-md transition-colors"
+                                href="#">
+                                <span class="material-symbols-outlined text-xl">badge</span>
+                                <span class="flex-1">Mi perfil</span>
+                            </a>
+                            <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low font-label-md text-label-md transition-colors"
+                                href="#soporte">
+                                <span class="material-symbols-outlined text-xl">help_center</span>
+                                <span class="flex-1">Mesa de ayuda</span>
+                            </a>
+                        </nav>
+                        <!-- Widget de Asistencia Directa / Duda Rápida -->
+                        <div
+                            class="bg-primary-container p-space-md rounded-xl text-on-primary shadow-sm flex flex-col gap-space-sm">
+                            <div class="flex items-center gap-space-xs">
+                                <span
+                                    class="material-symbols-outlined text-secondary-container text-xl">contact_support</span>
+                                <span class="font-headline-sm text-headline-sm text-surface-container-lowest">Tutoría
+                                    Técnica</span>
+                            </div>
+                            <p class="font-body-sm text-body-sm text-on-primary-container">
+                                ¿Tienes dudas con los laboratorios o requisitos de certificación?
+                            </p>
+                            <a class="w-full inline-flex justify-center items-center gap-space-xs bg-surface-container-lowest text-on-surface hover:bg-surface-container px-space-sm py-space-xs rounded-lg font-label-sm text-label-sm transition-colors shadow-sm"
+                                href="mailto:soporte@certifox.edu?subject=Consulta%20T%C3%A9cnica%20Estudiante%20CFX-88219">
+                                <span class="material-symbols-outlined text-base">chat</span>
+                                Contactar instructor
+                            </a>
+                        </div>
+                    </aside>
+                    <!-- Lienzo Principal del Estudiante -->
+                    <main class="lg:col-span-9 flex flex-col gap-space-xl">
+                        <!-- Saludo Personalizado y Métricas Globales -->
+                        <header class="flex flex-col md:flex-row md:items-end justify-between gap-space-md pb-space-xs">
+                            <div>
+                                <span
+                                    class="font-caption-caps text-caption-caps text-secondary uppercase tracking-widest block mb-space-2xs">Campus
+                                    Académico Certifox</span>
+                                <h1 class="font-headline-xl text-headline-xl text-on-surface">Hola Alejandro, continúa
+                                    tu formación técnica.</h1>
+                                <p class="font-body-md text-body-md text-on-surface-variant mt-space-2xs">Mantienes un
+                                    ritmo constante: 1 certificación oficial lista y 2 programas en curso.</p>
+                            </div>
+                            <div class="flex items-center gap-space-sm shrink-0">
+                                <div
+                                    class="flex items-center gap-space-xs px-space-md py-space-xs bg-surface-container-lowest rounded-lg shadow-sm">
+                                    <span class="material-symbols-outlined text-secondary-container text-xl"
+                                        style="font-variation-settings: 'FILL' 1;">bolt</span>
+                                    <div>
+                                        <span
+                                            class="font-caption-caps text-caption-caps text-on-surface-variant uppercase block">Racha</span>
+                                        <span class="font-label-md text-label-md text-on-surface">5 días activos</span>
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center gap-space-xs px-space-md py-space-xs bg-surface-container-lowest rounded-lg shadow-sm">
+                                    <span
+                                        class="material-symbols-outlined text-on-surface-variant text-xl">schedule</span>
+                                    <div>
+                                        <span
+                                            class="font-caption-caps text-caption-caps text-on-surface-variant uppercase block">Dedicación</span>
+                                        <span class="font-label-md text-label-md text-on-surface">18.5 hrs</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </header>
+                        <!-- Tarjeta Hero / Destacada: 'Continuar aprendiendo' -->
+                        <section class="bg-surface-container-lowest rounded-xl shadow-md overflow-hidden relative">
+                            <div class="grid grid-cols-1 md:grid-cols-12">
+                                <!-- Imagen Contextual con Scrim -->
+                                <div class="md:col-span-5 relative min-h-[220px] md:min-h-full">
+                                    <img class="absolute inset-0 w-full h-full object-cover"
+                                        data-alt="Industrial construction heavy machinery excavator and hydraulic crane working under clear sky, documentary style industrial technology, authentic photography with safety equipment."
+                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDicOlo2Lh1fK9i7c79p5be1XjXDOZpY8IvIvhUTTrMuAlOmIpPAT4i2jH8rC8Nh6QkcXCvxW9wNuRbL1a1eJZjnFxPHxD-JYViZ6Qz5aC2sL-3v_Wp7nTBxaWnbEfOKIuxGYR11bswWVr4NJDqdioHDptAfliuDi1rJEF7tWpyP2rTF9bgrdWeOCdqCwaBXTvEGEBK_qbjSiQ_WIl1vt6n5HsRTJSMJ5jUZ9ST9q0z_FHQP9YwmhqB">
+                                    <div
+                                        class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-primary-container/80 via-primary-container/30 to-transparent">
+                                    </div>
+                                    <div class="absolute top-space-md left-space-md">
+                                        <span
+                                            class="px-space-sm py-1 rounded-full bg-surface-container-lowest text-on-surface font-label-sm text-label-sm shadow-sm flex items-center gap-space-2xs">
+                                            <span
+                                                class="w-2 h-2 rounded-full bg-secondary-container animate-pulse"></span>
+                                            Prioridad en curso
+                                        </span>
+                                    </div>
+                                </div>
+                                <!-- Contenido de Continuación de Estudio -->
+                                <div class="md:col-span-7 p-space-xl flex flex-col justify-between gap-space-lg">
+                                    <div class="flex flex-col gap-space-xs">
+                                        <div class="flex items-center gap-space-xs">
+                                            <span
+                                                class="material-symbols-outlined text-base text-secondary">verified_user</span>
+                                            <span
+                                                class="font-caption-caps text-caption-caps text-secondary uppercase tracking-wider">Acreditación
+                                                Técnica Pesada</span>
+                                        </div>
+                                        <h3 class="font-headline-lg text-headline-lg text-on-surface">Seguridad
+                                            Operativa en Maquinaria Pesada</h3>
+                                        <p class="font-body-sm text-body-sm text-on-surface-variant">Instructor a cargo:
+                                            Ing. Roberto Mendoza • Escuela de Maquinaria y Minas</p>
+                                    </div>
+                                    <!-- Indicador y Barra de Progreso Dinámica -->
+                                    <div
+                                        class="bg-surface-container-low p-space-md rounded-lg flex flex-col gap-space-xs">
+                                        <div class="flex justify-between items-center font-label-sm text-label-sm">
+                                            <span class="text-on-surface-variant font-medium">Progreso curricular</span>
+                                            <span class="text-on-surface font-bold">65% completado • 8 de 12
+                                                lecciones</span>
+                                        </div>
+                                        <div
+                                            class="w-full h-2.5 bg-surface-container-highest rounded-full overflow-hidden">
+                                            <div class="h-full bg-secondary-container rounded-full transition-all duration-500 ease-out"
+                                                style="width: 65%;"></div>
+                                        </div>
+                                        <div class="flex items-start gap-space-xs mt-space-2xs text-on-surface">
+                                            <span
+                                                class="material-symbols-outlined text-secondary-container text-lg shrink-0">play_circle</span>
+                                            <div class="font-body-sm text-body-sm leading-tight">
+                                                <span class="font-label-sm text-label-sm text-on-surface">Próxima
+                                                    actividad pendiente:</span>
+                                                <p class="text-on-surface-variant">Módulo 3: Práctica de inspección
+                                                    pre-arranque</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Botones de Acción -->
+                                    <div class="flex flex-wrap items-center justify-between gap-space-md pt-space-2xs">
+                                        <a class="inline-flex items-center justify-center gap-space-xs px-space-lg py-space-sm rounded-lg bg-secondary-container text-on-secondary font-label-md text-label-md hover:bg-secondary transition-colors shadow-sm"
+                                            href="#">
+                                            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                                            Continuar al aula
+                                        </a>
+                                        <a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface flex items-center gap-space-2xs"
+                                            href="#">
+                                            <span
+                                                class="material-symbols-outlined text-base">download_for_offline</span>
+                                            Descargar temario PDF
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!-- Sección: Mis Cursos Activos (Grid) -->
+                        <section class="flex flex-col gap-space-md">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-space-xs">
+                                    <span class="material-symbols-outlined text-on-surface text-xl">folder_open</span>
+                                    <h2 class="font-headline-md text-headline-md text-on-surface">Mis Cursos Activos
+                                    </h2>
+                                </div>
+                                <span class="font-caption-caps text-caption-caps text-on-surface-variant uppercase">2
+                                    Programas en proceso</span>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg">
+                                <!-- Tarjeta de Curso 1: En curso -->
+                                <article
+                                    class="bg-surface-container-lowest rounded-xl shadow-sm flex flex-col justify-between overflow-hidden hover:shadow-md transition-shadow">
+                                    <div class="p-space-lg flex flex-col gap-space-md">
+                                        <div class="flex items-start justify-between gap-space-xs">
+                                            <span
+                                                class="px-space-xs py-0.5 rounded-full bg-surface-container-high text-on-tertiary-fixed-variant font-label-sm text-label-sm inline-flex items-center gap-1">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span>
+                                                En curso • 65%
+                                            </span>
+                                            <span
+                                                class="material-symbols-outlined text-on-surface-variant">more_horiz</span>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-headline-sm text-headline-sm text-on-surface">Seguridad
+                                                Operativa en Maquinaria Pesada</h3>
+                                            <p
+                                                class="font-body-sm text-body-sm text-on-surface-variant mt-space-2xs line-clamp-2">
+                                                Protocolos de prevención de riesgos y operación certificada bajo
+                                                estándares internacionales ISO 45001.</p>
+                                        </div>
+                                        <div class="flex flex-col gap-space-2xs pt-space-xs">
+                                            <div
+                                                class="flex justify-between font-label-sm text-label-sm text-on-surface-variant">
+                                                <span>Avance académico</span>
+                                                <span class="font-bold text-on-surface">8 / 12 lecciones</span>
+                                            </div>
+                                            <div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+                                                <div class="h-full bg-secondary-container rounded-full"
+                                                    style="width: 65%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="bg-surface-container-low px-space-lg py-space-sm flex items-center justify-between">
+                                        <div
+                                            class="flex items-center gap-space-2xs font-caption-caps text-caption-caps text-on-surface-variant uppercase">
+                                            <span class="material-symbols-outlined text-sm">alarm</span>
+                                            <span>Último acceso: Ayer</span>
+                                        </div>
+                                        <a class="inline-flex items-center gap-space-2xs font-label-md text-label-md text-secondary-container hover:text-secondary"
+                                            href="#">
+                                            Ir al curso
+                                            <span class="material-symbols-outlined text-base">chevron_right</span>
+                                        </a>
+                                    </div>
+                                </article>
+                                <!-- Tarjeta de Curso 2: Pendiente de confirmación -->
+                                <article
+                                    class="bg-surface-container-lowest rounded-xl shadow-sm flex flex-col justify-between overflow-hidden relative">
+                                    <div class="p-space-lg flex flex-col gap-space-md">
+                                        <div class="flex items-start justify-between gap-space-xs">
+                                            <!-- Badge Pendiente con tonalidad ámbar según el sistema -->
+                                            <span
+                                                class="px-space-xs py-0.5 rounded-full bg-surface-container-highest text-secondary font-label-sm text-label-sm inline-flex items-center gap-1.5">
+                                                <span
+                                                    class="material-symbols-outlined text-sm text-secondary">pending</span>
+                                                Pendiente de confirmación
+                                            </span>
+                                            <span
+                                                class="font-caption-caps text-caption-caps text-on-surface-variant uppercase">ID:
+                                                IND-5402</span>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-headline-sm text-headline-sm text-on-surface">Mantenimiento
+                                                Predictivo Industrial</h3>
+                                            <p
+                                                class="font-body-sm text-body-sm text-on-surface-variant mt-space-2xs line-clamp-2">
+                                                Análisis de vibraciones, termografía y lubricación para confiabilidad
+                                                operativa de activos rotativos.</p>
+                                        </div>
+                                        <!-- Mensaje de Alerta Contextual Informativo -->
+                                        <div
+                                            class="bg-surface-container p-space-sm rounded-lg flex items-start gap-space-xs">
+                                            <span
+                                                class="material-symbols-outlined text-secondary text-lg shrink-0 mt-0.5">info</span>
+                                            <div class="font-body-sm text-body-sm text-on-surface">
+                                                <span
+                                                    class="font-label-sm text-label-sm block text-on-surface font-semibold">Validación
+                                                    de inscripción</span>
+                                                <p class="text-on-surface-variant text-body-sm mt-0.5">El docente
+                                                    habilitará tus lecciones tras validar tu comprobante de pago.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="bg-surface-container-low px-space-lg py-space-sm flex items-center justify-between">
+                                        <span class="font-label-sm text-label-sm text-on-surface-variant">Enviado hace 3
+                                            horas</span>
+                                        <button
+                                            class="inline-flex items-center gap-space-2xs font-label-md text-label-md text-on-surface hover:text-secondary-container transition-colors"
+                                            onclick="alert('Tu comprobante está en la bandeja del instructor Roberto Mendoza. Plazo máximo de activación: 12 horas laborales.')"
+                                            type="button">
+                                            <span class="material-symbols-outlined text-base">receipt_long</span>
+                                            Ver comprobante
+                                        </button>
+                                    </div>
+                                </article>
+                            </div>
+                        </section>
+                        <!-- Sección: Cursos Finalizados -->
+                        <section class="flex flex-col gap-space-md">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-space-xs">
+                                    <span class="material-symbols-outlined text-on-surface text-xl">verified</span>
+                                    <h2 class="font-headline-md text-headline-md text-on-surface">Cursos Finalizados
+                                    </h2>
+                                </div>
+                                <a class="font-label-sm text-label-sm text-secondary-container hover:underline"
+                                    href="#">Ver registro histórico</a>
+                            </div>
+                            <!-- Tarjeta de Curso Completado -->
+                            <article
+                                class="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-space-lg">
+                                <div class="flex items-start gap-space-md">
+                                    <div
+                                        class="w-14 h-14 rounded-lg bg-surface-container-high flex items-center justify-center shrink-0">
+                                        <span class="material-symbols-outlined text-3xl text-on-surface"
+                                            style="font-variation-settings: 'FILL' 1;">military_tech</span>
+                                    </div>
+                                    <div class="flex flex-col gap-space-2xs">
+                                        <div class="flex items-center gap-space-xs">
+                                            <span
+                                                class="px-space-xs py-0.5 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm inline-flex items-center gap-1">
+                                                <span
+                                                    class="material-symbols-outlined text-xs text-on-surface">check_circle</span>
+                                                Aprobado • Calificación 98/100
+                                            </span>
+                                            <span
+                                                class="font-caption-caps text-caption-caps text-on-surface-variant">Finalizado
+                                                el 14 Feb 2025</span>
+                                        </div>
+                                        <h3 class="font-headline-sm text-headline-sm text-on-surface">Metrología y
+                                            Calibración Dimensional</h3>
+                                        <p class="font-body-sm text-body-sm text-on-surface-variant">Acreditado por
+                                            Certifox Academy en conformidad con la norma técnica de verificación ISO/IEC
+                                            17025.</p>
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex flex-col sm:flex-row items-stretch sm:items-center gap-space-sm w-full md:w-auto shrink-0">
+                                    <a class="inline-flex items-center justify-center gap-space-xs px-space-md py-space-sm rounded-lg bg-primary text-on-primary font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-colors shadow-sm"
+                                        data-path="verificar-certificado" href="#">
+                                        <span class="material-symbols-outlined text-lg">workspace_premium</span>
+                                        Ver certificado obtenido
+                                    </a>
+                                    <button
+                                        class="inline-flex items-center justify-center px-space-sm py-space-sm rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high font-label-sm text-label-sm transition-colors"
+                                        title="Compartir en LinkedIn" type="button">
+                                        <span class="material-symbols-outlined text-lg">share</span>
+                                    </button>
+                                </div>
+                            </article>
+                        </section>
+                        <!-- Sección de Soporte y Preguntas Frecuentes -->
+                        <section
+                            class="bg-surface-container-lowest rounded-xl shadow-sm p-space-xl flex flex-col md:flex-row items-center justify-between gap-space-xl"
+                            id="soporte">
+                            <div class="flex items-start gap-space-md">
+                                <div
+                                    class="w-12 h-12 rounded-full bg-surface-container-low flex items-center justify-center shrink-0">
+                                    <span
+                                        class="material-symbols-outlined text-secondary-container text-2xl">support_agent</span>
+                                </div>
+                                <div>
+                                    <h3 class="font-headline-sm text-headline-sm text-on-surface">¿Necesitas soporte
+                                        técnico o validar tus credenciales?</h3>
+                                    <p class="font-body-sm text-body-sm text-on-surface-variant mt-space-2xs max-w-xl">
+                                        Nuestro centro de soporte académico responde consultas de inscripciones,
+                                        problemas de acceso a video-clases y verificación con firma criptográfica en
+                                        menos de 2 horas.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-space-sm w-full md:w-auto shrink-0">
+                                <a class="w-full md:w-auto inline-flex items-center justify-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high font-label-md text-label-md transition-colors"
+                                    href="mailto:soporte@certifox.edu">
+                                    <span class="material-symbols-outlined text-lg">mail</span>
+                                    Abrir ticket de soporte
+                                </a>
+                            </div>
+                        </section>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="w-full bg-surface-container-low mt-space-3xl py-space-2xl">
+        <div
+            class="max-w-max-width-content mx-auto px-grid-margin-mobile lg:px-grid-margin-desktop flex flex-col md:flex-row justify-between items-center gap-space-md font-body-sm text-body-sm text-on-surface-variant">
+            <div class="flex items-center gap-space-xs"><img alt="Certifox Logo" class="h-6 w-auto object-contain"
+                    src="https://lh3.googleusercontent.com/aida/AEtjO1XafEiwEi7fRIYQdPd4QoOJFA27Mos42p1B7iEeSdlJZ-CBzVn1s8JBqf8wdzHZT0b_K-rr-OYduF4szFxPqDEcrpfdN3N0FBG-zQnZMOASXweEUs5qeMit1r4ikmWchiZxtby3n3Y_BsIZwCGFvP1ihIVur_gVtxQQBkNI8dfhyxBCpvNYq-RVNLAzqZ-hZTkksIyNVqsvdGag0BYHSOqXx7JwxMhTwvF-Y_hxdiYnXTRW9c1QDPY9dws"><span
+                    class="font-label-md text-label-md text-on-surface">Certifox Platform</span></div>
+            <p>© 2025 Certifox. Acreditación profesional y validación académica verificable.</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>

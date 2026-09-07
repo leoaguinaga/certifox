@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <style>
+        @layer base {
+
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                overscroll-behavior: none;
+            }
+
+            main>:first-child {
+                margin-top: 0 !important;
+            }
+
+            main>:last-child {
+                margin-bottom: 0 !important;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+        id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "error": "#ba1a1a", "outline-variant": "#c6c6cc", "on-surface-variant": "#45474c", "on-tertiary": "#ffffff", "surface-container-high": "#dde9ff", "on-error-container": "#93000a", "inverse-on-surface": "#ebf1ff", "background": "#f8f9ff", "tertiary-fixed": "#dbe1ff", "secondary": "#9d4300", "on-primary": "#ffffff", "on-tertiary-fixed": "#00174b", "primary-container": "#151b2a", "secondary-fixed-dim": "#ffb690", "on-tertiary-container": "#497cff", "on-secondary-fixed": "#341100", "inverse-surface": "#233144", "surface-bright": "#f8f9ff", "tertiary-fixed-dim": "#b4c5ff", "tertiary-container": "#00174b", "surface-container": "#e6eeff", "on-primary-fixed-variant": "#404757", "on-error": "#ffffff", "primary": "#000000", "tertiary": "#000000", "on-primary-container": "#7d8496", "surface-variant": "#d5e3fd", "secondary-fixed": "#ffdbca", "error-container": "#ffdad6", "primary-fixed-dim": "#c0c6da", "outline": "#76777d", "primary-fixed": "#dce2f6", "on-surface": "#0d1c2f", "on-tertiary-fixed-variant": "#003ea8", "surface-container-lowest": "#ffffff", "surface-container-low": "#eff4ff", "inverse-primary": "#c0c6da", "on-primary-fixed": "#151b2a", "surface-dim": "#ccdbf4", "on-secondary-fixed-variant": "#783200", "surface": "#f8f9ff", "on-secondary": "#ffffff", "on-secondary-container": "#5c2400", "surface-container-highest": "#d5e3fd", "secondary-container": "#fd761a", "on-background": "#0d1c2f", "surface-tint": "#585e6f" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "max-width-content": "1280px", "space-2xl": "3rem", "space-md": "1rem", "grid-margin-mobile": "1rem", "space-xl": "2rem", "max-width-editorial": "840px", "grid-margin-desktop": "2rem", "space-sm": "0.75rem", "space-lg": "1.5rem", "space-3xl": "4rem", "table-gutter": "0.75rem", "space-xs": "0.5rem", "space-2xs": "0.25rem" }, "fontFamily": { "headline-lg": ["Manrope"], "body-sm": ["Manrope"], "headline-xl-mobile": ["Manrope"], "body-md": ["Manrope"], "body-lg": ["Manrope"], "headline-sm": ["Manrope"], "caption-caps": ["Manrope"], "label-sm": ["Manrope"], "label-md": ["Manrope"], "headline-md": ["Manrope"], "display-hero-mobile": ["Manrope"], "headline-xl": ["Manrope"], "display-hero": ["Manrope"] }, "fontSize": { "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-xl-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }], "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }], "headline-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "600" }], "caption-caps": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700" }], "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "600" }], "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.00em", "fontWeight": "600" }], "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "display-hero-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "700" }], "display-hero": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.03em", "fontWeight": "800" }] } } } }</script>
+</head>
+
+<body class="bg-surface font-body-md text-body-md text-on-surface antialiased min-h-screen">
+    <header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+        <div
+            class="h-16 max-w-max-width-content mx-auto px-grid-margin-mobile md:px-grid-margin-desktop flex items-center justify-between gap-space-md">
+            <div class="flex items-center gap-space-lg"><a class="flex items-center gap-space-xs"
+                    data-path="verificar-certificado" href="#"><img alt="Brand logo. - Primary color: #0b1220
+- Font: manrope
+- Mode: light
+- Roundness: rounded-sm
+" class="h-8 w-auto object-contain"
+                        src="https://lh3.googleusercontent.com/aida/AEtjO1XafEiwEi7fRIYQdPd4QoOJFA27Mos42p1B7iEeSdlJZ-CBzVn1s8JBqf8wdzHZT0b_K-rr-OYduF4szFxPqDEcrpfdN3N0FBG-zQnZMOASXweEUs5qeMit1r4ikmWchiZxtby3n3Y_BsIZwCGFvP1ihIVur_gVtxQQBkNI8dfhyxBCpvNYq-RVNLAzqZ-hZTkksIyNVqsvdGag0BYHSOqXx7JwxMhTwvF-Y_hxdiYnXTRW9c1QDPY9dws" /><span
+                        class="font-headline-sm text-headline-sm text-on-surface tracking-tight">Certifox</span></a>
+                <nav class="hidden lg:flex items-center gap-space-xs"
+                    data-active-classes="bg-primary-container text-on-primary font-label-md text-label-md rounded-lg"><a
+                        class="px-space-sm py-space-xs font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors rounded-lg"
+                        data-path="explorar-cursos" href="#">Explorar cursos</a><a aria-current="page"
+                        class="px-space-sm py-space-xs transition-colors bg-primary-container text-on-primary font-label-md text-label-md rounded-lg"
+                        data-path="verificar-certificado" href="#">Verificar certificado</a><a
+                        class="px-space-sm py-space-xs font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors rounded-lg"
+                        data-path="mi-aprendizaje" href="#">Mi aprendizaje</a></nav>
+            </div>
+            <div class="flex items-center gap-space-sm"><a
+                    class="hidden sm:inline-flex items-center px-space-sm py-space-xs font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors rounded-lg"
+                    data-path="modo-instructor" href="#">Modo Instructor</a><a
+                    class="inline-flex items-center px-space-md py-space-xs font-label-md text-label-md bg-secondary-container text-on-secondary rounded-lg hover:bg-secondary transition-colors"
+                    data-path="acceso-estudiante" href="#">Acceso Estudiante</a>
+                <div class="pl-space-2xs flex items-center"><img alt="Profile" class="w-8 h-8 rounded-full object-cover"
+                        src="https://lh3.googleusercontent.com/aida/AEtjO1UcsVlSjtfMChF53ZjY37UWU4UWV9CbuOqwVdB1xtHh4iX7QJDEO2JY3N3oR803kNIXE-PCzpaC4yj1tIziPVjphxRlHMfzpyUCME7gFRxIVtp3ZGGowIcziwTZfZWWuR6Y3LxbhmgtofvYEPC1-lTOAyn53-D3IECneVotkyIDRJ8Ub-NZebhsrFx4iG7IqAW7uR-BmluYkN0wlQ7WEbY9PN77NdblwNCmEc5K2t8x7B6P_hih7ahf-Q" />
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="w-full pt-16 bg-surface">
+        <div class="flex flex-col w-full">
+            <!-- Status & Quick Re-Verification Bar -->
+            <section class="w-full bg-surface-container-low border-b border-surface-container py-space-md">
+                <div
+                    class="max-w-max-width-content mx-auto px-grid-margin-mobile md:px-grid-margin-desktop flex flex-col lg:flex-row items-start lg:items-center justify-between gap-space-md">
+                    <div class="flex items-center gap-space-sm">
+                        <span
+                            class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-surface-container text-on-surface">
+                            <span class="material-symbols-outlined text-[18px]">verified</span>
+                        </span>
+                        <div>
+                            <h1 class="font-headline-sm text-headline-sm text-on-surface leading-tight">Validador
+                                Oficial de Credenciales Académicas y Técnicas</h1>
+                            <p
+                                class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-space-2xs">
+                                <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                Respuesta en tiempo real: 140ms • Nodo Criptográfico Activo (Red Lima-1)
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Quick query widget -->
+                    <form class="w-full lg:w-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-space-xs"
+                        id="verify-form" onsubmit="event.preventDefault(); switchCredentialState();">
+                        <div class="relative flex-1 sm:w-72">
+                            <span
+                                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">fingerprint</span>
+                            <input
+                                class="w-full h-10 pl-9 pr-3 rounded-lg bg-surface-container-lowest text-on-surface font-label-md text-label-md uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-secondary transition-all shadow-sm"
+                                id="cert-input" placeholder="Ingrese código de certificado..." type="text"
+                                value="CFX-2025-9831" />
+                        </div>
+                        <button
+                            class="h-10 px-space-md rounded-lg bg-primary-container hover:bg-on-surface text-on-primary font-label-md text-label-md inline-flex items-center justify-center gap-space-xs transition-colors shadow-sm"
+                            type="submit">
+                            <span class="material-symbols-outlined text-[18px]">search</span>
+                            <span>Verificar otra</span>
+                        </button>
+                    </form>
+                </div>
+            </section>
+            <!-- Main Auditor Canvas -->
+            <main
+                class="max-w-max-width-content mx-auto px-grid-margin-mobile md:px-grid-margin-desktop py-space-xl md:py-space-2xl w-full">
+                <!-- Primary Validated Credential Stage -->
+                <div class="bg-surface-container-lowest rounded-xl shadow-xl p-space-md sm:p-space-xl lg:p-space-2xl relative overflow-hidden transition-all"
+                    id="valid-state-card">
+                    <!-- Decorative Security Stamp Watermark -->
+                    <div class="absolute -right-16 -top-16 w-80 h-80 opacity-[0.03] pointer-events-none select-none">
+                        <svg class="w-full h-full text-primary fill-current" viewbox="0 0 200 200">
+                            <circle cx="100" cy="100" fill="none" r="90" stroke="currentColor" stroke-width="6">
+                            </circle>
+                            <circle cx="100" cy="100" fill="none" r="75" stroke="currentColor" stroke-dasharray="4,4"
+                                stroke-width="2"></circle>
+                            <path
+                                d="M100 25 L120 75 L175 75 L130 110 L150 160 L100 130 L50 160 L70 110 L25 75 L80 75 Z">
+                            </path>
+                        </svg>
+                    </div>
+                    <!-- Header row inside card -->
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md pb-space-lg">
+                        <div class="flex flex-wrap items-center gap-space-sm">
+                            <span
+                                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-label-sm font-label-sm tracking-wide">
+                                <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
+                                Estado: Válido y Vigente
+                            </span>
+                            <span
+                                class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant text-label-sm font-label-sm">
+                                <span class="material-symbols-outlined text-[14px]">shield</span>
+                                ISO/IEC 17024 Compliant
+                            </span>
+                            <span
+                                class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant text-label-sm font-label-sm">
+                                <span class="material-symbols-outlined text-[14px]">lock</span>
+                                Criptografía SHA-256
+                            </span>
+                        </div>
+                        <div
+                            class="flex items-center gap-space-2xs text-on-surface-variant font-caption-caps text-caption-caps uppercase tracking-wider">
+                            <span class="material-symbols-outlined text-[16px] text-secondary-container">database</span>
+                            <span>Ledger ID: #BL-882190</span>
+                        </div>
+                    </div>
+                    <!-- Main certificate layout: 2 Columns (Content details + QR/Download sidebar) -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl pt-space-md">
+                        <!-- Left Column: Official details -->
+                        <div class="lg:col-span-8 flex flex-col justify-between space-y-space-lg">
+                            <div>
+                                <span
+                                    class="font-caption-caps text-caption-caps text-secondary font-bold uppercase tracking-widest block mb-1">
+                                    Registro Oficial de Alumno
+                                </span>
+                                <h2
+                                    class="font-headline-xl text-headline-xl text-on-surface font-extrabold tracking-tight">
+                                    Alejandro Morales Peñaloza
+                                </h2>
+                                <div
+                                    class="flex items-center gap-space-sm mt-1 text-on-surface-variant font-body-sm text-body-sm">
+                                    <span class="inline-flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-[16px]">badge</span>
+                                        Doc. Identidad: <strong
+                                            class="text-on-surface font-semibold tracking-wider">•••• 9203</strong>
+                                        (Protegido por Ley 29733)
+                                    </span>
+                                    <span>•</span>
+                                    <span class="text-emerald-700 font-semibold flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-[16px]">check_circle</span>
+                                        Identidad Biométrica Validada
+                                    </span>
+                                </div>
+                            </div>
+                            <!-- Academic Program Panel -->
+                            <div class="bg-surface-container-low p-space-lg rounded-xl space-y-space-sm">
+                                <span
+                                    class="font-caption-caps text-caption-caps text-on-surface-variant uppercase tracking-wider">
+                                    Especialidad Certificada
+                                </span>
+                                <h3 class="font-headline-lg text-headline-lg text-on-surface font-bold">
+                                    Seguridad Operativa en Maquinaria Pesada
+                                </h3>
+                                <p class="font-body-md text-body-md text-on-surface-variant">
+                                    Especialización Técnica en Operaciones Seguras de Línea Amarilla, Movimiento de
+                                    Tierras y Prevención de Riesgos Críticos en Faenas Mineras a Cielo Abierto.
+                                </p>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md pt-space-xs text-body-sm">
+                                    <div class="flex flex-col">
+                                        <span
+                                            class="font-caption-caps text-caption-caps text-on-surface-variant uppercase">Entidad
+                                            Acreditadora</span>
+                                        <span class="font-headline-sm text-headline-sm text-on-surface">Centro Técnico
+                                            MaqOps &amp; FoxCode Industrial</span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span
+                                            class="font-caption-caps text-caption-caps text-on-surface-variant uppercase">Instructor
+                                            Titular</span>
+                                        <span class="font-body-md text-body-md text-on-surface font-semibold">Ing. Marco
+                                            Viteri Valdivia</span>
+                                        <span class="text-on-surface-variant text-[12px]">CIP 182944 • Auditor
+                                            Certificador ISO 45001</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Metrics and Grades Bar -->
+                            <div
+                                class="grid grid-cols-1 sm:grid-cols-3 gap-space-md p-space-md bg-surface-container rounded-lg">
+                                <div class="space-y-0.5">
+                                    <span
+                                        class="font-caption-caps text-caption-caps text-on-surface-variant uppercase">Calificación
+                                        Final</span>
+                                    <div class="flex items-baseline gap-1">
+                                        <span
+                                            class="font-headline-lg text-headline-lg font-extrabold text-on-surface">19.4</span>
+                                        <span class="font-body-sm text-body-sm text-on-surface-variant">/ 20.0</span>
+                                    </div>
+                                    <span
+                                        class="font-caption-caps text-[11px] text-emerald-800 font-bold block">SOBRESALIENTE
+                                        (100% RÚBRICAS)</span>
+                                </div>
+                                <div class="space-y-0.5">
+                                    <span
+                                        class="font-caption-caps text-caption-caps text-on-surface-variant uppercase">Carga
+                                        Lectiva</span>
+                                    <div class="flex items-baseline gap-1">
+                                        <span
+                                            class="font-headline-lg text-headline-lg font-extrabold text-on-surface">48</span>
+                                        <span class="font-body-sm text-body-sm text-on-surface-variant">horas</span>
+                                    </div>
+                                    <span class="font-body-sm text-body-sm text-on-surface-variant">Teórico-prácticas en
+                                        simulador y patio</span>
+                                </div>
+                                <div class="space-y-0.5">
+                                    <span
+                                        class="font-caption-caps text-caption-caps text-on-surface-variant uppercase">Emisión
+                                        &amp; Validez</span>
+                                    <span class="font-headline-sm text-headline-sm text-on-surface block mt-1">14
+                                        Octubre 2024</span>
+                                    <span class="font-body-sm text-body-sm text-on-surface-variant">Vigencia
+                                        reglamentaria: 2 años</span>
+                                </div>
+                            </div>
+                            <!-- Technical Hash / Cryptographic Fingerprint block -->
+                            <div
+                                class="bg-primary-container text-inverse-on-surface p-space-md rounded-lg space-y-space-xs font-mono text-body-sm">
+                                <div class="flex items-center justify-between">
+                                    <span
+                                        class="font-caption-caps text-caption-caps text-tertiary-fixed tracking-wider">HUELLA
+                                        CRIPTOGRÁFICA SHA-256 (INMUTABLE)</span>
+                                    <span class="material-symbols-outlined text-secondary text-[18px]">security</span>
+                                </div>
+                                <p
+                                    class="text-xs break-all text-inverse-on-surface/90 font-mono tracking-tight bg-on-surface/40 p-2 rounded">
+                                    8a9fe409b3628e811c0f0f49c01742de8b7c4270f92275ba2c4b8e2cb927c24e
+                                </p>
+                                <div
+                                    class="flex flex-wrap items-center justify-between text-[11px] text-inverse-on-surface/70 pt-1 font-sans">
+                                    <span>Timestamp UTC: 2024-10-14 18:42:09 GMT-5</span>
+                                    <span>Bloque Transaccional: #9,481,204</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Right Column: Interactive Card / Share / QR / Actions -->
+                        <div
+                            class="lg:col-span-4 flex flex-col justify-between space-y-space-lg bg-surface-container-low p-space-lg rounded-xl">
+                            <div class="text-center space-y-space-md">
+                                <span
+                                    class="font-caption-caps text-caption-caps text-on-surface-variant uppercase tracking-wider block">
+                                    Código Único de Auditoría
+                                </span>
+                                <div
+                                    class="inline-block px-space-md py-space-xs rounded-lg bg-surface-container font-mono font-bold text-headline-sm text-primary-container tracking-wider shadow-inner">
+                                    CFX-2025-9831
+                                </div>
+                                <!-- Authentic Responsive Scalable QR Code Container -->
+                                <div
+                                    class="w-48 h-48 mx-auto p-3 bg-surface-container-lowest rounded-xl shadow-md flex items-center justify-center relative group">
+                                    <svg class="w-full h-full" fill="none" viewbox="0 0 160 160"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <!-- Outer framing corners -->
+                                        <rect fill="#0B1220" height="40" rx="4" width="40" x="10" y="10"></rect>
+                                        <rect fill="#FFFFFF" height="24" width="24" x="18" y="18"></rect>
+                                        <rect fill="#0B1220" height="16" width="16" x="22" y="22"></rect>
+                                        <rect fill="#0B1220" height="40" rx="4" width="40" x="110" y="10"></rect>
+                                        <rect fill="#FFFFFF" height="24" width="24" x="118" y="18"></rect>
+                                        <rect fill="#0B1220" height="16" width="16" x="122" y="22"></rect>
+                                        <rect fill="#0B1220" height="40" rx="4" width="40" x="10" y="110"></rect>
+                                        <rect fill="#FFFFFF" height="24" width="24" x="18" y="118"></rect>
+                                        <rect fill="#0B1220" height="16" width="16" x="22" y="122"></rect>
+                                        <!-- QR Data Matrix Simulated Patterns -->
+                                        <rect fill="#0B1220" height="8" width="8" x="60" y="15"></rect>
+                                        <rect fill="#0B1220" height="8" width="12" x="75" y="15"></rect>
+                                        <rect fill="#0B1220" height="6" width="15" x="60" y="30"></rect>
+                                        <rect fill="#0B1220" height="12" width="10" x="85" y="28"></rect>
+                                        <rect fill="#0B1220" height="15" width="8" x="65" y="45"></rect>
+                                        <rect fill="#0B1220" height="8" width="8" x="15" y="65"></rect>
+                                        <rect fill="#0B1220" height="12" width="12" x="30" y="60"></rect>
+                                        <rect fill="#0B1220" height="6" width="15" x="15" y="80"></rect>
+                                        <rect fill="#0B1220" height="14" width="10" x="35" y="78"></rect>
+                                        <!-- Center fox badge micro logo -->
+                                        <rect fill="#F97316" height="30" rx="6" width="30" x="65" y="65"></rect>
+                                        <path d="M72 73 L80 87 L88 73 L80 77 Z" fill="#FFFFFF"></path>
+                                        <rect fill="#0B1220" height="8" width="14" x="105" y="65"></rect>
+                                        <rect fill="#0B1220" height="14" width="8" x="125" y="70"></rect>
+                                        <rect fill="#0B1220" height="8" width="20" x="110" y="85"></rect>
+                                        <rect fill="#0B1220" height="12" width="12" x="135" y="80"></rect>
+                                        <rect fill="#0B1220" height="15" width="10" x="60" y="110"></rect>
+                                        <rect fill="#0B1220" height="8" width="15" x="75" y="115"></rect>
+                                        <rect fill="#0B1220" height="10" width="25" x="65" y="130"></rect>
+                                        <rect fill="#0B1220" height="12" width="12" x="100" y="110"></rect>
+                                        <rect fill="#0B1220" height="8" width="20" x="120" y="115"></rect>
+                                        <rect fill="#0B1220" height="14" width="10" x="105" y="130"></rect>
+                                        <rect fill="#0B1220" height="12" width="15" x="125" y="130"></rect>
+                                    </svg>
+                                </div>
+                                <p class="font-body-sm text-[12px] text-on-surface-variant leading-tight">
+                                    Escanear con cualquier cámara de smartphone para auditar autenticidad al instante.
+                                </p>
+                            </div>
+                            <!-- Direct action CTAs -->
+                            <div class="space-y-space-xs pt-space-xs">
+                                <a class="w-full h-11 px-space-md rounded-lg bg-secondary text-on-secondary font-label-md text-label-md flex items-center justify-center gap-space-xs hover:bg-secondary-container transition-all shadow-md active:scale-[0.99]"
+                                    href="#descargar">
+                                    <span class="material-symbols-outlined text-[18px]">download</span>
+                                    <span>Descargar PDF Oficial Firmado</span>
+                                </a>
+                                <button
+                                    class="w-full h-11 px-space-md rounded-lg bg-surface-container-lowest text-on-surface font-label-md text-label-md flex items-center justify-center gap-space-xs hover:bg-surface-container transition-colors shadow-sm"
+                                    id="copy-btn" onclick="copyVerificationLink()" type="button">
+                                    <span class="material-symbols-outlined text-[18px]">link</span>
+                                    <span id="copy-btn-text">Copiar Enlace de Verificación</span>
+                                </button>
+                                <a class="w-full h-11 px-space-md rounded-lg bg-surface-container text-on-surface font-label-md text-label-md flex items-center justify-center gap-space-xs hover:bg-surface-container-high transition-colors"
+                                    href="https://www.linkedin.com/sharing/share-offsite/?url=https://certifox.io/verify/CFX-2025-9831"
+                                    rel="noopener noreferrer" target="_blank">
+                                    <svg class="w-4 h-4 fill-current" viewbox="0 0 24 24">
+                                        <path
+                                            d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z">
+                                        </path>
+                                    </svg>
+                                    <span>Añadir a Perfil de LinkedIn</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Syllabus & Competencies Accordion Grid -->
+                    <div class="mt-space-xl pt-space-xl border-t border-surface-container">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-space-xs mb-space-md">
+                            <div>
+                                <h4 class="font-headline-md text-headline-md text-on-surface font-bold">Rúbrica de
+                                    Competencias Evaluadas y Aprobadas</h4>
+                                <p class="font-body-sm text-body-sm text-on-surface-variant">Conforme a los lineamientos
+                                    del Decreto Supremo 024-2016-EM y estándares internacionales OSHA.</p>
+                            </div>
+                            <span
+                                class="text-xs font-semibold px-2.5 py-1 rounded bg-surface-container text-on-surface-variant self-start md:self-auto">
+                                Auditado por Tercero Imparcial
+                            </span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+                            <!-- Competency 1 -->
+                            <div class="p-space-md rounded-lg bg-surface-container-low space-y-space-2xs">
+                                <div
+                                    class="flex items-center gap-2 text-emerald-800 font-semibold font-label-md text-label-md">
+                                    <span class="material-symbols-outlined text-[18px]">verified</span>
+                                    <span>Inspección Pre-Operacional 360°</span>
+                                </div>
+                                <p class="font-body-sm text-body-sm text-on-surface-variant">
+                                    Detección preventiva de fugas hidráulicas, holguras mecánicas y comprobación
+                                    sistemática de cinturón y cabina ROPS/FOPS.
+                                </p>
+                                <div class="pt-2 text-[11px] font-mono text-on-surface-variant font-medium">Nota de
+                                    campo: 20/20</div>
+                            </div>
+                            <!-- Competency 2 -->
+                            <div class="p-space-md rounded-lg bg-surface-container-low space-y-space-2xs">
+                                <div
+                                    class="flex items-center gap-2 text-emerald-800 font-semibold font-label-md text-label-md">
+                                    <span class="material-symbols-outlined text-[18px]">verified</span>
+                                    <span>Control de Carga y Centro de Gravedad</span>
+                                </div>
+                                <p class="font-body-sm text-body-sm text-on-surface-variant">
+                                    Maniobras en pendientes superiores a 15% con tolva cargada y cálculo dinámico de
+                                    estabilidad en terreno inestable.
+                                </p>
+                                <div class="pt-2 text-[11px] font-mono text-on-surface-variant font-medium">Nota de
+                                    campo: 19/20</div>
+                            </div>
+                            <!-- Competency 3 -->
+                            <div class="p-space-md rounded-lg bg-surface-container-low space-y-space-2xs">
+                                <div
+                                    class="flex items-center gap-2 text-emerald-800 font-semibold font-label-md text-label-md">
+                                    <span class="material-symbols-outlined text-[18px]">verified</span>
+                                    <span>Normativa OSHA 1926 Subpart O</span>
+                                </div>
+                                <p class="font-body-sm text-body-sm text-on-surface-variant">
+                                    Aplicación de protocolos de señalización de radio de giro, control de polvo y
+                                    detención de emergencia sin retardo.
+                                </p>
+                                <div class="pt-2 text-[11px] font-mono text-on-surface-variant font-medium">Nota de
+                                    campo: 19.2/20</div>
+                            </div>
+                        </div>
+                        <!-- Corporate Notice -->
+                        <div
+                            class="mt-space-lg p-space-md rounded-lg bg-surface-container flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-md">
+                            <div class="flex items-start gap-space-sm">
+                                <span
+                                    class="material-symbols-outlined text-secondary text-[24px] mt-0.5">verified_user</span>
+                                <div>
+                                    <h5 class="font-headline-sm text-headline-sm text-on-surface">Validez Institucional
+                                        para Contratistas y Mineras</h5>
+                                    <p class="font-body-sm text-body-sm text-on-surface-variant max-w-3xl">
+                                        Esta credencial posee plena validez legal y técnica conforme a la Ley de Firmas
+                                        y Certificados Digitales. Las áreas de RRHH y Seguridad (HSE) pueden homologar
+                                        este certificado inmediatamente sin requerir trámites notariales adicionales.
+                                    </p>
+                                </div>
+                            </div>
+                            <button
+                                class="h-9 px-space-md rounded-lg bg-surface-container-lowest hover:bg-surface-container-high text-on-surface font-label-md text-label-md inline-flex items-center gap-1.5 transition-colors whitespace-nowrap shadow-sm"
+                                onclick="window.print()" type="button">
+                                <span class="material-symbols-outlined text-[16px]">print</span>
+                                Imprimir Acta
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Interactive Toggle to Demonstrate Alternate State (As strictly required in prompt) -->
+                <div class="mt-space-2xl pt-space-xl border-t border-surface-container flex flex-col items-center">
+                    <div
+                        class="flex items-center gap-space-xs text-on-surface-variant font-body-sm text-body-sm mb-space-md">
+                        <span class="material-symbols-outlined text-[18px]">info</span>
+                        <span>Demostración para Evaluadores Técnicos:</span>
+                        <button
+                            class="underline font-semibold text-secondary hover:text-secondary-container transition-colors"
+                            onclick="toggleRevokedState()" type="button">
+                            Alternar a ejemplo de Credencial Revocada o Expirada
+                        </button>
+                    </div>
+                    <!-- Alternate State Component: Invalid / Revoked Certificate (Hidden by default, togglable) -->
+                    <div class="hidden w-full bg-surface-container-lowest rounded-xl shadow-xl p-space-md sm:p-space-xl lg:p-space-2xl relative overflow-hidden transition-all border-l-4 border-l-error"
+                        id="revoked-state-card">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md pb-space-lg">
+                            <div class="flex flex-wrap items-center gap-space-sm">
+                                <span
+                                    class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 text-red-800 text-label-sm font-label-sm tracking-wide">
+                                    <span class="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
+                                    ● Estado: Credencial Revocada / No Vigente
+                                </span>
+                                <span
+                                    class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container text-error text-label-sm font-label-sm font-semibold">
+                                    <span class="material-symbols-outlined text-[14px]">gpp_bad</span>
+                                    Invalidez Operativa Declarada
+                                </span>
+                            </div>
+                            <div
+                                class="flex items-center gap-space-2xs text-on-surface-variant font-caption-caps text-caption-caps uppercase tracking-wider">
+                                <span>Motivo: Recertificación Anual Vencida</span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl pt-space-md">
+                            <div class="lg:col-span-8 space-y-space-md">
+                                <div>
+                                    <span
+                                        class="font-caption-caps text-caption-caps text-error font-bold uppercase tracking-widest block mb-1">
+                                        Auditoría Forense de Estado
+                                    </span>
+                                    <h3 class="font-headline-lg text-headline-lg text-on-surface font-extrabold">
+                                        Certificación Operativa No Válida para Faenas Mineras
+                                    </h3>
+                                    <p class="font-body-md text-body-md text-on-surface-variant mt-2">
+                                        Esta credencial (CFX-2023-1102) fue emitida previamente pero ha sido <strong
+                                            class="text-error font-semibold">revocada formalmente</strong> debido a que
+                                        el titular no completó el proceso obligatorio de actualización bianual en la
+                                        Norma Técnica G-050 o presentó un reporte de inhabilitación por la autoridad
+                                        reguladora competente.
+                                    </p>
+                                </div>
+                                <div
+                                    class="p-space-md bg-red-50/60 rounded-lg space-y-space-xs text-red-950 font-body-sm text-body-sm">
+                                    <div class="font-semibold flex items-center gap-1 text-red-900">
+                                        <span class="material-symbols-outlined text-[18px]">warning</span>
+                                        Instrucción Crítica para Oficiales de Seguridad y Supervisores de Contrato
+                                    </div>
+                                    <p>
+                                        No se autoriza el acceso a cabina ni operación de volquetes o palas bajo esta
+                                        serie registral. Cualquier intento de presentación de documento impreso sin
+                                        sello vigente constituye una infracción a los códigos de seguridad interna.
+                                    </p>
+                                </div>
+                                <div
+                                    class="flex flex-wrap gap-space-md pt-space-xs text-body-sm text-on-surface-variant">
+                                    <div><strong>Fecha de Revocación:</strong> 31 de Enero de 2025</div>
+                                    <div><strong>Resolución Técnica:</strong> REV-MAQOPS-2025-09</div>
+                                    <div><strong>Responsable de Auditoría:</strong> Comité Técnico de Calidad MaqOps
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="lg:col-span-4 bg-surface-container-low p-space-lg rounded-xl flex flex-col justify-between text-center space-y-space-md">
+                                <div>
+                                    <span
+                                        class="font-caption-caps text-caption-caps text-on-surface-variant uppercase tracking-wider block mb-2">
+                                        Código Auditado
+                                    </span>
+                                    <div
+                                        class="inline-block px-4 py-2 rounded-lg bg-surface-container font-mono text-headline-sm text-error font-bold line-through">
+                                        CFX-2023-1102
+                                    </div>
+                                    <p class="text-xs text-on-surface-variant mt-space-sm">
+                                        Firma digital bloqueada por la Autoridad Certificadora.
+                                    </p>
+                                </div>
+                                <div class="space-y-space-xs">
+                                    <a class="w-full h-10 rounded-lg bg-primary text-on-primary font-label-md text-label-md flex items-center justify-center gap-1 hover:bg-primary-container transition-colors"
+                                        href="#solicitar-recertificacion">
+                                        <span class="material-symbols-outlined text-[16px]">sync</span>
+                                        <span>Solicitar Proceso de Recertificación</span>
+                                    </a>
+                                    <button
+                                        class="w-full h-10 rounded-lg bg-surface-container text-on-surface font-label-md text-label-md flex items-center justify-center transition-colors hover:bg-surface-container-high"
+                                        onclick="toggleRevokedState()" type="button">
+                                        Volver a la Credencial Válida
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Verification Help Banner for Recruiters & Enterprises -->
+                <section
+                    class="mt-space-2xl bg-primary-container text-inverse-on-surface rounded-xl p-space-lg sm:p-space-xl relative overflow-hidden shadow-lg">
+                    <div
+                        class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-space-lg">
+                        <div class="space-y-space-2xs max-w-2xl">
+                            <span
+                                class="inline-block px-2.5 py-0.5 rounded text-[11px] font-mono tracking-wider font-semibold uppercase bg-secondary text-on-secondary">
+                                Módulo B2B • Verificación Masiva
+                            </span>
+                            <h3 class="font-headline-lg text-headline-lg font-bold tracking-tight text-on-primary">
+                                ¿Representa a un Departamento de Recursos Humanos o Contratista?
+                            </h3>
+                            <p class="font-body-md text-body-md text-inverse-on-surface/80 leading-relaxed">
+                                Consulte nuestro servicio de validación por API o envíe un lote de DNI / Códigos para
+                                recibir un informe pericial homologado con transcripción académica oficial en menos de 2
+                                horas.
+                            </p>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-space-xs w-full md:w-auto">
+                            <a class="h-11 px-space-lg rounded-lg bg-secondary hover:bg-secondary-container text-on-secondary font-label-md text-label-md inline-flex items-center justify-center gap-space-xs transition-colors shadow-md text-center"
+                                href="#solicitar-informe">
+                                <span class="material-symbols-outlined text-[18px]">corporate_fare</span>
+                                <span>Solicitar Transcripción Masiva</span>
+                            </a>
+                            <a class="h-11 px-space-md rounded-lg bg-surface-container-low/10 hover:bg-surface-container-low/20 text-inverse-on-surface font-label-md text-label-md inline-flex items-center justify-center gap-space-xs transition-colors text-center"
+                                href="#api-docs">
+                                <span class="material-symbols-outlined text-[18px]">api</span>
+                                <span>Documentación API</span>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+        <script>
+            function copyVerificationLink() {
+                const btn = document.getElementById('copy-btn');
+                const textSpan = document.getElementById('copy-btn-text');
+                const dummyUrl = window.location.origin + window.location.pathname + '?code=CFX-2025-9831';
+
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(dummyUrl).then(() => {
+                        showCopyFeedback();
+                    }).catch(() => {
+                        showCopyFeedback();
+                    });
+                } else {
+                    showCopyFeedback();
+                }
+
+                function showCopyFeedback() {
+                    const originalText = textSpan.innerText;
+                    textSpan.innerText = '¡Enlace Copiado al Portapapeles!';
+                    btn.classList.add('bg-emerald-50', 'text-emerald-800');
+                    setTimeout(() => {
+                        textSpan.innerText = originalText;
+                        btn.classList.remove('bg-emerald-50', 'text-emerald-800');
+                    }, 2500);
+                }
+            }
+
+            function toggleRevokedState() {
+                const validCard = document.getElementById('valid-state-card');
+                const revokedCard = document.getElementById('revoked-state-card');
+                const certInput = document.getElementById('cert-input');
+
+                if (revokedCard.classList.contains('hidden')) {
+                    revokedCard.classList.remove('hidden');
+                    validCard.classList.add('hidden');
+                    if (certInput) certInput.value = 'CFX-2023-1102';
+                    revokedCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } else {
+                    revokedCard.classList.add('hidden');
+                    validCard.classList.remove('hidden');
+                    if (certInput) certInput.value = 'CFX-2025-9831';
+                    validCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+
+            function switchCredentialState() {
+                const val = (document.getElementById('cert-input').value || '').trim().toUpperCase();
+                if (val.includes('REV') || val.includes('2023') || val.includes('1102')) {
+                    document.getElementById('valid-state-card').classList.add('hidden');
+                    document.getElementById('revoked-state-card').classList.remove('hidden');
+                } else {
+                    document.getElementById('valid-state-card').classList.remove('hidden');
+                    document.getElementById('revoked-state-card').classList.add('hidden');
+                }
+            }
+        </script>
+    </main>
+    <footer
+        class="w-full bg-surface-container-lowest mt-space-3xl border-t border-surface-container shadow-[0_1px_8px_rgba(0,0,0,0.02)]">
+        <div class="max-w-max-width-content mx-auto px-grid-margin-mobile md:px-grid-margin-desktop py-space-2xl">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-space-xl pb-space-xl">
+                <div class="space-y-space-sm md:col-span-1">
+                    <div class="flex items-center gap-space-xs"><img alt="Brand logo. - Primary color: #0b1220
+- Font: manrope
+- Mode: light
+- Roundness: rounded-sm
+" class="h-7 w-auto object-contain"
+                            src="https://lh3.googleusercontent.com/aida/AEtjO1XafEiwEi7fRIYQdPd4QoOJFA27Mos42p1B7iEeSdlJZ-CBzVn1s8JBqf8wdzHZT0b_K-rr-OYduF4szFxPqDEcrpfdN3N0FBG-zQnZMOASXweEUs5qeMit1r4ikmWchiZxtby3n3Y_BsIZwCGFvP1ihIVur_gVtxQQBkNI8dfhyxBCpvNYq-RVNLAzqZ-hZTkksIyNVqsvdGag0BYHSOqXx7JwxMhTwvF-Y_hxdiYnXTRW9c1QDPY9dws" /><span
+                            class="font-headline-sm text-headline-sm text-on-surface">Certifox</span></div>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant">Infraestructura de certificación
+                        académica y profesional de alta fidelidad, con emisión verificable e inmutable para
+                        organizaciones líderes.</p>
+                </div>
+                <div class="space-y-space-xs">
+                    <h4 class="font-caption-caps text-caption-caps text-on-surface uppercase tracking-wider">Estándares
+                        de Seguridad</h4>
+                    <ul class="space-y-space-2xs font-body-sm text-body-sm text-on-surface-variant">
+                        <li class="flex items-center gap-space-2xs"><span
+                                class="material-symbols-outlined text-label-sm text-secondary-container">verified_user</span>Criptografía
+                            SHA-256</li>
+                        <li class="flex items-center gap-space-2xs"><span
+                                class="material-symbols-outlined text-label-sm text-secondary-container">policy</span>Normativa
+                            ISO/IEC 17024</li>
+                        <li class="flex items-center gap-space-2xs"><span
+                                class="material-symbols-outlined text-label-sm text-secondary-container">qr_code_scanner</span>Validación
+                            QR Instantánea</li>
+                    </ul>
+                </div>
+                <div class="space-y-space-xs">
+                    <h4 class="font-caption-caps text-caption-caps text-on-surface uppercase tracking-wider">Plataforma
+                    </h4>
+                    <ul class="space-y-space-2xs font-body-sm text-body-sm text-on-surface-variant">
+                        <li><a class="hover:text-on-surface transition-colors" data-path="verificar-certificado"
+                                href="#">Auditoría Pública</a></li>
+                        <li><a class="hover:text-on-surface transition-colors" data-path="explorar-cursos"
+                                href="#">Catálogo Homologado</a></li>
+                        <li><a class="hover:text-on-surface transition-colors" data-path="modo-instructor"
+                                href="#">Portal Docente</a></li>
+                    </ul>
+                </div>
+                <div class="space-y-space-xs">
+                    <h4 class="font-caption-caps text-caption-caps text-on-surface uppercase tracking-wider">Marco Legal
+                    </h4>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">Los certificados
+                        emitidos cumplen con validez jurídica conforme a las regulaciones de acreditación de
+                        competencias y firma digital avanzada.</p>
+                </div>
+            </div>
+            <div
+                class="pt-space-lg border-t border-surface-container flex flex-col sm:flex-row items-center justify-between gap-space-md text-on-surface-variant">
+                <p class="font-body-sm text-body-sm">© 2024 Certifox Inc. Todos los derechos reservados. Validación
+                    garantizada mediante arquitectura descentralizada.</p>
+                <div class="flex items-center gap-space-lg font-caption-caps text-caption-caps"><a
+                        class="hover:text-on-surface transition-colors" href="#">Términos del Servicio</a><a
+                        class="hover:text-on-surface transition-colors" href="#">Aviso de Privacidad</a><a
+                        class="hover:text-on-surface transition-colors" href="#">Seguridad de Datos</a></div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>
