@@ -61,9 +61,9 @@ export function PublicHeader() {
         <div className="flex items-center gap-3">
           {/* User profile preview or action button */}
           <Link
-            href="/mi-aprendizaje"
+            href="/ingresar"
             className="flex items-center gap-2 hover:opacity-90 transition-opacity"
-            title="Ir a mi aula virtual"
+            title="Ingresar a la plataforma"
           >
             <div className="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-orange-500/20 shadow-xs shrink-0">
               <Image

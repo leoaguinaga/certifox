@@ -119,11 +119,11 @@ export function MobileNav({ navLinks = DEFAULT_LINKS }: MobileNavProps) {
                   </div>
                 </div>
                 <Link
-                  href="/mi-aprendizaje"
+                  href="/ingresar"
                   onClick={closeMenu}
                   className="text-xs font-semibold text-orange-600 hover:text-orange-700"
                 >
-                  Ver aula
+                  Ingresar
                 </Link>
               </div>
 

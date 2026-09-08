@@ -117,7 +117,7 @@ export function CourseCatalogCard({
           isList && "sm:w-60 sm:p-5 sm:border-l sm:border-stone-100 sm:justify-center shrink-0"
         )}
       >
-        <div className="flex items-center justify-between bg-[#EFF4FF] px-3 py-1.5 rounded-lg border border-[#D5E3FD]/40">
+        <div className={cn("flex items-center justify-between bg-[#EFF4FF] px-3 py-1.5 rounded-lg border border-[#D5E3FD]/40", isList && "flex-col items-start")}>
           <span className="text-xs text-stone-600 flex items-center gap-1">
             <Lock className="w-3 h-3 text-stone-400" />
             <span className="text-[11px]">Requiere confirmación</span>
