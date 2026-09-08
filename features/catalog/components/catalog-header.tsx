@@ -6,7 +6,7 @@ export function CatalogHeader() {
     <section className="w-full bg-[#EFF4FF] py-10 border-b border-stone-200/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav
+        {/* <nav
           aria-label="Breadcrumb"
           className="flex items-center gap-1.5 text-xs text-stone-500 font-medium mb-4"
         >
@@ -19,7 +19,7 @@ export function CatalogHeader() {
           </Link>
           <span className="text-stone-300">/</span>
           <span className="text-stone-900 font-semibold">Catálogo</span>
-        </nav>
+        </nav> */}
 
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>

@@ -16,7 +16,7 @@ export function CourseDetailHero({ course }: CourseDetailHeroProps) {
 
       {/* Breadcrumb */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4">
-        <nav
+        {/* <nav
           aria-label="Breadcrumb"
           className="flex items-center gap-1.5 text-xs text-stone-500 font-medium"
         >
@@ -34,7 +34,7 @@ export function CourseDetailHero({ course }: CourseDetailHeroProps) {
           <span className="text-stone-900 font-semibold truncate">
             Detalle de Acreditación
           </span>
-        </nav>
+        </nav> */}
       </div>
 
       {/* Hero Banner Box */}

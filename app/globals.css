@@ -114,7 +114,8 @@
 }
 
 :root {
-  --background: #f8f9ff;
+  --background: #f7f7fb;
+  --background-foreground: #fffdf9;
   --foreground: #0d1c2f;
   --card: #ffffff;
   --card-foreground: #0d1c2f;
@@ -228,17 +229,27 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "kern" 1, "liga" 1;
   }
+
   html {
     @apply font-sans;
     text-rendering: optimizeLegibility;
     scrollbar-color: var(--border) var(--background);
   }
-  ::selection { background: #fd761a; color: #ffffff; }
-  :focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+
+  ::selection {
+    background: #fd761a;
+    color: #ffffff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
 }
 
 @utility font-caption-caps {
@@ -291,6 +302,7 @@
 @utility no-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;
+
   &::-webkit-scrollbar {
     display: none;
   }

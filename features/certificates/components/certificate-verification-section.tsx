@@ -23,15 +23,12 @@ export function CertificateVerificationSection() {
   };
 
   return (
-    <section id="verificacion" className="py-20 bg-[#FFFDF9] relative overflow-hidden">
+    <section id="verificacion" className="py-20 bg-background-foreground relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Column: Form & Audit Explanation */}
           <div className="lg:col-span-5">
-            <span className="text-xs uppercase font-bold tracking-wider text-[#FD761A]">
-              Validación Pública Universal
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight mt-1 mb-4 leading-tight">
+            <h2 className="text-3xl sm:text-4xl font-black text-stone-900 tracking-tight mt-1 mb-4 leading-tight">
               Cero falsificaciones. Confianza institucional absoluta.
             </h2>
             <p className="text-sm sm:text-base text-stone-600 mb-8 leading-relaxed">
@@ -76,7 +73,7 @@ export function CertificateVerificationSection() {
 
               <p className="text-[11px] font-medium text-stone-600 mt-3 flex items-center gap-1.5">
                 <Info className="w-3.5 h-3.5 text-[#FD761A] shrink-0" />
-                <span>Respuesta en menos de 200 milisegundos con firma SHA-256</span>
+                <span>Respuesta instantánea con firma digital SHA-256</span>
               </p>
             </div>
           </div>

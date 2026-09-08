@@ -7,7 +7,7 @@ const METRICS = [
 
 export function MetricStrip() {
   return (
-    <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 pt-8 border-t border-stone-200/80 text-center">
+    <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 border-stone-200/80 text-center">
       {METRICS.map((metric) => (
         <div key={metric.label}>
           <p className="font-extrabold text-2xl sm:text-3xl text-stone-900 tracking-tight font-mono">

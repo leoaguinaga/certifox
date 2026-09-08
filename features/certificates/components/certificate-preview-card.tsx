@@ -77,14 +77,14 @@ export function CertificatePreviewCard({
 
           {/* Stylized QR Simulation */}
           <div className="flex sm:flex-col items-center gap-2 self-end sm:self-auto">
-            <div className="w-14 h-14 bg-stone-900 p-1.5 rounded-lg text-white shadow-xs">
+            <div className="size-15 bg-stone-900 p-1.5 rounded-lg text-white shadow-xs">
               <svg className="w-full h-full" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm14 0h4v4h-4v-4zm-4-2h2v2h-2v-2zm4 4v4h2v-4h-2zm-6-2h2v4h-2v-4zm4-2h4v2h-4v-2zm-8-8h2v2H8V6zm0 12h2v2H8v-2z" />
               </svg>
             </div>
-            <span className="text-[9px] font-bold uppercase tracking-wider text-stone-400">
+            {/* <span className="text-[9px] font-bold uppercase tracking-wider text-stone-400">
               Escanear validación
-            </span>
+            </span> */}
           </div>
         </div>
       </div>

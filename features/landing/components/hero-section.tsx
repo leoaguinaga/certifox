@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ShieldCheck, QrCode, CheckCircle2, Banknote } from "lucide-react";
+import { ArrowRight, ShieldCheck, QrCode, CheckCircle2, Banknote, ShieldCheckIcon, Share2 } from "lucide-react";
 import { InteractivePreviewWindow } from "./interactive-preview-window";
 import { MetricStrip } from "./metric-strip";
 
@@ -21,18 +21,18 @@ export function HeroSection() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative flex flex-col items-center text-center max-w-4xl mx-auto">
           {/* Floating badge 1 (Top Left) */}
-          <div className="hidden lg:flex absolute -left-12 top-4 flex-col items-center bg-white/95 backdrop-blur-md px-4 py-2.5 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-stone-200/80 -rotate-3 transition-transform hover:rotate-0">
+          <div className="hidden lg:flex absolute -left-16 top-4 flex-col items-center bg-white/95 backdrop-blur-md px-4 py-2.5 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-stone-200/80 -rotate-3 transition-transform hover:rotate-0">
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="font-mono text-xs font-bold text-stone-800">ISO 17024</span>
+              <ShieldCheckIcon className="w-4 h-4 text-emerald-600" />
+              <span className="font-mono text-xs font-bold text-stone-800">Acreditación Oficial</span>
             </div>
             <span className="text-[10px] uppercase font-bold text-stone-500 tracking-wider mt-0.5">
-              Compliant System
+              Código único verificable
             </span>
           </div>
 
           {/* Floating badge 2 (Mid Left) */}
-          <div className="hidden md:flex absolute -left-20 top-36 items-center gap-3 bg-white/95 backdrop-blur-md px-4 py-2.5 rounded-2xl shadow-[0_10px_35px_rgb(0,0,0,0.06)] border border-stone-200/80 rotate-3 transition-transform hover:rotate-0">
+          <div className="hidden md:flex absolute -left-24 top-36 items-center gap-3 bg-white/95 backdrop-blur-md px-4 py-2.5 rounded-2xl shadow-[0_10px_35px_rgb(0,0,0,0.06)] border border-stone-200/80 rotate-3 transition-transform hover:rotate-0">
             <div className="w-8 h-8 rounded-xl bg-orange-50 text-[#FD761A] flex items-center justify-center font-bold">
               <QrCode className="w-4 h-4" />
             </div>
@@ -43,22 +43,22 @@ export function HeroSection() {
           </div>
 
           {/* Floating badge 3 (Top Right) */}
-          <div className="hidden lg:flex absolute -right-10 top-6 items-center gap-2.5 bg-white/95 backdrop-blur-md px-4 py-2.5 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-stone-200/80 rotate-6 transition-transform hover:rotate-0">
+          <div className="hidden lg:flex absolute -right-14 top-6 items-center gap-2.5 bg-white/95 backdrop-blur-md px-4 py-2.5 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-stone-200/80 rotate-6 transition-transform hover:rotate-0">
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
             <div className="text-left">
-              <p className="text-xs font-bold text-stone-900 leading-tight">SHA-256 Inmutable</p>
-              <p className="text-[10px] text-stone-500 font-mono">8a9f..c24e</p>
+              <p className="text-xs font-bold text-stone-900 leading-tight">100% Anti-fraude</p>
+              <p className="text-[10px] text-stone-500 font-mono">Registro digital inalterable</p>
             </div>
           </div>
 
           {/* Floating badge 4 (Mid Right) */}
-          <div className="hidden md:flex absolute -right-20 top-40 items-center gap-3 bg-white/95 backdrop-blur-md px-4 py-2 rounded-2xl shadow-[0_10px_35px_rgb(0,0,0,0.06)] border border-stone-200/80 -rotate-2 transition-transform hover:rotate-0">
+          <div className="hidden md:flex absolute -right-24 top-40 items-center gap-3 bg-white/95 backdrop-blur-md px-4 py-2 rounded-2xl shadow-[0_10px_35px_rgb(0,0,0,0.06)] border border-stone-200/80 -rotate-2 transition-transform hover:rotate-0">
             <div className="w-8 h-8 rounded-xl bg-orange-50 text-[#FD761A] flex items-center justify-center font-bold">
-              <Banknote className="w-4 h-4" />
+              <Share2 className="w-4 h-4" />
             </div>
             <div className="text-left">
-              <p className="text-xs font-bold text-stone-900">0% Comisiones</p>
-              <p className="text-[10px] text-stone-500 font-medium">Cobros P2P Directos</p>
+              <p className="text-xs font-bold text-stone-900">Listo para LinkedIn</p>
+              <p className="text-[10px] text-stone-500 font-medium">Comparte tu logro</p>
             </div>
           </div>
 
@@ -68,7 +68,7 @@ export function HeroSection() {
               Novedad
             </span>
             <span className="text-xs sm:text-sm font-semibold text-stone-700">
-              Acreditación técnica instantánea con FoxCode 2025
+              Acreditación técnica instantánea
             </span>
             <ArrowRight className="w-3.5 h-3.5 text-stone-400" />
           </div>
@@ -76,7 +76,7 @@ export function HeroSection() {
           {/* Main Display Headline */}
           <h1 className="text-3xl sm:text-5xl lg:text-[56px] lg:leading-[64px] text-stone-900 tracking-tight max-w-3xl mb-6 font-extrabold font-sans">
             Aprende, demuestra y{" "}
-            <span className="inline-block relative px-3 py-0.5 rounded-xl bg-orange-100 text-[#FD761A] font-extrabold">
+            <span className="inline-block relative px-3 py-0.5 z-1 rounded-xl bg-orange-100 text-[#FD761A] font-extrabold">
               certifica
             </span>{" "}
             tus habilidades.

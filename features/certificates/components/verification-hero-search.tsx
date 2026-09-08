@@ -69,39 +69,11 @@ export function VerificationHeroSearch({
   };
 
   return (
-    <section className="w-full py-16 md:py-24 relative overflow-hidden bg-[#F8F9FF]">
-      {/* Structural subtle grid background */}
-      <div className="absolute inset-0 pointer-events-none opacity-40">
-        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern
-              id="verification-grid"
-              width="48"
-              height="48"
-              patternUnits="userSpaceOnUse"
-            >
-              <path
-                d="M 48 0 L 0 0 0 48"
-                fill="none"
-                stroke="#DDE9FF"
-                strokeWidth="0.8"
-              />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#verification-grid)" />
-        </svg>
-      </div>
+    <section className="w-full py-16 md:py-24 lg:py-30 relative overflow-hidden bg-[#F8F9FF]">
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10 text-center space-y-8">
         {/* Badge & Title */}
         <div className="space-y-3">
-          <div className="inline-flex items-center gap-1.5 bg-[#E6EEFF] px-3.5 py-1 rounded-full text-[#45474C] border border-[#D5E3FD]">
-            <ShieldCheck className="w-3.5 h-3.5 text-[#FD761A]" />
-            <span className="text-[11px] font-bold uppercase tracking-wider">
-              Auditoría Registral Certifox v4.8
-            </span>
-          </div>
-
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0D1C2F] tracking-tight leading-tight">
             Valida la autenticidad de cualquier credencial académica o técnica
           </h1>
