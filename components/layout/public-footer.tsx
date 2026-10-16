@@ -29,7 +29,7 @@ const FOOTER_SECTIONS = [
       { label: "Para Instructores", href: "#" },
       { label: "Centros y Gremios", href: "#" },
       { label: "Matrícula Directa P2P", href: "#" },
-      { label: "Aula Virtual", href: "/mi-aprendizaje" },
+      { label: "Aula Virtual", href: "/campus" },
       { label: "Preguntas Frecuentes", href: "#faq" },
     ],
   },

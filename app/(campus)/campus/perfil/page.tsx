@@ -3,12 +3,12 @@ import { getStudentProfile } from "@/data/student";
 import { StudentProfileView } from "@/features/learning/components/student-profile-view";
 
 export const metadata: Metadata = {
-  title: "Mi Perfil de Estudiante | Certifox",
+  title: "Mi Perfil | Campus Certifox",
   description:
-    "Datos de matrícula, identificación oficial y preferencias de seguridad del estudiante.",
+    "Datos de matrícula, identificación oficial y preferencias de seguridad en el Campus Certifox.",
 };
 
-export default function PerfilPage() {
+export default function CampusPerfilPage() {
   const student = getStudentProfile();
 
   return <StudentProfileView student={student} />;

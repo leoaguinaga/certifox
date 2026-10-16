@@ -29,7 +29,7 @@ export function CompletedCoursesSection({ courses }: CompletedCoursesSectionProp
           </h2>
         </div>
         <Link
-          href="/mis-certificados"
+          href="/campus/certificados"
           className="text-xs font-bold text-[#FD761A] hover:underline"
         >
           Ver registro histórico

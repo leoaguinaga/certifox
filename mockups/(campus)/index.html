@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="es" style="">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Certifox Campus - Mi Panel</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface": "#f8f9fc",
+                        "surface-subtle": "#f1f3f9",
+                        "navy-brand": "#0b1220",
+                        "navy-panel": "#111b2d",
+                        "navy-border": "#1e293b",
+                        "orange-brand": "#f97316",
+                        "orange-hover": "#ea580c",
+                        "orange-subtle": "#fff7ed",
+                        "orange-border": "#ffedd5",
+                        "brand-accent": "#fd761a",
+                        "text-primary": "#0f172a",
+                        "text-secondary": "#64748b",
+                        "text-muted": "#94a3b8",
+                        "border-light": "#e2e8f0"
+                    },
+                    fontFamily: {
+                        sans: ['Manrope', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        @layer base {
+
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: 'Manrope', sans-serif;
+                background-color: #f8f9fc;
+                color: #0f172a;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 9999px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+    </style>
+</head>
+
+<body class="bg-surface antialiased min-h-screen flex text-text-primary">
+    <!-- SIDEBAR IZQUIERDO FIJO / ESTILO PLATZI & COURSERA -->
+    <aside
+        class="w-64 bg-white border-r border-border-light flex flex-col justify-between shrink-0 fixed inset-y-0 left-0 z-30 transition-all">
+        <!-- Top: Marca y Navegación -->
+        <div class="flex flex-col">
+            <!-- Logo y Badge Alumno -->
+            <div class="h-16 px-5 border-b border-border-light flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+
+                    <div class="flex flex-col">
+                        <span class="font-bold text-[17px] tracking-tight leading-none text-navy-brand">Certifox</span>
+                        <span class="text-[10px] text-orange-brand font-bold uppercase tracking-wider mt-0.5">Aula
+                            virtual<br></span>
+                    </div>
+                </div>
+            </div>
+            <!-- Links de Navegación -->
+            <nav class="p-3 space-y-1">
+                <!-- 1. Inicio / Mi Panel (Activo) -->
+                <a class="flex items-center justify-between px-3 py-2.5 rounded-lg bg-orange-subtle text-orange-brand font-bold text-sm transition-colors border border-orange-border/80"
+                    href="#">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-[20px]"
+                            style="font-variation-settings: 'FILL' 1;">dashboard</span>
+                        <span class="">Inicio / Mi Panel</span>
+                    </div>
+                    <span class="w-1.5 h-1.5 rounded-full bg-orange-brand"></span>
+                </a>
+                <!-- 2. Mis Cursos & Rutas -->
+                <a class="flex items-center justify-between px-3 py-2.5 rounded-lg text-text-secondary hover:text-navy-brand hover:bg-slate-50 font-semibold text-sm transition-colors"
+                    href="#">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-[20px]">school</span>
+                        <span class="">Mis Cursos &amp; Rutas</span>
+                    </div>
+                    <span class="text-[11px] font-bold px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">3</span>
+                </a>
+                <!-- 3. Clases en Vivo & Calendario -->
+                <a class="flex items-center justify-between px-3 py-2.5 rounded-lg text-text-secondary hover:text-navy-brand hover:bg-slate-50 font-semibold text-sm transition-colors"
+                    href="#">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-[20px]">calendar_today</span>
+                        <span class="">Calendario</span>
+                    </div>
+                    <span
+                        class="inline-flex items-center justify-center w-2 h-2 rounded-full bg-orange-brand animate-pulse"
+                        title="Sesión hoy"></span>
+                </a>
+                <!-- 4. Mis Certificados & Insignias -->
+                <a class="flex items-center justify-between px-3 py-2.5 rounded-lg text-text-secondary hover:text-navy-brand hover:bg-slate-50 font-semibold text-sm transition-colors"
+                    href="#">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-[20px]">workspace_premium</span>
+                        <span class="">Certificados &amp; Badges</span>
+                    </div>
+
+                </a>
+                <!-- 5. Tareas & Evaluaciones -->
+                <a class="flex items-center justify-between px-3 py-2.5 rounded-lg text-text-secondary hover:text-navy-brand hover:bg-slate-50 font-semibold text-sm transition-colors"
+                    href="#">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-[20px]">assignment_turned_in</span>
+                        <span class="">Tareas &amp; Rúbricas</span>
+                    </div>
+                    <span
+                        class="text-[11px] font-bold px-1.5 py-0.5 rounded bg-orange-subtle text-orange-brand border border-orange-border">1</span>
+                </a>
+                <!-- 6. Comunidad & Preguntas -->
+                <a class="flex items-center justify-between px-3 py-2.5 rounded-lg text-text-secondary hover:text-navy-brand hover:bg-slate-50 font-semibold text-sm transition-colors"
+                    href="#">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-[20px]">forum</span>
+                        <span class="">Comunidad &amp; Q&amp;A</span>
+                    </div>
+                </a>
+            </nav>
+            <!-- Divisor sutil y Acceso Rápido al Catálogo -->
+            <div class="px-3 pt-3">
+
+            </div>
+        </div>
+        <!-- Bottom: Ficha de Usuario Compacta -->
+        <div>
+            <div class="px-4 py-3 border-t border-border-light space-y-1.5"><a
+                    class="flex items-center gap-2 text-[11px] font-semibold text-text-secondary hover:text-navy-brand transition-colors"
+                    href="#"><span
+                        class="material-symbols-outlined text-[16px] text-text-muted">support_agent</span><span
+                        class="">Mesa de Ayuda</span></a></div>
+            <div class="p-3 border-t border-border-light bg-slate-50/50">
+                <div
+                    class="flex items-center justify-between p-2 rounded-lg bg-white border border-border-light shadow-sm">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <div class="relative shrink-0"><img alt="Brunella E."
+                                class="w-8 h-8 rounded-full object-cover ring-1 ring-slate-200"
+                                src="https://lh3.googleusercontent.com/aida/AEtjO1XDKmxoiqT0ljJ8xryqy5hi5WHbmdXEIN_edrzSh40znqeGIpj28TOQfNS5xdtMHsjZXKbYvkATDlTWloAdtq61Quz-Im-demNx8jfjsDBWHdprYIcuoVkMdbNgw74zhqHgEgKsReTuVAJZMpkQj2sCaHOSm2uGBQuwA6cx4-uG07kcodrmLsHu4m_O1ITcpGl-ZcenWFJems_WcygbUYXycMiYUQIdL0V55bk6tQLf6mdFCGzlzlUnFQ"><span
+                                class="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white"></span>
+                        </div>
+                        <div class="flex flex-col min-w-0"><span
+                                class="text-xs font-bold text-navy-brand truncate leading-tight">Brunella E.</span><span
+                                class="text-[10px] text-slate-500 font-medium truncate">Estudiante Certificada</span>
+                        </div>
+                    </div><button aria-label="Ajustes de cuenta"
+                        class="p-1.5 text-text-muted hover:text-navy-brand rounded-md hover:bg-slate-100 transition-colors"
+                        type="button"><span class="material-symbols-outlined text-[18px]">settings</span></button>
+                </div>
+            </div>
+        </div>
+    </aside>
+    <!-- CONTENEDOR PRINCIPAL (DESPLAZADO POR EL SIDEBAR) -->
+    <div class="flex-1 pl-64 flex flex-col min-h-screen">
+        <!-- HEADER SUPERIOR DESPEJADO (ESTILO COURSERA / PLATZI) -->
+        <header
+            class="sticky top-0 z-20 h-16 bg-white/95 backdrop-blur border-b border-border-light px-8 flex items-center justify-between">
+            <!-- Mensaje breve de bienvenida & subtítulo operativo -->
+            <div class="flex items-center gap-4">
+                <div>
+                    <h1 class="text-base font-bold text-navy-brand tracking-tight flex items-center gap-1.5">
+
+
+                    </h1>
+
+                </div>
+            </div>
+            <!-- Buscador y Acciones Rápidas -->
+            <div class="flex items-center gap-3">
+                <!-- Buscador estilizado -->
+                <div class="relative w-64 lg:w-80">
+                    <span
+                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-[18px]">search</span>
+                    <input
+                        class="w-full h-9 pl-9 pr-3 text-xs bg-slate-50 border border-border-light rounded-lg text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-orange-brand focus:border-orange-brand transition-all"
+                        placeholder="Buscar en mis cursos, módulos o temas..." type="text">
+                </div>
+                <!-- Métrica rápida de Racha -->
+                <div class="hidden md:flex items-center gap-1.5 px-3 py-1.5 bg-orange-subtle border border-orange-border text-orange-brand rounded-lg text-xs font-bold"
+                    title="Racha de 5 días seguidos">
+                    <span class="material-symbols-outlined text-[16px]"
+                        style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+                    <span class="">5 días</span>
+                </div>
+                <!-- Notificaciones -->
+                <button aria-label="Notificaciones"
+                    class="relative p-2 text-text-secondary hover:text-navy-brand hover:bg-slate-50 rounded-lg transition-colors border border-border-light"
+                    type="button">
+                    <span class="material-symbols-outlined text-[20px]">notifications</span>
+                    <span
+                        class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-orange-brand ring-2 ring-white"></span>
+                </button>
+                <!-- Ayuda rápida -->
+                <button aria-label="Soporte y Mesa de Ayuda"
+                    class="p-2 text-text-secondary hover:text-navy-brand hover:bg-slate-50 rounded-lg transition-colors border border-border-light"
+                    title="Centro de Soporte ISO" type="button">
+                    <span class="material-symbols-outlined text-[20px]">help_outline</span>
+                </button>
+            </div>
+        </header>
+        <!-- CONTENIDO DE LA PÁGINA (SCROLL NATURAL) -->
+        <main class="flex-1 p-8 max-w-7xl w-full mx-auto space-y-6">
+            <!-- HERO DE REANUDACIÓN DIRECTA ('RESUME LEARNING' PLATZI / COURSERA) -->
+            <section
+                class="bg-navy-brand rounded-2xl p-6 lg:p-7 text-white shadow-lg relative overflow-hidden border border-slate-800/90">
+                <div
+                    class="absolute -right-10 -bottom-10 w-72 h-72 bg-gradient-to-br from-orange-brand/20 to-transparent rounded-full blur-2xl pointer-events-none">
+                </div>
+                <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                    <div class="lg:col-span-7 space-y-4">
+                        <div class="flex flex-wrap items-center gap-2"><span
+                                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-orange-brand/20 border border-orange-brand/40 text-orange-brand text-[11px] font-bold uppercase tracking-wider"><span
+                                    class="w-2 h-2 rounded-full bg-orange-brand animate-pulse"></span>Último curso
+                                visitado • Reanudar sesión</span><span class="text-slate-400 text-xs font-semibold">•
+                                Norma ISO 17024 / OSHA 1926</span><span
+                                class="text-emerald-400 text-xs flex items-center gap-1"><span
+                                    class="material-symbols-outlined text-[14px]">verified</span>Credencial
+                                Oficial</span></div>
+                        <div>
+                            <h2 class="text-xl lg:text-2xl font-bold tracking-tight text-white leading-tight">Seguridad
+                                Operativa en Maquinaria Pesada</h2>
+                            <p class="text-slate-300 text-xs lg:text-sm mt-1 flex items-center gap-1.5"><span
+                                    class="material-symbols-outlined text-[16px] text-slate-400">layers</span>Módulo 3:
+                                Maniobras críticas y análisis de estabilidad en taludes dinámicos</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-800/90 border border-slate-700/60 space-y-2.5">
+                            <div class="flex items-center justify-between text-xs">
+                                <div class="flex items-center gap-2 text-white min-w-0"><span
+                                        class="material-symbols-outlined text-orange-brand text-[18px] shrink-0">play_circle</span>
+                                    <div class="truncate"><span class="text-slate-400">Siguiente lección:</span> <strong
+                                            class="text-white font-semibold">3.1 Ángulos de ataque y centro de
+                                            gravedad</strong></div>
+                                </div><span class="text-orange-brand font-bold shrink-0 ml-2">65% completado</span>
+                            </div>
+                            <div
+                                class="w-full bg-slate-900/80 h-2 rounded-full overflow-hidden p-0.5 border border-slate-700/50">
+                                <div class="bg-orange-brand h-full rounded-full transition-all duration-500"
+                                    style="width: 65%;"></div>
+                            </div>
+                            <div
+                                class="flex flex-wrap items-center justify-between text-[11px] text-slate-400 gap-2 pt-0.5">
+                                <span class="">Lección 1 de 4 del módulo • Faltan 7 módulos prácticos</span><span
+                                    class="inline-flex items-center gap-1 text-slate-300 font-medium"><span
+                                        class="material-symbols-outlined text-[14px] text-orange-brand">schedule</span>Rúbrica
+                                    de taludes vence en 4 días</span></div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-5 flex flex-col justify-center">
+                        <div
+                            class="rounded-xl overflow-hidden border border-slate-700/70 bg-slate-900/90 shadow-md relative group">
+                            <div class="relative h-36 w-full bg-slate-800 overflow-hidden"><img
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80"
+                                    data-alt="Operador técnico de maquinaria pesada en excavación minera"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAvX4TcTCSemDECZ148in6OsZ51c_aVuyuFgGS3YhOLDpGgtAovJxto1zrhW7aZbzW6PdNaLL9SNKO8B8xO02NoOUqNe9LbKpXzH22pG2yk0YDSNiJoQ0PQUmjE3BAxqk3o6yEsLJS85jA1818UB7Bi2wdsYeUbEzdch1bSuR-1IFKXZjJL__DghKivBRt91iyvH4uqD5m-rUpfDhjZMofq8Gf-X4wI1anIZQW5OWHL34t6gyucUD5">
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-t from-navy-brand via-navy-brand/40 to-transparent">
+                                </div>
+                                <div
+                                    class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded bg-black/70 backdrop-blur text-white text-[10px] font-semibold flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[13px] text-orange-brand">timer</span>24
+                                    min restantes</div>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div
+                                        class="w-10 h-10 rounded-full bg-orange-brand/90 hover:bg-orange-brand text-white flex items-center justify-center shadow-lg transition-transform group-hover:scale-110">
+                                        <span class="material-symbols-outlined text-[24px]">play_arrow</span></div>
+                                </div>
+                            </div>
+                            <div class="p-3.5 space-y-2.5 bg-slate-900/95">
+                                <div class="flex items-center justify-between text-xs"><span
+                                        class="text-slate-300 font-medium truncate">Instructor: Ing. Marco
+                                        Viteri</span><span
+                                        class="text-[11px] text-emerald-400 font-semibold flex items-center gap-1"><span
+                                            class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Simulador
+                                        listo</span></div>
+                                <div class="flex items-center gap-2"><a
+                                        class="flex-1 inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-orange-brand hover:bg-orange-hover text-white font-bold text-xs transition-all shadow-md"
+                                        href="#"><span class="">Continuar lección</span><span
+                                            class="material-symbols-outlined text-[16px]">arrow_forward</span></a><a
+                                        class="px-3 py-2.5 rounded-lg border border-slate-700 hover:bg-slate-800 text-slate-300 hover:text-white font-semibold text-xs transition-colors shrink-0"
+                                        href="#" title="Ver temario y recursos"><span
+                                            class="material-symbols-outlined text-[16px]">menu_book</span></a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- GRID OPERATIVO EN 2 COLUMNAS (65% / 35%) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                <!-- COLUMNA PRINCIPAL (Izquierda, ~65% - 8 cols) -->
+                <div class="lg:col-span-8 space-y-6">
+                    <!-- Sección: En progreso con pestañas limpias -->
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between border-b border-border-light pb-2">
+                            <div class="flex items-center gap-2">
+                                <h3 class="text-base font-bold text-navy-brand">En progreso</h3>
+                                <span class="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-bold">2
+                                    cursos</span>
+                            </div>
+                            <!-- Pestañas sutiles -->
+                            <div class="flex items-center gap-1 text-xs font-semibold">
+                                <button class="px-3 py-1 rounded-md bg-navy-brand text-white font-bold">Todos
+                                    (2)</button>
+                                <button
+                                    class="px-3 py-1 rounded-md text-text-secondary hover:text-navy-brand hover:bg-slate-100 transition-colors">Rutas</button>
+                                <button
+                                    class="px-3 py-1 rounded-md text-text-secondary hover:text-navy-brand hover:bg-slate-100 transition-colors">Finalizados
+                                    (2)</button>
+                            </div>
+                        </div>
+                        <!-- Tarjeta 1: En curso secundaria (Compacta / Horizontal) -->
+                        <div
+                            class="bg-white rounded-xl border border-border-light p-4 hover:border-slate-300 hover:shadow-sm transition-all flex flex-col sm:flex-row gap-4 items-center">
+                            <div class="w-full sm:w-44 h-28 rounded-lg overflow-hidden shrink-0 bg-slate-100 relative">
+                                <img class="w-full h-full object-cover"
+                                    data-alt="Técnico especialista analizando un tablero eléctrico industrial con termografía"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAvX4TcTCSemDECZ148in6OsZ51c_aVuyuFgGS3YhOLDpGgtAovJxto1zrhW7aZbzW6PdNaLL9SNKO8B8xO02NoOUqNe9LbKpXzH22pG2yk0YDSNiJoQ0PQUmjE3BAxqk3o6yEsLJS85jA1818UB7Bi2wdsYeUbEzdch1bSuR-1IFKXZjJL__DghKivBRt91iyvH4uqD5m-rUpfDhjZMofq8Gf-X4wI1anIZQW5OWHL34t6gyucUD5">
+                                <span
+                                    class="absolute top-2 left-2 px-1.5 py-0.5 rounded bg-navy-brand/90 text-white text-[9px] font-bold uppercase tracking-wide">
+                                    Técnico
+                                </span>
+                            </div>
+                            <div class="flex-1 min-w-0 space-y-2 w-full">
+                                <div class="flex items-center justify-between">
+                                    <span
+                                        class="text-[11px] font-bold text-orange-brand uppercase tracking-wider">Módulo
+                                        2 de 5 en progreso</span>
+                                    <span class="text-xs font-bold text-navy-brand">30%</span>
+                                </div>
+                                <h4
+                                    class="text-sm font-bold text-navy-brand truncate hover:text-orange-brand transition-colors">
+                                    Mantenimiento Predictivo y Termografía Industrial
+                                </h4>
+                                <!-- Barra de progreso discreta -->
+                                <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                                    <div class="bg-orange-brand h-full rounded-full" style="width: 30%;"></div>
+                                </div>
+                                <div class="flex items-center justify-between pt-1">
+                                    <span class="text-xs text-text-secondary flex items-center gap-1 truncate">
+                                        <span class="material-symbols-outlined text-[14px]">play_arrow</span>
+                                        Próxima clase: <strong>Termografía Nivel I</strong>
+                                    </span>
+                                    <a class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-navy-brand font-bold text-xs transition-colors shrink-0"
+                                        href="#">
+                                        Reanudar
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Tarjeta 2: Próximo a iniciar o matriculado -->
+                        <div
+                            class="bg-white rounded-xl border border-border-light p-4 hover:border-slate-300 hover:shadow-sm transition-all flex flex-col sm:flex-row gap-4 items-center">
+                            <div class="w-full sm:w-44 h-28 rounded-lg overflow-hidden shrink-0 bg-slate-100 relative">
+                                <img class="w-full h-full object-cover"
+                                    data-alt="Plataforma de perforación minera y exploración geotécnica"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_lkydAgA173dJP9pnQHGwnU1LSJhszGbaOz1QxVUNxi1ZOtC2F0SAtk42-uKxYPNcI_0gbvJhlJ4EEs1nPZfIVtwUIxlvbcL9w07u3n5HzSELOey-6MJjVr9rUv_efPiNzsnVoqDR_jS1R39DzdqzJNDUoiKmEKx8cuL-k6n-4ChB2nIXcIBsbNRv-bsNDRd24n8ccMrFUd02QmEzpKqsLNr1NWYUgpQ_-HQrzI79OHy7s5X4eyrl">
+                                <span
+                                    class="absolute top-2 left-2 px-1.5 py-0.5 rounded bg-slate-800/90 text-white text-[9px] font-bold uppercase tracking-wide">
+                                    Matriculado
+                                </span>
+                            </div>
+                            <div class="flex-1 min-w-0 space-y-2 w-full">
+                                <div class="flex items-center justify-between">
+                                    <span
+                                        class="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">Inicia
+                                        el 15 de Noviembre</span>
+                                    <span class="text-xs text-text-secondary">5 Módulos</span>
+                                </div>
+                                <h4 class="text-sm font-bold text-navy-brand truncate">
+                                    Inspección de Equipos de Perforación Minera
+                                </h4>
+                                <p class="text-xs text-text-secondary line-clamp-1">
+                                    Protocolos no destructivos y evaluación estructural conforme al código API Spec 4F.
+                                </p>
+                                <div class="flex items-center justify-between pt-1">
+                                    <span class="text-[11px] text-text-muted flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-[14px]">check_box</span>
+                                        Requisitos previos completados
+                                    </span>
+                                    <a class="px-3 py-1.5 rounded-lg border border-border-light hover:bg-slate-50 text-text-primary font-semibold text-xs transition-colors shrink-0"
+                                        href="#">
+                                        Ver temario
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Acceso rápido a Explorar más cursos (Estilo Coursera) -->
+                    <div
+                        class="p-4 rounded-xl border border-dashed border-border-light bg-slate-50 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-10 h-10 rounded-lg bg-orange-subtle border border-orange-border flex items-center justify-center text-orange-brand">
+                                <span class="material-symbols-outlined text-[22px]">auto_stories</span>
+                            </div>
+                            <div>
+                                <h5 class="text-xs font-bold text-navy-brand">¿Deseas ampliar tu perfil técnico?</h5>
+                                <p class="text-[11px] text-text-secondary">Explora más de 40 certificaciones alineadas a
+                                    estándares internacionales ISO y OSHA.</p>
+                            </div>
+                        </div>
+                        <a class="text-xs font-bold text-orange-brand hover:text-orange-hover flex items-center gap-1 shrink-0"
+                            href="#">
+                            <span class="">Explorar catálogo</span>
+                            <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                        </a>
+                    </div>
+                </div>
+                <!-- COLUMNA LATERAL OPERATIVA (Derecha, ~35% - 4 cols) -->
+                <div class="lg:col-span-4 space-y-6">
+                    <!-- MÉTRICAS CLAVE COMPACTAS -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-white p-3.5 rounded-xl border border-border-light shadow-sm flex flex-col">
+                            <span class="text-[10px] text-text-secondary font-bold uppercase tracking-wider">Horas
+                                Acreditadas</span>
+                            <div class="flex items-baseline gap-1 mt-1">
+                                <span class="text-xl font-bold text-navy-brand">42</span>
+                                <span class="text-xs text-text-muted">/ 60 h</span>
+                            </div>
+                            <div class="w-full bg-slate-100 h-1 rounded-full mt-2 overflow-hidden">
+                                <div class="bg-navy-brand h-full rounded-full" style="width: 70%;"></div>
+                            </div>
+                        </div>
+                        <div class="bg-white p-3.5 rounded-xl border border-border-light shadow-sm flex flex-col">
+                            <span class="text-[10px] text-text-secondary font-bold uppercase tracking-wider">Racha de
+                                Estudio</span>
+                            <div class="flex items-center gap-1.5 mt-1">
+                                <span class="text-xl font-bold text-orange-brand">5 días</span>
+                                <span class="text-base">🔥</span>
+                            </div>
+                            <span class="text-[10px] text-text-muted mt-2">¡Sigue con el ritmo!</span>
+                        </div>
+                    </div>
+                    <!-- AGENDA OPERATIVA (Estilo Coursera 'Upcoming Events & Deadlines') -->
+                    <div class="bg-white rounded-xl border border-border-light p-4 shadow-sm space-y-3">
+                        <div class="flex items-center justify-between pb-2 border-b border-border-light">
+                            <h3
+                                class="text-xs font-bold uppercase tracking-wider text-navy-brand flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-orange-brand text-[18px]">event</span>
+                                Próximos eventos y entregas
+                            </h3>
+                            <span class="text-[10px] font-bold text-slate-500">Esta semana</span>
+                        </div>
+                        <div class="space-y-3">
+                            <!-- Evento 1: Clase en vivo hoy -->
+                            <div class="p-3 rounded-lg bg-orange-subtle border border-orange-border/70 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span
+                                        class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-orange-brand">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-orange-brand animate-ping"></span>
+                                        Hoy • 18:00 hrs
+                                    </span>
+                                    <span class="text-[10px] font-semibold text-orange-700">En 2 horas</span>
+                                </div>
+                                <div class="text-xs font-bold text-navy-brand leading-snug">
+                                    Sesión en vivo Q&amp;A: Dudas de Estabilidad
+                                </div>
+                                <p class="text-[11px] text-slate-600">
+                                    Con el Ing. Marco Viteri. Revisión técnica del Módulo 3.
+                                </p>
+                                <a class="inline-flex items-center justify-center gap-1.5 w-full py-1.5 px-3 rounded-md bg-orange-brand hover:bg-orange-hover text-white text-xs font-bold transition-colors shadow-sm"
+                                    href="#">
+                                    <span class="material-symbols-outlined text-[16px]">videocam</span>
+                                    <span class="">Unirse</span>
+                                </a>
+                            </div>
+                            <!-- Evento 2: Entrega de tarea -->
+                            <div class="p-3 rounded-lg bg-slate-50 border border-border-light space-y-1.5">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[10px] font-bold text-text-secondary uppercase">Jueves • 23:59
+                                        hrs</span>
+                                    <span
+                                        class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-slate-200 text-slate-700">Tarea</span>
+                                </div>
+                                <div class="text-xs font-bold text-navy-brand">
+                                    Entrega: Informe Técnico Práctico 3.1
+                                </div>
+                                <div class="flex items-center gap-1 text-[11px] text-text-muted">
+                                    <span class="material-symbols-outlined text-[14px]">schedule</span>
+                                    <span class="">Vence en 3 días</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- TUS LOGROS RECIENTES / CERTIFICACIÓN ESTILO COURSERA -->
+                    <div class="bg-white rounded-xl border border-border-light p-4 shadow-sm space-y-3">
+                        <div class="flex items-center justify-between pb-2 border-b border-border-light">
+                            <h3
+                                class="text-xs font-bold uppercase tracking-wider text-navy-brand flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-orange-brand text-[18px]">verified</span>
+                                Tus logros recientes
+                            </h3>
+                            <span
+                                class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">Oficial</span>
+                        </div>
+                        <!-- Mini tarjeta del certificado ISO 45001 -->
+                        <div class="p-3 rounded-lg border border-border-light bg-slate-50/70 space-y-2.5">
+                            <div class="flex items-start gap-3">
+                                <!-- QR Code Preview -->
+                                <div class="p-1.5 bg-white rounded border border-border-light shrink-0">
+                                    <svg class="w-10 h-10 text-navy-brand" fill="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm14 2h2v4h-2v-4zm-4-2h4v2h-4v-2zm2 4h4v2h-4v-2zm-2-4h2v2h-2v-2zm4-4h2v2h-2v-2zm-4 0h2v2h-2v-2zm6 2h2v2h-2v-2z">
+                                        </path>
+                                    </svg>
+                                </div>
+                                <div class="min-w-0">
+                                    <h4 class="text-xs font-bold text-navy-brand truncate">Gestión de Riesgos Laborales
+                                        en Minería</h4>
+                                    <p class="text-[10px] text-text-secondary mt-0.5 font-mono">Norma ISO 45001 • ID
+                                        FX-8849-CL</p>
+                                    <span
+                                        class="inline-flex items-center gap-1 text-[10px] text-emerald-700 font-semibold mt-1">
+                                        <span class="material-symbols-outlined text-[12px]">check_circle</span>
+                                        Aprobado con Distinción (19/20)
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="pt-1 flex items-center gap-2">
+                                <a class="flex-1 py-1.5 px-2.5 text-center text-xs font-bold rounded-lg bg-navy-brand hover:bg-slate-800 text-white transition-colors"
+                                    href="#">
+                                    Ver credencial
+                                </a>
+                                <button
+                                    class="p-1.5 rounded-lg border border-border-light hover:bg-white text-text-secondary hover:text-navy-brand transition-colors"
+                                    title="Compartir en LinkedIn" type="button">
+                                    <span class="material-symbols-outlined text-[16px]">share</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- FOOTER SUTIL Y COMPACTO -->
+
+    </div>
+
+
+</body>
+
+</html>

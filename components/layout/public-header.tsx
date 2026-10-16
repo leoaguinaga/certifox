@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 const NAV_LINKS: MobileNavItem[] = [
   { label: "Explorar cursos", href: "/cursos", iconType: "book" },
   { label: "Verificar certificado", href: "/verificar", iconType: "shield" },
-  { label: "Mi aprendizaje", href: "/mi-aprendizaje", iconType: "graduation" },
+  { label: "Mi aprendizaje", href: "/campus", iconType: "graduation" },
 ];
 
 export function PublicHeader() {
@@ -20,8 +20,8 @@ export function PublicHeader() {
     if (href === "/cursos") {
       return pathname.startsWith("/cursos");
     }
-    if (href === "/mi-aprendizaje") {
-      return pathname.startsWith("/mi-aprendizaje");
+    if (href === "/campus") {
+      return pathname.startsWith("/campus");
     }
     if (href === "/verificar" || href === "/#verificacion" || href === "#verificacion") {
       return pathname.startsWith("/verificar");

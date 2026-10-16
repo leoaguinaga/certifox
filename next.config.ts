@@ -26,19 +26,44 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/mi-aprendizaje",
+        destination: "/campus",
+        permanent: true,
+      },
+      {
+        source: "/mi-aprendizaje/cursos",
+        destination: "/campus/cursos",
+        permanent: true,
+      },
+      {
         source: "/mi-aprendizaje/certificados",
-        destination: "/mis-certificados",
-        permanent: false,
+        destination: "/campus/certificados",
+        permanent: true,
+      },
+      {
+        source: "/mis-certificados",
+        destination: "/campus/certificados",
+        permanent: true,
       },
       {
         source: "/mi-aprendizaje/perfil",
-        destination: "/perfil",
-        permanent: false,
+        destination: "/campus/perfil",
+        permanent: true,
+      },
+      {
+        source: "/perfil",
+        destination: "/campus/perfil",
+        permanent: true,
       },
       {
         source: "/mi-aprendizaje/ayuda",
-        destination: "/mesa-de-ayuda",
-        permanent: false,
+        destination: "/campus/mesa-de-ayuda",
+        permanent: true,
+      },
+      {
+        source: "/mesa-de-ayuda",
+        destination: "/campus/mesa-de-ayuda",
+        permanent: true,
       },
     ];
   },

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Lock, User, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { AuthTab } from "./auth-tabs";
 
@@ -10,6 +11,7 @@ interface LoginFormProps {
 }
 
 export function LoginForm({ onSwitchTab }: LoginFormProps) {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
@@ -17,8 +19,7 @@ export function LoginForm({ onSwitchTab }: LoginFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Placeholder login action
-    console.log("Submit login:", { identifier, password, rememberMe });
+    router.push("/campus");
   };
 
   return (

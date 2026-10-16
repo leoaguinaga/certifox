@@ -20,7 +20,7 @@ interface MobileNavProps {
 const DEFAULT_LINKS: MobileNavItem[] = [
   { label: "Explorar cursos", href: "/cursos", iconType: "book" },
   { label: "Verificar certificado", href: "/#verificacion", iconType: "shield" },
-  { label: "Mi aprendizaje", href: "/mi-aprendizaje", iconType: "graduation" },
+  { label: "Mi aprendizaje", href: "/campus", iconType: "graduation" },
 ];
 
 export function MobileNav({ navLinks = DEFAULT_LINKS }: MobileNavProps) {
@@ -34,8 +34,8 @@ export function MobileNav({ navLinks = DEFAULT_LINKS }: MobileNavProps) {
     if (href === "/cursos") {
       return pathname.startsWith("/cursos");
     }
-    if (href === "/mi-aprendizaje") {
-      return pathname.startsWith("/mi-aprendizaje");
+    if (href === "/campus") {
+      return pathname.startsWith("/campus");
     }
     if (href === "/verificar" || href === "/#verificacion" || href === "#verificacion") {
       return pathname.startsWith("/verificar");
