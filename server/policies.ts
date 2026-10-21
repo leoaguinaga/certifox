@@ -15,7 +15,7 @@ export type UserRole = "STUDENT" | "INSTRUCTOR";
 export interface SessionUser {
   id: string;
   email: string;
-  role: UserRole;
+  role: string;
   name?: string | null;
 }
 
