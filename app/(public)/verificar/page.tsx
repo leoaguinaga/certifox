@@ -5,10 +5,17 @@ import { VerificationProcessSteps } from "@/features/certificates/components/ver
 import { VerificationStandardsSection } from "@/features/certificates/components/verification-standards-section";
 import { VerificationFaq } from "@/features/certificates/components/verification-faq";
 
+export const dynamic = "force-dynamic";
+
+// RNF-10: noindex en /verificar
 export const metadata: Metadata = {
   title: "Verificación Oficial de Certificados y Credenciales | Certifox",
   description:
     "Auditoría pública registral en tiempo real con inmutabilidad criptográfica SHA-256 y cumplimiento ISO/IEC 17024.",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function VerificarPage() {

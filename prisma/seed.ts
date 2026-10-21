@@ -173,8 +173,8 @@ async function main() {
           code: "CFX-2025-9831",
           sha256: "8a9fe409b3628e811c0f0f49c01742de8b7c4270f92275ba2c4b8e2cb927c24e",
           status: CertificateStatus.VALID,
-          issuedAt: new Date("2024-10-14T18:42:00Z"),
-          expiresAt: new Date("2026-10-14T18:42:00Z"), // Vigente
+          issuedAt: new Date("2026-10-14T18:42:00Z"),
+          expiresAt: new Date("2028-10-14T18:42:00Z"), // Vigente por 2 años
         },
       },
     },
