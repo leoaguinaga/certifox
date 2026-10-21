@@ -1,0 +1,300 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  STUDENT
+  INSTRUCTOR
+}
+
+enum EnrollmentStatus {
+  PENDING
+  ACTIVE
+  COMPLETED
+}
+
+enum SubmissionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum CertificateStatus {
+  VALID
+  EXPIRED
+  REVOKED
+  OBSERVED
+}
+
+enum TicketStatus {
+  OPEN
+  CLOSED
+}
+
+// -----------------------------------------------------------------------------
+// Better Auth + User Domain
+// -----------------------------------------------------------------------------
+model User {
+  id             String       @id @default(cuid())
+  name           String
+  email          String       @unique
+  emailVerified  Boolean      @default(false)
+  image          String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  // Campos específicos de dominio Certifox
+  role           Role         @default(STUDENT)
+  documentType   String?      // DNI, CE, Pasaporte
+  documentNumber String?      // Encriptado o enmascarado en vistas públicas
+  institution    String?
+  avatarUrl      String?
+
+  // Relaciones Better Auth
+  sessions       Session[]
+  accounts       Account[]
+
+  // Relaciones de dominio
+  coursesInstructed Course[]     @relation("InstructorCourses")
+  enrollments       Enrollment[]
+  tickets           Ticket[]
+  auditLogs         AuditLog[]   @relation("ActorAuditLogs")
+
+  @@map("users")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("accounts")
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("verifications")
+}
+
+// -----------------------------------------------------------------------------
+// Cursos, Módulos y Lecciones
+// -----------------------------------------------------------------------------
+model Course {
+  id              String        @id @default(cuid())
+  slug            String        @unique
+  title           String
+  summary         String
+  category        String
+  level           String        // Básico, Intermedio, Avanzado
+  hours           Int           @default(0)
+  coverUrl        String?
+  liveSessionUrl  String?
+  published       Boolean       @default(false)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  instructorId    String
+  instructor      User          @relation("InstructorCourses", fields: [instructorId], references: [id])
+
+  modules         Module[]
+  enrollments     Enrollment[]
+  assessments     Assessment[]
+
+  @@map("courses")
+}
+
+model Module {
+  id        String   @id @default(cuid())
+  title     String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  lessons   Lesson[]
+
+  @@map("modules")
+}
+
+model Lesson {
+  id          String   @id @default(cuid())
+  title       String
+  order       Int      @default(0)
+  videoUrl    String?
+  durationMin Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  moduleId    String
+  module      Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  progress    LessonProgress[]
+
+  @@map("lessons")
+}
+
+// -----------------------------------------------------------------------------
+// Matrícula y Progreso
+// -----------------------------------------------------------------------------
+model Enrollment {
+  id          String           @id @default(cuid())
+  status      EnrollmentStatus @default(PENDING)
+  activatedAt DateTime?
+  completedAt DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  userId      String
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  courseId    String
+  course      Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  progress    LessonProgress[]
+  submissions Submission[]
+  certificate Certificate?
+
+  @@unique([userId, courseId])
+  @@map("enrollments")
+}
+
+model LessonProgress {
+  id           String     @id @default(cuid())
+  completedAt  DateTime   @default(now())
+
+  enrollmentId String
+  enrollment   Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+
+  lessonId     String
+  lesson       Lesson     @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([enrollmentId, lessonId])
+  @@map("lesson_progress")
+}
+
+// -----------------------------------------------------------------------------
+// Tareas y Evaluaciones
+// -----------------------------------------------------------------------------
+model Assessment {
+  id           String       @id @default(cuid())
+  title        String
+  description  String?
+  passingScore Int          @default(14) // Escala 0-20 común en Perú
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  courseId     String
+  course       Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  submissions  Submission[]
+
+  @@map("assessments")
+}
+
+model Submission {
+  id                String           @id @default(cuid())
+  contentUrlOrText  String           // URL o texto de entrega
+  score             Int?
+  feedback          String?
+  status            SubmissionStatus @default(PENDING)
+  submittedAt       DateTime         @default(now())
+  gradedAt          DateTime?
+
+  assessmentId      String
+  assessment        Assessment       @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+
+  enrollmentId      String
+  enrollment        Enrollment       @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+
+  @@map("submissions")
+}
+
+// -----------------------------------------------------------------------------
+// Certificados y Verificación
+// -----------------------------------------------------------------------------
+model Certificate {
+  id               String            @id @default(cuid())
+  code             String            @unique // ≥ 96 bits de entropía (cuid/nanoid/hex aleatorio)
+  sha256           String            // Hash criptográfico de validación
+  status           CertificateStatus @default(VALID)
+  issuedAt         DateTime          @default(now())
+  expiresAt        DateTime?
+  revokedAt        DateTime?
+  revocationReason String?
+
+  enrollmentId     String            @unique
+  enrollment       Enrollment        @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+
+  @@map("certificates")
+}
+
+// -----------------------------------------------------------------------------
+// Soporte y Auditoría
+// -----------------------------------------------------------------------------
+model Ticket {
+  id        String       @id @default(cuid())
+  subject   String
+  category  String
+  message   String
+  status    TicketStatus @default(OPEN)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  userId    String
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("tickets")
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  action     String   // "CONFIRM_PAYMENT", "GRADE_SUBMISSION", "ISSUE_CERTIFICATE", "REVOKE_CERTIFICATE"
+  targetType String   // "Enrollment", "Submission", "Certificate"
+  targetId   String
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  actorId    String
+  actor      User     @relation("ActorAuditLogs", fields: [actorId], references: [id])
+
+  @@map("audit_logs")
+}

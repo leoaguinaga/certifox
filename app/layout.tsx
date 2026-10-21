@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "@fontsource-variable/manrope";
 import "./globals.css";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Certifox — Acreditación Técnica y Cursos Certificados",
@@ -17,8 +18,8 @@ export default function RootLayout({
     <html lang="es" className="h-full antialiased">
       <body className="min-h-full flex flex-col font-sans bg-[#FFFDF9] text-[#0D1C2F]">
         {children}
+        <Toaster position="top-right" richColors />
       </body>
     </html>
   );
 }
-

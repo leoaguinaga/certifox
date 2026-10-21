@@ -1,8 +1,15 @@
-"use client";
-
+import { getSession } from "@/server/auth";
+import { forbidden } from "next/navigation";
 import { Users } from "lucide-react";
 
-export default function CampusEstudiantesPage() {
+export default async function CampusEstudiantesPage() {
+  const session = await getSession();
+
+  // AC-09: Un estudiante recibe 403 en /campus/estudiantes
+  if (!session || session.user.role !== "INSTRUCTOR") {
+    forbidden();
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -24,7 +31,7 @@ export default function CampusEstudiantesPage() {
           Directorio Académico
         </h3>
         <p className="text-xs text-stone-500 dark:text-stone-400 max-w-md mx-auto">
-          84 estudiantes activos en 3 grupos académicos asignados para el ciclo vigente.
+          Panel de gestión exclusivo para docentes. Aquí podrás revisar el progreso de tus alumnos y confirmar pagos.
         </p>
       </div>
     </div>

@@ -11,8 +11,6 @@ import {
 interface CampusRoleContextValue {
   role: CampusRole;
   user: CampusUserProfile;
-  setRole: (role: CampusRole) => void;
-  toggleRole: () => void;
   mobileNavOpen: boolean;
   setMobileNavOpen: (open: boolean) => void;
   toggleMobileNav: () => void;
@@ -22,37 +20,36 @@ const CampusRoleContext = createContext<CampusRoleContextValue | undefined>(
   undefined
 );
 
+interface CampusRoleProviderProps {
+  children: React.ReactNode;
+  initialRole?: CampusRole;
+  initialUser?: Partial<CampusUserProfile>;
+}
+
 export function CampusRoleProvider({
   children,
   initialRole = "student",
-}: {
-  children: React.ReactNode;
-  initialRole?: CampusRole;
-}) {
-  const [role, setRoleState] = useState<CampusRole>(initialRole);
+  initialUser,
+}: CampusRoleProviderProps) {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
-
-  const setRole = (newRole: CampusRole) => {
-    setRoleState(newRole);
-    localStorage.setItem("certifox_campus_role", newRole);
-  };
-
-  const toggleRole = () => {
-    const nextRole = role === "student" ? "teacher" : "student";
-    setRole(nextRole);
-  };
 
   const toggleMobileNav = () => setMobileNavOpen((prev) => !prev);
 
-  const user = role === "student" ? MOCK_STUDENT_USER : MOCK_TEACHER_USER;
+  // A4: El rol proviene estrictamente de la sesión real, sin toggles arbitrarios
+  const fallbackProfile = initialRole === "teacher" ? MOCK_TEACHER_USER : MOCK_STUDENT_USER;
+  const user: CampusUserProfile = {
+    ...fallbackProfile,
+    ...initialUser,
+    name: initialUser?.name || fallbackProfile.name,
+    email: initialUser?.email || fallbackProfile.email,
+    roleLabel: initialRole === "teacher" ? "Docente Verificado" : "Estudiante Regular",
+  };
 
   return (
     <CampusRoleContext.Provider
       value={{
-        role,
+        role: initialRole,
         user,
-        setRole,
-        toggleRole,
         mobileNavOpen,
         setMobileNavOpen,
         toggleMobileNav,
