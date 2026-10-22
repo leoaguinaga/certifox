@@ -16,7 +16,7 @@ const FOOTER_SECTIONS = [
   {
     title: "Validación",
     links: [
-      { label: "Verificar con QR Oficial", href: "#verificacion" },
+      { label: "Verificar con QR Oficial", href: "/verificar" },
       { label: "Buscador de Código Único", href: "#verificacion" },
       { label: "Estándar Criptográfico", href: "#verificacion" },
       { label: "Docentes Homologados", href: "#cursos" },
@@ -36,10 +36,10 @@ const FOOTER_SECTIONS = [
   {
     title: "Soporte & Legal",
     links: [
-      { label: "Centro de Ayuda", href: "#" },
+      { label: "Centro de Ayuda", href: "/campus/mesa-de-ayuda" },
       { label: "Auditoría Académica", href: "#" },
-      { label: "Términos del Servicio", href: "#" },
-      { label: "Política de Privacidad", href: "#" },
+      { label: "Términos del Servicio", href: "/terminos" },
+      { label: "Política de Privacidad", href: "/privacidad" },
       { label: "Canal de Integridad Ética", href: "#" },
     ],
   },
@@ -106,3 +106,5 @@ export function PublicFooter() {
     </footer>
   );
 }
+
+

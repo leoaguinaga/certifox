@@ -1,4 +1,5 @@
 import { PrismaClient, Role, EnrollmentStatus, CertificateStatus } from "@prisma/client";
+import { hashPassword } from "better-auth/crypto";
 
 const prisma = new PrismaClient();
 
@@ -27,7 +28,7 @@ async function main() {
       email: "profe@certifox.pe",
       role: Role.INSTRUCTOR,
       institution: "Centro Técnico MaqOps & FoxCode Industrial",
-      avatarUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuBp8fbSmmUjxZ-hl58gG_g56pRgHYV1jWDgwvgcHEsxrQSOo9iGqLnJ86bRsnf-EvcC_-HvC-3-fXwtbDQ27r2uXqnJ8iU0ERaXL1umXXw0ZCI49QQeKy7F9r7Ai8B2xmjccScuea7DHslp2p8VqJQ9FsqhozIKpckAiLdYc6DNuUDRUIN2JYcZeHiUvtqsrRjpV2KDrTRqQQT8yTTilFItFlCsffouF0ffAt9oKeczc369aB4B9m-_",
+      avatarUrl: "/images/avatars/instructor.svg",
     },
   });
 
@@ -55,6 +56,19 @@ async function main() {
 
   console.log("✅ Usuarios creados: 1 Instructor, 2 Estudiantes");
 
+  // Configurar credenciales Better Auth (Password123!)
+  const demoHashedPassword = await hashPassword("Password123!");
+  for (const u of [instructor, student, student2]) {
+    await prisma.account.create({
+      data: {
+        userId: u.id,
+        accountId: u.id,
+        providerId: "credential",
+        password: demoHashedPassword,
+      },
+    });
+  }
+
   // 2. Cursos demo
   const course1 = await prisma.course.create({
     data: {
@@ -66,7 +80,7 @@ async function main() {
       hours: 48,
       published: true,
       instructorId: instructor.id,
-      coverUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuBATXmZ_lcK_1sJzzOeIvRjWlAYN9zXPN_FKWSlt9C2eH_Ne4dVjlIHETJ3yZI3rg3HKYtD_r9e2crodOweebnB3EFP9bEZ1T07FzI-hEqYhjLz8IqLIf3Lc0OUEZhiWb1Tfh9UQjSu6AWajdpgcDJC5pumGMceZVwpiwlr8VkAWyRke_iuhxCDC1_R-hQ2j45lTJKy8CyRLAvoX_6ZdEH4MGi5ThcFuZ6BOxKtjaX47jYXRy5aXANf",
+      coverUrl: "/images/courses/course-haccp.svg",
       modules: {
         create: [
           {
@@ -135,7 +149,7 @@ async function main() {
       hours: 60,
       published: true,
       instructorId: instructor.id,
-      coverUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuBUYnN5Uq14HwaXIqv4bej8-sdax2ycFEiz-SJcAM14AZAzOLlGc_vcyxgI4VSYCiM6Z5Gmw1oDSP1EG9k1oON8TdAHGzt_vUx0Bc2Uu-g0Eo2Oy8lygp1B6KOVM2KUcC9aAQLHNO1s2CVg1aH9V2elm0aTFf_aBB7Qm55mLsNd4i9jFo-1Sm6pSpAU4lK0CGRDXHj0SFuvQTozJf5-ypYcThSRv0om2oPZNZm97v6Lu90yEhSNRljR",
+      coverUrl: "/images/courses/course-iso9001.svg",
       modules: {
         create: [
           {
@@ -260,3 +274,4 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
+

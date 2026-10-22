@@ -8,6 +8,7 @@ import { Settings, LogOut } from "lucide-react";
 import { useCampusRole } from "../context/campus-role-context";
 import { signOut } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
+import { sanitizeMediaUrl } from "@/lib/image-utils";
 
 export function CampusUserBadge() {
   const { user, role } = useCampusRole();
@@ -75,7 +76,7 @@ export function CampusUserBadge() {
           <div className="relative shrink-0 w-8.5 h-8.5 rounded-full overflow-hidden ring-1 ring-stone-200 dark:ring-stone-700 bg-stone-100">
             {user.avatar ? (
               <Image
-                src={user.avatar}
+                src={sanitizeMediaUrl(user.avatar, "/images/avatars/default.svg")}
                 alt={`Foto de perfil de ${user.name}`}
                 fill
                 sizes="34px"
@@ -116,3 +117,4 @@ export function CampusUserBadge() {
     </div>
   );
 }
+

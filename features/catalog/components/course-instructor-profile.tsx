@@ -1,3 +1,4 @@
+import { sanitizeMediaUrl } from '@/lib/image-utils';
 import Image from "next/image";
 import { Award, Star, ShieldCheck } from "lucide-react";
 import { CourseInstructor } from "../types";
@@ -19,7 +20,7 @@ export function CourseInstructorProfile({
         {/* Avatar */}
         <div className="relative w-28 h-28 rounded-2xl overflow-hidden shadow-md shrink-0 border border-stone-200">
           <Image
-            src={instructor.avatarUrl}
+            src={sanitizeMediaUrl(instructor.avatarUrl, "/images/avatars/instructor.svg")}
             alt={instructor.name}
             fill
             sizes="112px"
@@ -72,3 +73,5 @@ export function CourseInstructorProfile({
     </section>
   );
 }
+
+

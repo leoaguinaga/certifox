@@ -1,3 +1,4 @@
+import { sanitizeMediaUrl } from '@/lib/image-utils';
 import Image from "next/image";
 import { ShieldCheck, Layers, Clock, QrCode } from "lucide-react";
 import { Course } from "../types";
@@ -95,7 +96,7 @@ export function CourseDetailHero({ course }: CourseDetailHeroProps) {
             <div className="flex items-center gap-3 pt-2 border-t border-white/10">
               <div className="relative w-12 h-12 rounded-full overflow-hidden shadow-md shrink-0 ring-2 ring-white/20">
                 <Image
-                  src={course.instructor.avatarUrl}
+                  src={sanitizeMediaUrl(course.instructor?.avatarUrl, "/images/avatars/instructor.svg")}
                   alt={course.instructor.name}
                   fill
                   sizes="48px"
@@ -122,3 +123,5 @@ export function CourseDetailHero({ course }: CourseDetailHeroProps) {
     </div>
   );
 }
+
+

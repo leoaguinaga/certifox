@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0E2439" />
+      <stop offset="100%" stop-color="#1E3A5F" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563EB" />
+      <stop offset="100%" stop-color="#60A5FA" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#bg)" />
+  <circle cx="720" cy="90" r="170" fill="#2563EB" opacity="0.12" />
+  <circle cx="100" cy="370" r="130" fill="#FD761A" opacity="0.08" />
+  <g stroke="#ffffff" stroke-opacity="0.04" stroke-width="1">
+    <line x1="0" y1="90" x2="800" y2="90" />
+    <line x1="0" y1="180" x2="800" y2="180" />
+    <line x1="0" y1="270" x2="800" y2="270" />
+    <line x1="0" y1="360" x2="800" y2="360" />
+    <line x1="160" y1="0" x2="160" y2="450" />
+    <line x1="320" y1="0" x2="320" y2="450" />
+    <line x1="480" y1="0" x2="480" y2="450" />
+    <line x1="640" y1="0" x2="640" y2="450" />
+  </g>
+  <g transform="translate(350, 140)">
+    <rect x="-60" y="-60" width="120" height="120" rx="28" fill="url(#accent)" opacity="0.2" />
+    <rect x="-48" y="-48" width="96" height="96" rx="20" fill="url(#accent)" />
+    <!-- Award ribbon / ISO -->
+    <circle cx="0" cy="-6" r="18" fill="none" stroke="#ffffff" stroke-width="4" />
+    <path d="M-8 10 L-14 30 L0 22 L14 30 L8 10" fill="#ffffff" />
+  </g>
+  <text x="400" y="270" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="800" text-anchor="middle" letter-spacing="1">GESTIÓN DE CALIDAD ISO 9001</text>
+  <text x="400" y="305" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500" text-anchor="middle">Auditoría Interna y Mejora Continua de Procesos</text>
+  <rect x="330" y="335" width="140" height="28" rx="14" fill="#2563EB" opacity="0.3" />
+  <text x="400" y="354" fill="#93C5FD" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="700" text-anchor="middle">NORMA INTERNACIONAL</text>
+</svg>

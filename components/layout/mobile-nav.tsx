@@ -106,15 +106,15 @@ export function MobileNav({ navLinks = DEFAULT_LINKS }: MobileNavProps) {
                 <div className="flex items-center gap-3">
                   <div className="relative w-9 h-9 rounded-full overflow-hidden ring-2 ring-orange-500/20">
                     <Image
-                      src="https://lh3.googleusercontent.com/aida/AEtjO1UcsVlSjtfMChF53ZjY37UWU4UWV9CbuOqwVdB1xtHh4iX7QJDEO2JY3N3oR803kNIXE-PCzpaC4yj1tIziPVjphxRlHMfzpyUCME7gFRxIVtp3ZGGowIcziwTZfZWWuR6Y3LxbhmgtofvYEPC1-lTOAyn53-D3IECneVotkyIDRJ8Ub-NZebhsrFx4iG7IqAW7uR-BmluYkN0wlQ7WEbY9PN77NdblwNCmEc5K2t8x7B6P_hih7ahf-Q"
-                      alt="Brunella E."
+                      src="/images/avatars/student.svg"
+                      alt="Mi Campus"
                       fill
                       sizes="36px"
                       className="object-cover"
                     />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-stone-900 leading-none">Brunella E.</p>
+                    <p className="text-xs font-bold text-stone-900 leading-none">Mi Campus</p>
                     <p className="text-[11px] text-stone-500 mt-0.5">Estudiante acreditada</p>
                   </div>
                 </div>
@@ -142,3 +142,4 @@ export function MobileNav({ navLinks = DEFAULT_LINKS }: MobileNavProps) {
     </div>
   );
 }
+

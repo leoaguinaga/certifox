@@ -83,7 +83,7 @@ export function InteractivePreviewWindow() {
               <div className="flex items-center gap-2.5">
                 <div className="relative w-7 h-7 rounded-full overflow-hidden shrink-0">
                   <Image
-                    src="https://lh3.googleusercontent.com/aida/AEtjO1UcsVlSjtfMChF53ZjY37UWU4UWV9CbuOqwVdB1xtHh4iX7QJDEO2JY3N3oR803kNIXE-PCzpaC4yj1tIziPVjphxRlHMfzpyUCME7gFRxIVtp3ZGGowIcziwTZfZWWuR6Y3LxbhmgtofvYEPC1-lTOAyn53-D3IECneVotkyIDRJ8Ub-NZebhsrFx4iG7IqAW7uR-BmluYkN0wlQ7WEbY9PN77NdblwNCmEc5K2t8x7B6P_hih7ahf-Q"
+                    src="/images/avatars/instructor.svg"
                     alt="Ing. Marco Viteri"
                     fill
                     sizes="28px"
@@ -154,3 +154,4 @@ export function InteractivePreviewWindow() {
     </div>
   );
 }
+

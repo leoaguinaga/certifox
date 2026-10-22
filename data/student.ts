@@ -4,8 +4,7 @@ export const mockStudent: StudentProfile = {
   id: "CFX-88219",
   name: "Alejandro Morales",
   email: "alejandro.morales@empresa.com",
-  avatar:
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuCr8Cs2V0mR2YyfQX3GFFe_I__XuoKazEOOB0dDj_GHmnarRiLXTM2dMSbcUlIRx18SHRYY8vmb8Rlh28NuFzlbwLBsJv-nSiNGSpJqHF-hKP8U2PEjbgP_PcXLY1iT8vHgrLttggjWYyol9yCopSi2Kjc5AYQDruFBp4bdxiJmyaoGr0e10Lr_IutdhhonCm-XO5ilVrwx0-2mCyvj6MCB4ouZYFripoUuKvi3VORbrhvrShG_vw2D",
+  avatar: "/images/avatars/student.svg",
   role: "Estudiante",
   statusLabel: "Estudiante Acreditado",
   documentType: "DNI",
@@ -26,8 +25,7 @@ export const mockEnrolledCourses: EnrolledCourse[] = [
     categoryLabel: "Acreditación Técnica Pesada",
     instructorName: "Ing. Roberto Mendoza",
     school: "Escuela de Maquinaria y Minas",
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuDicOlo2Lh1fK9i7c79p5be1XjXDOZpY8IvIvhUTTrMuAlOmIpPAT4i2jH8rC8Nh6QkcXCvxW9wNuRbL1a1eJZjnFxPHxD-JYViZ6Qz5aC2sL-3v_Wp7nTBxaWnbEfOKIuxGYR11bswWVr4NJDqdioHDptAfliuDi1rJEF7tWpyP2rTF9bgrdWeOCdqCwaBXTvEGEBK_qbjSiQ_WIl1vt6n5HsRTJSMJ5jUZ9ST9q0z_FHQP9YwmhqB",
+    image: "/images/courses/course-haccp.svg",
     status: "in_progress",
     statusLabel: "En curso • 65%",
     progressPercentage: 65,
@@ -46,8 +44,7 @@ export const mockEnrolledCourses: EnrolledCourse[] = [
     categoryLabel: "Mantenimiento & Confiabilidad",
     instructorName: "Ing. Roberto Mendoza",
     school: "Escuela de Maquinaria y Minas",
-    image:
-      "https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=800&auto=format&fit=crop",
+    image: "/images/courses/course-bpm.svg",
     status: "pending_confirmation",
     statusLabel: "Pendiente de confirmación",
     progressPercentage: 0,
@@ -65,8 +62,7 @@ export const mockEnrolledCourses: EnrolledCourse[] = [
     categoryLabel: "Calidad y Metrología",
     instructorName: "Dra. Elena Vargas",
     school: "Instituto Tecnológico de Ensayos",
-    image:
-      "https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=800&auto=format&fit=crop",
+    image: "/images/courses/course-iso9001.svg",
     status: "completed",
     statusLabel: "Aprobado • Calificación 98/100",
     progressPercentage: 100,

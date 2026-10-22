@@ -8,13 +8,35 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "lh3.googleusercontent.com",
+        hostname: "media.certifox.edu",
       },
       {
         protocol: "https",
-        hostname: "images.unsplash.com",
+        hostname: "*.r2.cloudflarestorage.com",
       },
     ],
+  },
+  async headers() {
+    return [
+      {
+        // AC-21: /campus/* devuelve no-store para no cachearse en CDN ni proxies intermedios
+        source: "/campus/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "private, no-store, no-cache, must-revalidate, max-age=0",
+          },
+          {
+            key: "Pragma",
+            value: "no-cache",
+          },
+          {
+            key: "Expires",
+            value: "0",
+          },
+        ],
+      },
+    ];
   },
   async redirects() {
     return [

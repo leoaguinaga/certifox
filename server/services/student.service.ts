@@ -74,7 +74,7 @@ export async function getStudentEnrolledCourses(
       school: course.instructor.institution || "Centro de Formación Técnica",
       image:
         course.coverUrl ||
-        "https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=800&auto=format&fit=crop",
+        "/images/courses/course-default.svg",
       status,
       statusLabel,
       progressPercentage,
@@ -135,7 +135,7 @@ export async function getStudentProfileData(
     name: dbUser?.name || "Estudiante",
     email: dbUser?.email || user.email,
     avatar:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuCr8Cs2V0mR2YyfQX3GFFe_I__XuoKazEOOB0dDj_GHmnarRiLXTM2dMSbcUlIRx18SHRYY8vmb8Rlh28NuFzlbwLBsJv-nSiNGSpJqHF-hKP8U2PEjbgP_PcXLY1iT8vHgrLttggjWYyol9yCopSi2Kjc5AYQDruFBp4bdxiJmyaoGr0e10Lr_IutdhhonCm-XO5ilVrwx0-2mCyvj6MCB4ouZYFripoUuKvi3VORbrhvrShG_vw2D",
+      "/images/avatars/student.svg",
     role: "Estudiante",
     statusLabel: activeCount > 0 ? "Estudiante Activo" : "Estudiante",
     documentType: dbUser?.documentType || "DNI",
@@ -148,3 +148,4 @@ export async function getStudentProfileData(
 
   return { profile, enrolledCourses };
 }
+

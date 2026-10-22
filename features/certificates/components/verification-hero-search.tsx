@@ -194,7 +194,7 @@ export function VerificationHeroSearch({
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
                     <div className="rounded-lg overflow-hidden bg-stone-100 border border-stone-200 relative h-36 flex items-center justify-center">
                       <Image
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRPpgZkPA3K1Lbeeowwf6HqT-7LV_bCnI-AwrCLpNCle66LwnJQj-cb4fJ4ZOmUDHnUBECOcuB8N6JjD87xxV-O8e8kWrHWwSjRIsmz5-c48YKXleWwmLU7PQuJnd-sg1yV8In7CB0Rrol1RlxRIbukTO6xzj5PYAxITuIuHEsP8AtR4eagkq5FGxs8f9uifDUEeHc8HbJ3KN8c6M_xkQk18lGqoXf3J7zXBgM4Kc8wa3oKcPxc8LZ"
+                        src="/images/courses/course-haccp.svg"
                         alt="Ubicación de código en diploma oficial Certifox"
                         fill
                         sizes="(max-width: 768px) 100vw, 50vw"
@@ -345,3 +345,4 @@ export function VerificationHeroSearch({
     </section>
   );
 }
+

@@ -20,17 +20,14 @@ export const CURSOS: Course[] = [
     accessNote: "Acceso previa confirmación",
     hasVerifiableCertificate: true,
     hasQrCertificate: true,
-    imageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuBATXmZ_lcK_1sJzzOeIvRjWlAYN9zXPN_FKWSlt9C2eH_Ne4dVjlIHETJ3yZI3rg3HKYtD_r9e2crodOweebnB3EFP9bEZ1T07FzI-hEqYhjLz8IqLIf3Lc0OUEZhiWb1Tfh9UQjSu6AWajdpgcDJC5pumGMceZVwpiwlr8VkAWyRke_iuhxCDC1_R-hQ2j45lTJKy8CyRLAvoX_6ZdEH4MGi5ThcFuZ6BOxKtjaX47jYXRy5aXANf",
+    imageUrl: "/images/courses/course-default.svg",
     imageAlt: "Operación de excavadoras y maquinaria pesada en terreno industrial",
-    backdropUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuBUYnN5Uq14HwaXIqv4bej8-sdax2ycFEiz-SJcAM14AZAzOLlGc_vcyxgI4VSYCiM6Z5Gmw1oDSP1EG9k1oON8TdAHGzt_vUx0Bc2Uu-g0Eo2Oy8lygp1B6KOVM2KUcC9aAQLHNO1s2CVg1aH9V2elm0aTFf_aBB7Qm55mLsNd4i9jFo-1Sm6pSpAU4lK0CGRDXHj0SFuvQTozJf5-ypYcThSRv0om2oPZNZm97v6Lu90yEhSNRljR",
+    backdropUrl: "/images/courses/course-haccp.svg",
     instructorName: "Ing. Marco Viteri",
     instructor: {
       name: "Ing. Marco Viteri Valdivia",
       role: "Especialista en Gestión de Riesgo y Operaciones de Línea Amarilla • 16 años de experiencia",
-      avatarUrl:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuBp8fbSmmUjxZ-hl58gG_g56pRgHYV1jWDgwvgcHEsxrQSOo9iGqLnJ86bRsnf-EvcC_-HvC-3-fXwtbDQ27r2uXqnJ8iU0ERaXL1umXXw0ZCI49QQeKy7F9r7Ai8B2xmjccScuea7DHslp2p8VqJQ9FsqhozIKpckAiLdYc6DNuUDRUIN2JYcZeHiUvtqsrRjpV2KDrTRqQQT8yTTilFItFlCsffouF0ffAt9oKeczc369aB4B9m-_",
+      avatarUrl: "/images/avatars/instructor.svg",
       cipNumber: "CIP Nº 182944",
       bio: "Ingeniero de Minas con posgrado en Prevención de Riesgos Operacionales en Minería de Gran Superficie. Con más de 16 años liderando programas de cero fatalidades en flotas Komatsu y Caterpillar en Chile y Perú. Ex-instructor técnico sénior para contratistas de tajo abierto.",
       accreditedStudents: 1420,
@@ -226,17 +223,14 @@ export const CURSOS: Course[] = [
     accessNote: "Acceso previa confirmación",
     hasVerifiableCertificate: true,
     hasQrCertificate: true,
-    imageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuBvWNGjsOPNawrld9IwTQZuIua8MtysjmDdDHE3VU0C6NeospXxh09zKO80W-jVgZdVaT4aOqKoN4idFA-XTavOFjL4E1d62jKBB9uZGKW5-2b7PEX33P-g7U5CuWV3eOe7Bze_sO_D5JVECtV_Y9F7xwrJiNj-OLafDz-BP7CNKMlO8ePx80jOXqK38ru5Sd0gINys6DAAdAxcl4VVqn2yoE8ZoCnt59DG_qVaaRUTWarV5tRNnlVe",
+    imageUrl: "/images/courses/course-default.svg",
     imageAlt: "Supervisor de seguridad en mina subterránea con casco y chaleco reflectivo",
-    backdropUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuCa37R4MbafIZQpc12n9lMo3itB21MaI2LvpnEbNcpskd1hH3hMls7VsjE7TQti3iQCR5BHawxzZ_BdVKqTKzqjwga5K9dzopo806sjaw5g-gTbqagor3CTQXHvOuMpARSzfpU8fnqvTz4Ufx4ePcRdcBWDeUISn9TgdLFBxZg0NeB_nSPJUxKN5TLE-_jBmMqsQRkv4GRPaWZ_24pXewUb94FVOTuas7fSm6GwiEOEPoFh88m1V0qq",
+    backdropUrl: "/images/courses/course-haccp.svg",
     instructorName: "Ing. Carlos Morales",
     instructor: {
       name: "Ing. Carlos Morales",
       role: "Auditor Líder en Seguridad Minera e Higiene Industrial • 14 años en minería de socavón",
-      avatarUrl:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuBgeHGoYSgtEWnjrWSngdZmYfgT1qxr1JFccX1ewQtgm6sOvbrUL17SvUL-UzqrPVWiEtM8bQ1ebu_JQe1MTlXyiDNrOOLhPw0gYa3AoSKjXaSxzkiDHyn7sbPw2S__XBjf5Zy9-lA0HSjPuGNnxW2pLD4OJ8UFu3yrEsOszr3NLv2-Q43QO9vO_xtdsEz0_6vDkCzJ_nF0NCWL_OEuHHJpdEHmh7B1jR7JfiXdfwmC0wJhQmEBjzTD",
+      avatarUrl: "/images/avatars/instructor.svg",
       cipNumber: "CIP Nº 152831",
       bio: "Ingeniero de Minas con especialización en Geomecánica y Gestión de Desastres Mineros. Ha liderado comités paritarios y auditorías para las principales compañías mineras polimetálicas de la región.",
       accreditedStudents: 980,
@@ -326,17 +320,14 @@ export const CURSOS: Course[] = [
     accessNote: "Acceso previa confirmación",
     hasVerifiableCertificate: true,
     hasQrCertificate: true,
-    imageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuAYQ21XphGr5_1HwWU0l41H54aPbHh5i_csTjL2EQ8yw4L_sWB59GrR6nADw7v3o-JZbdRo3OvpXq95UQcdIPdMOL79bIVlD7Fx_GIIofwbvLNOgUP4ktDHhohRej-ChGj9LaZxFye_sCvXgR0j4leVo3cH64Wu7L9-JOQ58KV6Z73AALOSYk9fWN-Zx4EfhGaDeN9X0Iw1t1X5gOezXoJB7ctVVUkBXWVgYCSpNL8NEuOhPlA1t_em",
+    imageUrl: "/images/courses/course-default.svg",
     imageAlt: "Tablero eléctrico industrial de automatización con PLC Siemens y cableado estructurado",
-    backdropUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuAYQ21XphGr5_1HwWU0l41H54aPbHh5i_csTjL2EQ8yw4L_sWB59GrR6nADw7v3o-JZbdRo3OvpXq95UQcdIPdMOL79bIVlD7Fx_GIIofwbvLNOgUP4ktDHhohRej-ChGj9LaZxFye_sCvXgR0j4leVo3cH64Wu7L9-JOQ58KV6Z73AALOSYk9fWN-Zx4EfhGaDeN9X0Iw1t1X5gOezXoJB7ctVVUkBXWVgYCSpNL8NEuOhPlA1t_em",
+    backdropUrl: "/images/courses/course-haccp.svg",
     instructorName: "Ing. Elena Rojas",
     instructor: {
       name: "Ing. Elena Rojas",
       role: "Especialista en Automatización Industrial y Sistemas SCADA • Siemens Certified Professional",
-      avatarUrl:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuBIWdxP5tHuXjiLhjq75uR4va-YYj1dxknBzsHE4FOQr6-ZGENhIR5zej1qeVeGM2funQ4ulZHq08jmdluP358E_Fw1aZ7UwpN-a_GDOPJwDFHOtWv4KkPWRHaQElwksI9O70wg7RuN0gF7Hl8SicTFLXmx0r-HuhmaMkof1Nl2rSypU-xoTJni6xep9LNJwh3gCKVI3X__JOB9CF9LBTxBnq_yhod6d0rxXFM8JW6OM_jG-DqKBHB_",
+      avatarUrl: "/images/avatars/instructor.svg",
       cipNumber: "CIP Nº 194120",
       bio: "Ingeniera Electrónica con más de 12 años integrando líneas de embotellado, fajas transportadoras y plantas de tratamiento de agua con controladores Siemens y Rockwell.",
       accreditedStudents: 850,
@@ -381,17 +372,14 @@ export const CURSOS: Course[] = [
     accessNote: "Acceso previa confirmación",
     hasVerifiableCertificate: true,
     hasQrCertificate: true,
-    imageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuAU00WRuV6tyXS-M4pFMqjIv3cKxovIWH3kq0QirLEHdaxiN_7yNFzZKWQgPFKJ3KqCYQ107Jl6WRatfVo-CYbsj3I8mDyXZlzni2vkpp0cvmIcO-kKSXn1J4hplrjTWe-XGpicG0Wu25_L5TijB9iIDUZyAXWDy_-Y3PrX1Agw6ZJyq9baYAg_OOLL-qOFLFl1fmyc9-gfSYmyu8Rr1NtMhtu4-vUofKtAnedrov64qANSyzps6Jo5",
+    imageUrl: "/images/courses/course-default.svg",
     imageAlt: "Auditor de calidad revisando documentación de cumplimiento en oficina corporativa",
-    backdropUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuAU00WRuV6tyXS-M4pFMqjIv3cKxovIWH3kq0QirLEHdaxiN_7yNFzZKWQgPFKJ3KqCYQ107Jl6WRatfVo-CYbsj3I8mDyXZlzni2vkpp0cvmIcO-kKSXn1J4hplrjTWe-XGpicG0Wu25_L5TijB9iIDUZyAXWDy_-Y3PrX1Agw6ZJyq9baYAg_OOLL-qOFLFl1fmyc9-gfSYmyu8Rr1NtMhtu4-vUofKtAnedrov64qANSyzps6Jo5",
+    backdropUrl: "/images/courses/course-haccp.svg",
     instructorName: "Mg. Rodrigo Salgado",
     instructor: {
       name: "Mg. Rodrigo Salgado",
       role: "Lead Auditor IRCA ISO 45001 & Consultor Senior en Sistemas Integrados de Gestión",
-      avatarUrl:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuA1ASPEJseLmaPWrojRvZkoGKjishJbD5AYZBFzfvjnQ3Tqvo8twIH827pjo0HE2o23D5X951FaMsQIXnUPBuebgEpqVmMs5x8jotsDAXFzk_-sDJUIK0hd4Fi7GUmaAYezIFV4GVzyNCpOyxFc6jXLK8nvxR1D-GeoacTmi7dDYkwAOg6waNTDjKSfuVkJ6orAA_HY93ucLsuVmHrlmaegPJV2VPw5tH3Wvt1PJQeGlGXexYL4eycz",
+      avatarUrl: "/images/avatars/instructor.svg",
       cipNumber: "CIP Nº 167240",
       bio: "Master en Gestión Integrada de Seguridad, Medio Ambiente y Calidad. Ha liderado más de 120 auditorías de certificación y seguimiento para empresas de energía, construcción y manufactura.",
       accreditedStudents: 1100,
@@ -436,17 +424,14 @@ export const CURSOS: Course[] = [
     accessNote: "Acceso previa confirmación",
     hasVerifiableCertificate: true,
     hasQrCertificate: true,
-    imageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuBeyliSmHT_cTU3_4T_CO_XBg5Mx2QFieCtBaJrr3wUXwWqcVA2VCzcMtiCtBMUPkS5NAC7UgffFow8xkZPROKfCfqlTwgqaGgM3dE8-KB0CCFbVRa_rGTkMx9Uf45yTPoGHetPvNGwBXRhjfRGtKJ_QTCvnXn1yj6fwXsMrbm-U7WJXF5gSrlpiI6OwNAo6xaHi0n92OYOrOwSy4DVccBuUdtbhKBpM-0aNMvdwfoR-a0XvbiWa3jh",
+    imageUrl: "/images/courses/course-default.svg",
     imageAlt: "Cámara termográfica industrial analizando calor en transformador de alta tensión",
-    backdropUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuC2HUg52eK_gByYfuXeUhfOrcNza-VbixV3eOiz_1Ooag9UKzM7K-SUSslvogrB_3mv_m6RHl1GQpGDXvCMbGBMhPfr-2i-lYCv8ADJmcsQkgStphguUeAHXVVR2_J6oXeMsUJHwI3MymbTRb3FNo9dzSt1E1uEiCwesau6AXShifmK7BW7zHzzyPLGM9xGZPXhvs07eZ8_Xv6te_C9-RqMwzG7nlu6mOtX4xkLrPO_C4orfRP6sK-a",
+    backdropUrl: "/images/courses/course-haccp.svg",
     instructorName: "Ing. Fabián Gómez",
     instructor: {
       name: "Ing. Fabián Gómez",
       role: "Consultor en Confiabilidad Operacional y Termógrafo Certificado Nivel II (ITC)",
-      avatarUrl:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuD6FKdgB05sllOjF3z_SIPYcasOZ9EAU4t89wvWvkaTCWFNieyX1gwspZWPupR8wSRttxg6I6LSvjwUxTWN8Kr8XMG0Q9SpSRkh_XZbS3VaBNzEPGZz9Ty810OCFgDnD1IyK2SBKxs3ocQ5HpYXZcThBZz4w70X37xFsPhLeEW5LGel0ODQCIe85GFk130Hpnwo6vEz2KwFPOHaaWk0Halpb3JoTVN02DVqtslSTQdZGlrTrSXLHfyQ",
+      avatarUrl: "/images/avatars/instructor.svg",
       cipNumber: "CIP Nº 178552",
       bio: "Ingeniero Mecánico Electricista especializado en gestión de activos bajo ISO 55000. Ha implementado programas de mantenimiento predictivo en plantas siderúrgicas y de celulosa.",
       accreditedStudents: 690,
@@ -491,17 +476,14 @@ export const CURSOS: Course[] = [
     accessNote: "Acceso previa confirmación",
     hasVerifiableCertificate: true,
     hasQrCertificate: true,
-    imageUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuA-Q3yf36EMHg6TgG8aDkW6LWxo-tAVcLmfODE3bTr5jjMmdJ-Kuu_l0ghwovkGg0kdKKOG6GjrGKbO11w3rBBuQpCHBkFtb09pM30pe1_3UDTy3PkWOCIV52mWAD2IQJAKAUsc2Bijmpn0tsM8qqE92QWpGNOj_PIWK5rH1BpJAKP2_9gPXsJNODAQrtuEVc2xstMLCawg9KP7w7Zh9pBkttfjwDHC5XpD7mQU3uc5cVZxUw2bHngq",
+    imageUrl: "/images/courses/course-default.svg",
     imageAlt: "Ingeniera ambiental monitoreando calidad de efluentes en planta ecológica",
-    backdropUrl:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuA-Q3yf36EMHg6TgG8aDkW6LWxo-tAVcLmfODE3bTr5jjMmdJ-Kuu_l0ghwovkGg0kdKKOG6GjrGKbO11w3rBBuQpCHBkFtb09pM30pe1_3UDTy3PkWOCIV52mWAD2IQJAKAUsc2Bijmpn0tsM8qqE92QWpGNOj_PIWK5rH1BpJAKP2_9gPXsJNODAQrtuEVc2xstMLCawg9KP7w7Zh9pBkttfjwDHC5XpD7mQU3uc5cVZxUw2bHngq",
+    backdropUrl: "/images/courses/course-haccp.svg",
     instructorName: "Dra. Patricia Méndez",
     instructor: {
       name: "Dra. Patricia Méndez",
       role: "Especialista en Derecho Ambiental y Consultora en Economía Circular • PhD en Ciencias Ambientales",
-      avatarUrl:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuCI4YYLdSd2HeS5nKbddywRMDfD3MnwaGdGyvBbPQdJ3YfAKDf8ZX3cqYLTWRzJxq0-DqM3f0FHa6iHZyLd8-4PtIqzmPLQvVv9dWeZKsssML5UZ5q-jLHiWK6wRnUpztSqqDzdiBSfsPQZy_R35jnMUL7c63Xowyt_xOtLnBw81VUUKgOdV_Tvi6CX20jIBbFryiHEAFW9ZO5_--LMWDlQm-Ys8OaFHVJlTITPVr-H0JbxqF5eBNbt",
+      avatarUrl: "/images/avatars/instructor.svg",
       cipNumber: "CIP Nº 139044",
       bio: "Doctora en Ciencias Ambientales con más de 18 años asesorando proyectos mineros y energéticos en estudios de impacto ambiental (EIA) y planes de cierre de pasivos mineros.",
       accreditedStudents: 740,
@@ -569,3 +551,4 @@ export function getCatalogCategories() {
 
   return categories;
 }
+

@@ -69,7 +69,7 @@ export async function createCourse(
         input.summary?.trim() || "Programa de certificación técnica especializada.",
       coverUrl:
         input.coverUrl?.trim() ||
-        "https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=800&auto=format&fit=crop",
+        "/images/courses/course-default.svg",
       published: Boolean(input.published),
       instructorId: user.id,
       modules: {
@@ -261,3 +261,4 @@ export async function deleteLessonFromModule(
     where: { id: lessonId },
   });
 }
+

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { sanitizeMediaUrl } from "@/lib/image-utils";
 import {
   PlayCircle,
   ArrowRight,
@@ -112,7 +113,7 @@ export function StudentDashboardView({
               <div className="rounded-xl overflow-hidden border border-stone-700/70 bg-stone-900/90 shadow-md relative group">
                 <div className="relative h-36 w-full bg-stone-800 overflow-hidden">
                   <Image
-                    src={priorityCourse.image}
+                    src={sanitizeMediaUrl(priorityCourse.image)}
                     alt={priorityCourse.title}
                     fill
                     sizes="(max-width: 1024px) 100vw, 400px"
@@ -228,7 +229,7 @@ export function StudentDashboardView({
                 >
                   <div className="w-full sm:w-44 h-28 rounded-lg overflow-hidden shrink-0 bg-stone-100 dark:bg-stone-800 relative">
                     <Image
-                      src={course.image}
+                      src={sanitizeMediaUrl(course.image)}
                       alt={course.title}
                       fill
                       sizes="(max-width: 640px) 100vw, 176px"
@@ -393,3 +394,4 @@ export function StudentDashboardView({
     </div>
   );
 }
+

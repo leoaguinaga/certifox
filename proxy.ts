@@ -22,14 +22,9 @@ export function proxy(request: NextRequest) {
     }
   }
 
-  // Si ya tiene sesión e intenta entrar a /ingresar, redirige a /campus
-  if (pathname === "/ingresar" && sessionCookie) {
-    return NextResponse.redirect(new URL("/campus", request.url));
-  }
-
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/campus/:path*", "/ingresar"],
+  matcher: ["/campus/:path*"],
 };

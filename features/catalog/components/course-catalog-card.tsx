@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Clock, QrCode, Star, Lock, ArrowRight } from "lucide-react";
 import { Course } from "../types";
 import { cn } from "@/lib/utils";
+import { sanitizeMediaUrl } from "@/lib/image-utils";
 
 interface CourseCatalogCardProps {
   course: Course;
@@ -31,7 +32,7 @@ export function CourseCatalogCard({
           )}
         >
           <Image
-            src={course.imageUrl}
+            src={sanitizeMediaUrl(course.imageUrl)}
             alt={course.imageAlt}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -85,7 +86,7 @@ export function CourseCatalogCard({
             <div className="flex items-center gap-2 min-w-0">
               <div className="relative w-7 h-7 rounded-full overflow-hidden shrink-0 ring-1 ring-stone-200">
                 <Image
-                  src={course.instructor.avatarUrl}
+                  src={sanitizeMediaUrl(course.instructor?.avatarUrl, "/images/avatars/instructor.svg")}
                   alt={course.instructor.name}
                   fill
                   sizes="28px"
@@ -141,3 +142,4 @@ export function CourseCatalogCard({
     </article>
   );
 }
+
