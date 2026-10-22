@@ -1,6 +1,5 @@
-import Link from "next/link";
 import Image from "next/image";
-import { ChevronRight, ShieldCheck, Layers, Clock, QrCode } from "lucide-react";
+import { ShieldCheck, Layers, Clock, QrCode } from "lucide-react";
 import { Course } from "../types";
 
 interface CourseDetailHeroProps {
