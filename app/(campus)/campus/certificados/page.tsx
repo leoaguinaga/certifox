@@ -1,40 +1,78 @@
-"use client";
+import { getSession } from "@/server/auth";
+import { redirect } from "next/navigation";
+import {
+  getStudentCertificatesCollection,
+  getInstructorCertificatesDashboard,
+} from "@/server/services/certificate-management.service";
+import { CertificatesManagementView } from "@/features/certificates-management/components/certificates-management-view";
+import { maskDocumentNumber } from "@/server/services/certificate.service";
+import {
+  StudentCertificateItem,
+  EligibleEnrollmentItem,
+} from "@/features/certificates-management/types";
 
-import { Award } from "lucide-react";
-import { useCampusRole } from "@/features/campus/context/campus-role-context";
-import { CertificatesCollectionView } from "@/features/learning/components/certificates-collection-view";
+export const dynamic = "force-dynamic";
 
-export default function CampusCertificadosPage() {
-  const { role } = useCampusRole();
+export default async function CampusCertificadosPage() {
+  const session = await getSession();
 
-  if (role === "student") {
-    return <CertificatesCollectionView />;
+  if (!session) {
+    redirect("/ingresar?from=/campus/certificados");
   }
 
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-stone-900 dark:text-white">
-            Emisión y Auditoría de Certificados
-          </h1>
-          <p className="text-xs sm:text-sm text-stone-500 dark:text-stone-400 mt-1">
-            Emisión de diplomas oficiales con huella SHA-256 y gestión de revocaciones con registro de auditoría.
-          </p>
-        </div>
-      </div>
+  const role = session.user.role;
 
-      <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-8 text-center space-y-3">
-        <div className="size-12 rounded-xl bg-orange-100 dark:bg-orange-950/60 text-[#FD761A] flex items-center justify-center mx-auto">
-          <Award className="size-6" />
-        </div>
-        <h3 className="text-base font-bold text-stone-900 dark:text-white">
-          Bandeja de Certificación Docente
-        </h3>
-        <p className="text-xs text-stone-500 dark:text-stone-400 max-w-md mx-auto">
-          Emite certificados para matrículas completadas o revoca credenciales observadas con trazabilidad en AuditLog.
-        </p>
-      </div>
-    </div>
+  if (role === "STUDENT") {
+    const rawCerts = await getStudentCertificatesCollection(session);
+    const studentCertificates: StudentCertificateItem[] = rawCerts.map((c) => ({
+      id: c.id,
+      code: c.code,
+      sha256: c.sha256,
+      status: c.status,
+      issuedAt: c.issuedAt.toISOString(),
+      expiresAt: c.expiresAt ? c.expiresAt.toISOString() : null,
+      revokedAt: c.revokedAt ? c.revokedAt.toISOString() : null,
+      revocationReason: c.revocationReason,
+      courseTitle: c.enrollment.course.title,
+      courseSlug: c.enrollment.course.slug,
+      hours: c.enrollment.course.hours,
+      instructorName: c.enrollment.course.instructor.name,
+      institution: c.enrollment.course.instructor.institution,
+      studentName: session.user.name || "Estudiante",
+      studentDocumentMasked: "72****03",
+    }));
+
+    return (
+      <CertificatesManagementView
+        role="STUDENT"
+        studentCertificates={studentCertificates}
+        eligibleEnrollments={[]}
+      />
+    );
+  }
+
+  // Instructor
+  const rawEnrollments = await getInstructorCertificatesDashboard(session);
+  const eligibleEnrollments: EligibleEnrollmentItem[] = rawEnrollments.map((enr) => ({
+    enrollmentId: enr.id,
+    studentId: enr.user.id,
+    studentName: enr.user.name,
+    studentEmail: enr.user.email,
+    studentDocumentMasked: enr.user.documentNumber
+      ? maskDocumentNumber(enr.user.documentNumber)
+      : "Sin DNI",
+    courseId: enr.course.id,
+    courseTitle: enr.course.title,
+    completedAt: enr.completedAt ? enr.completedAt.toISOString() : "",
+    certificateCode: enr.certificate?.code || null,
+    certificateStatus: enr.certificate?.status || null,
+  }));
+
+  return (
+    <CertificatesManagementView
+      role="INSTRUCTOR"
+      studentCertificates={[]}
+      eligibleEnrollments={eligibleEnrollments}
+    />
   );
 }
