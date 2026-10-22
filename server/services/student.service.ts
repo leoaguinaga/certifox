@@ -4,6 +4,7 @@ import { prisma } from "@/server/db";
 import { SessionContext, requireAuth } from "@/server/policies";
 import { EnrolledCourse, CourseEnrollmentStatus, StudentProfile } from "@/features/learning/types";
 import { maskDocumentNumber } from "@/server/services/certificate.service";
+import { sanitizeMediaUrl } from "@/lib/image-utils";
 
 /**
  * Consulta de cursos matriculados del estudiante autenticado desde PostgreSQL (Neon).
@@ -72,9 +73,10 @@ export async function getStudentEnrolledCourses(
       categoryLabel: course.category,
       instructorName: course.instructor.name,
       school: course.instructor.institution || "Centro de Formación Técnica",
-      image:
-        course.coverUrl ||
-        "/images/courses/course-default.svg",
+      image: sanitizeMediaUrl(
+        course.coverUrl,
+        "/images/courses/course-default.svg"
+      ),
       status,
       statusLabel,
       progressPercentage,
