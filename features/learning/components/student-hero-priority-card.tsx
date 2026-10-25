@@ -1,5 +1,6 @@
-import { sanitizeMediaUrl } from '@/lib/image-utils';
 "use client";
+
+import { sanitizeMediaUrl } from '@/lib/image-utils';
 
 import Link from "next/link";
 import Image from "next/image";
@@ -110,5 +111,6 @@ export function StudentHeroPriorityCard({ course }: StudentHeroPriorityCardProps
     </section>
   );
 }
+
 
 
