@@ -70,7 +70,7 @@ export function InstitutionsSection() {
             <div className="rounded-2xl overflow-hidden shadow-2xl border border-white/10 relative bg-stone-900">
               <div className="relative h-72 sm:h-80 w-full">
                 <Image
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaBzXmDengFhcPBgfVPMvELOZsYsg0ltKMaIsUSIalNLXeviSzHtRExwu8Hy3jJye_YQ_qX7oLHnvzm81uN9odZcsheBOyYOx7zCBI2khIY_M5fyJGWGKhhjHPDYgVFIF6t5d2nGhE2PLXvcmvDEaCYgymUUV77bPyTIVow0m6oIzKoFfFGkFDEXqLBf-BhXdWpazqFVs0SJDEDh_6onNd12qSgfO7re0W5Z0mNbE8iOOM04xwS6n9"
+                  src="/images/courses/course-iso9001.svg"
                   alt="Instructor y docente en taller técnico"
                   fill
                   sizes="(max-width: 1024px) 100vw, 40vw"
@@ -100,3 +100,4 @@ export function InstitutionsSection() {
     </section>
   );
 }
+

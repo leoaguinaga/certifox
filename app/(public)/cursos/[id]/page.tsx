@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getAllCourses, getCourseByIdOrSlug } from "@/data/cursos";
+import { getCourseDetailBySlugOrId } from "@/server/services/course.service";
 import { CourseDetailHero } from "@/features/catalog/components/course-detail-hero";
 import { CourseCompetencies } from "@/features/catalog/components/course-competencies";
 import { CourseCurriculumAccordion } from "@/features/catalog/components/course-curriculum-accordion";
@@ -9,25 +9,15 @@ import { CourseInstructorProfile } from "@/features/catalog/components/course-in
 import { CourseDetailFaq } from "@/features/catalog/components/course-detail-faq";
 import { StickyEnrollmentCard } from "@/features/catalog/components/sticky-enrollment-card";
 
+export const dynamic = "force-dynamic";
+
 interface PageProps {
   params: Promise<{ id: string }>;
 }
 
-export async function generateStaticParams() {
-  const courses = getAllCourses();
-  const paths: { id: string }[] = [];
-
-  courses.forEach((c) => {
-    paths.push({ id: c.id });
-    paths.push({ id: c.slug });
-  });
-
-  return paths;
-}
-
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
-  const course = getCourseByIdOrSlug(id);
+  const course = await getCourseDetailBySlugOrId(id);
 
   if (!course) {
     return {
@@ -43,7 +33,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function CourseDetailPage({ params }: PageProps) {
   const { id } = await params;
-  const course = getCourseByIdOrSlug(id);
+  const course = await getCourseDetailBySlugOrId(id);
 
   if (!course) {
     notFound();

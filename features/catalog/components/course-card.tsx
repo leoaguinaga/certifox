@@ -1,3 +1,4 @@
+import { sanitizeMediaUrl } from '@/lib/image-utils';
 import Link from "next/link";
 import Image from "next/image";
 import { User, Clock, BookOpen, ShieldCheck } from "lucide-react";
@@ -13,7 +14,7 @@ export function CourseCard({ course }: CourseCardProps) {
       {/* Thumbnail with overlay badge */}
       <div className="relative h-48 w-full overflow-hidden bg-stone-100">
         <Image
-          src={course.imageUrl}
+          src={sanitizeMediaUrl(course.imageUrl)}
           alt={course.imageAlt}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -75,3 +76,5 @@ export function CourseCard({ course }: CourseCardProps) {
     </article>
   );
 }
+
+

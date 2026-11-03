@@ -131,7 +131,7 @@ export function ActiveCoursesGrid({ courses }: ActiveCoursesGridProps) {
                       <span>Último acceso: {course.lastAccess || "Reciente"}</span>
                     </div>
                     <Link
-                      href={`/cursos/${course.slug}`}
+                      href={`/campus/cursos/${course.slug}`}
                       className="inline-flex items-center gap-1 font-bold text-[#FD761A] hover:text-[#9D4300] transition-colors"
                     >
                       <span>Ir al curso</span>

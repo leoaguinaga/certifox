@@ -67,15 +67,15 @@ export function PublicHeader() {
           >
             <div className="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-orange-500/20 shadow-xs shrink-0">
               <Image
-                src="https://lh3.googleusercontent.com/aida/AEtjO1UcsVlSjtfMChF53ZjY37UWU4UWV9CbuOqwVdB1xtHh4iX7QJDEO2JY3N3oR803kNIXE-PCzpaC4yj1tIziPVjphxRlHMfzpyUCME7gFRxIVtp3ZGGowIcziwTZfZWWuR6Y3LxbhmgtofvYEPC1-lTOAyn53-D3IECneVotkyIDRJ8Ub-NZebhsrFx4iG7IqAW7uR-BmluYkN0wlQ7WEbY9PN77NdblwNCmEc5K2t8x7B6P_hih7ahf-Q"
-                alt="Foto de perfil de Brunella E."
+                src="/images/avatars/student.svg"
+                alt="Foto de perfil de Mi Campus"
                 fill
                 sizes="32px"
                 className="object-cover"
               />
             </div>
             <span className="hidden lg:inline text-xs font-medium text-stone-700">
-              Brunella E.
+              Mi Campus
             </span>
           </Link>
 
@@ -86,3 +86,4 @@ export function PublicHeader() {
     </header>
   );
 }
+

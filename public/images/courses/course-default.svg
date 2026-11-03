@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#1E293B" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FD761A" />
+      <stop offset="100%" stop-color="#F59E0B" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#bg)" />
+  <circle cx="700" cy="80" r="160" fill="#FD761A" opacity="0.08" />
+  <g stroke="#ffffff" stroke-opacity="0.04" stroke-width="1">
+    <line x1="0" y1="90" x2="800" y2="90" />
+    <line x1="0" y1="180" x2="800" y2="180" />
+    <line x1="0" y1="270" x2="800" y2="270" />
+    <line x1="0" y1="360" x2="800" y2="360" />
+    <line x1="160" y1="0" x2="160" y2="450" />
+    <line x1="320" y1="0" x2="320" y2="450" />
+    <line x1="480" y1="0" x2="480" y2="450" />
+    <line x1="640" y1="0" x2="640" y2="450" />
+  </g>
+  <g transform="translate(350, 140)">
+    <rect x="-60" y="-60" width="120" height="120" rx="28" fill="url(#accent)" opacity="0.2" />
+    <rect x="-48" y="-48" width="96" height="96" rx="20" fill="url(#accent)" />
+    <!-- Book & Star -->
+    <path d="M-18 -10 C-10 -14 0 -14 0 -10 C0 -14 10 -14 18 -10 L18 16 C10 12 0 12 0 16 C0 12 -10 12 -18 16 Z" fill="#ffffff" />
+    <line x1="0" y1="-10" x2="0" y2="16" stroke="#FD761A" stroke-width="2" />
+  </g>
+  <text x="400" y="270" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="800" text-anchor="middle" letter-spacing="1">CURSO TÉCNICO PROFESIONAL</text>
+  <text x="400" y="305" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500" text-anchor="middle">Capacitación Acreditada &amp; Certificación Digital</text>
+  <rect x="330" y="335" width="140" height="28" rx="14" fill="#FD761A" opacity="0.25" />
+  <text x="400" y="354" fill="#FDBA74" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="700" text-anchor="middle">CAMPUS CERTIFOX</text>
+</svg>

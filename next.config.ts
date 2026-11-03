@@ -1,8 +1,19 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    authInterrupts: true,
+  },
   images: {
     remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "media.certifox.edu",
+      },
+      {
+        protocol: "https",
+        hostname: "*.r2.cloudflarestorage.com",
+      },
       {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
@@ -12,6 +23,28 @@ const nextConfig: NextConfig = {
         hostname: "images.unsplash.com",
       },
     ],
+  },
+  async headers() {
+    return [
+      {
+        // AC-21: /campus/* devuelve no-store para no cachearse en CDN ni proxies intermedios
+        source: "/campus/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "private, no-store, no-cache, must-revalidate, max-age=0",
+          },
+          {
+            key: "Pragma",
+            value: "no-cache",
+          },
+          {
+            key: "Expires",
+            value: "0",
+          },
+        ],
+      },
+    ];
   },
   async redirects() {
     return [

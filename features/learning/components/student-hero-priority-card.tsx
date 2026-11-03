@@ -1,5 +1,7 @@
 "use client";
 
+import { sanitizeMediaUrl } from '@/lib/image-utils';
+
 import Link from "next/link";
 import Image from "next/image";
 import { ShieldCheck, PlayCircle, ArrowRight, Download } from "lucide-react";
@@ -16,7 +18,7 @@ export function StudentHeroPriorityCard({ course }: StudentHeroPriorityCardProps
         {/* Imagen Contextual con Scrim */}
         <div className="md:col-span-5 relative min-h-[220px] md:min-h-[300px]">
           <Image
-            src={course.image}
+            src={sanitizeMediaUrl(course.image)}
             alt={course.title}
             fill
             sizes="(max-width: 768px) 100vw, 40vw"
@@ -109,3 +111,6 @@ export function StudentHeroPriorityCard({ course }: StudentHeroPriorityCardProps
     </section>
   );
 }
+
+
+

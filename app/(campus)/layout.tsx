@@ -1,16 +1,40 @@
+import { getSession } from "@/server/auth";
+import { redirect } from "next/navigation";
 import { CampusRoleProvider } from "@/features/campus/context/campus-role-context";
 import { CampusSidebar } from "@/features/campus/components/campus-sidebar";
 import { CampusMobileDrawer } from "@/features/campus/components/campus-mobile-drawer";
 import { CampusHeader } from "@/features/campus/components/campus-header";
 
-export default function CampusLayout({
+// Regla RNF y Caché: El campus autenticado es dinámico y nunca se pre-renderiza estático ni se cachea
+export const dynamic = "force-dynamic";
+
+export default async function CampusLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  let session = null;
+  try {
+    session = await getSession();
+  } catch (err) {
+    console.error("Error al obtener sesión en CampusLayout:", err);
+  }
+
+  // AC-09: Sin sesión, /campus* redirige a /ingresar
+  if (!session) {
+    redirect("/ingresar");
+  }
+
+  const role = session.user.role === "INSTRUCTOR" ? "teacher" : "student";
+  const user = {
+    name: session.user.name || "Usuario",
+    email: session.user.email,
+    avatar: session.user.image || undefined,
+  };
+
   return (
-    <CampusRoleProvider>
-      <div className="min-h-screen flex bg-white  dark:bg-stone-950 text-stone-900 dark:text-stone-100 antialiased font-sans">
+    <CampusRoleProvider initialRole={role} initialUser={user}>
+      <div className="min-h-screen flex bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100 antialiased font-sans">
         {/* Desktop Fixed Left Sidebar */}
         <CampusSidebar />
 

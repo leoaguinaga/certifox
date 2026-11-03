@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { Home, ShieldCheck } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 
 export function CatalogHeader() {
   return (

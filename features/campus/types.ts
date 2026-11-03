@@ -30,7 +30,7 @@ export const MOCK_STUDENT_USER: CampusUserProfile = {
   name: "Brunella E.",
   email: "brunella.e@empresa.com",
   avatar:
-    "https://lh3.googleusercontent.com/aida/AEtjO1XDKmxoiqT0ljJ8xryqy5hi5WHbmdXEIN_edrzSh40znqeGIpj28TOQfNS5xdtMHsjZXKbYvkATDlTWloAdtq61Quz-Im-demNx8jfjsDBWHdprYIcuoVkMdbNgw74zhqHgEgKsReTuVAJZMpkQj2sCaHOSm2uGBQuwA6cx4-uG07kcodrmLsHu4m_O1ITcpGl-ZcenWFJems_WcygbUYXycMiYUQIdL0V55bk6tQLf6mdFCGzlzlUnFQ",
+    "/images/avatars/student.svg",
   role: "student",
   roleLabel: "Estudiante Certificada",
   institution: "Consorcio Minero del Sur",
@@ -44,9 +44,10 @@ export const MOCK_TEACHER_USER: CampusUserProfile = {
   name: "Ing. Marco Viteri",
   email: "marco.viteri@certifox.edu",
   avatar:
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuCr8Cs2V0mR2YyfQX3GFFe_I__XuoKazEOOB0dDj_GHmnarRiLXTM2dMSbcUlIRx18SHRYY8vmb8Rlh28NuFzlbwLBsJv-nSiNGSpJqHF-hKP8U2PEjbgP_PcXLY1iT8vHgrLttggjWYyol9yCopSi2Kjc5AYQDruFBp4bdxiJmyaoGr0e10Lr_IutdhhonCm-XO5ilVrwx0-2mCyvj6MCB4ouZYFripoUuKvi3VORbrhvrShG_vw2D",
+    "/images/avatars/instructor.svg",
   role: "teacher",
   roleLabel: "Docente Homologado",
   institution: "Escuela de Maquinaria y Minas",
   pendingReviewsCount: 6,
 };
+

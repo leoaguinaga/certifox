@@ -1,8 +1,34 @@
 "use client";
 
 import { useState } from "react";
-import { FileEdit, X, CheckCircle2, ArrowRight } from "lucide-react";
+import {
+  FileEdit,
+  X,
+  ArrowRight,
+  MessageCircle,
+  Copy,
+  Check,
+  Loader2,
+  Clock,
+} from "lucide-react";
 import { Course } from "../types";
+import { requestEnrollmentAction } from "../actions";
+import { toast } from "sonner";
+
+interface PaymentEnrollmentData {
+  enrollmentId: string;
+  status: string;
+  courseTitle: string;
+  instructions: {
+    yapeNumber: string;
+    yapeName: string;
+    bcpAccount: string;
+    bcpCci: string;
+    whatsappUrl: string;
+    amountUsd: number;
+    amountPen: number;
+  };
+}
 
 interface EnrollmentModalProps {
   course: Course;
@@ -16,23 +42,57 @@ export function EnrollmentModal({
   onClose,
 }: EnrollmentModalProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [paymentData, setPaymentData] = useState<PaymentEnrollmentData | null>(null);
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
-    country: "",
   });
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitted(true);
+    setIsLoading(true);
+
+    try {
+      const response = await requestEnrollmentAction({
+        courseId: course.id,
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+      });
+
+      if (!response.success || !response.data) {
+        toast.error(response.error || "No se pudo registrar la solicitud");
+        setIsLoading(false);
+        return;
+      }
+
+      setPaymentData(response.data as PaymentEnrollmentData);
+      setIsSubmitted(true);
+      toast.success("Solicitud de matrícula generada");
+    } catch {
+      toast.error("Ocurrió un error al procesar la matrícula");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCopy = (text: string, key: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedKey(key);
+    toast.success("Copiado al portapapeles");
+    setTimeout(() => setCopiedKey(null), 2500);
   };
 
   const handleClose = () => {
     setIsSubmitted(false);
-    setFormData({ name: "", email: "", phone: "", country: "" });
+    setPaymentData(null);
+    setFormData({ name: "", email: "", phone: "" });
     onClose();
   };
 
@@ -44,7 +104,7 @@ export function EnrollmentModal({
       onClick={handleClose}
     >
       <div
-        className="relative w-full max-w-lg rounded-2xl bg-white shadow-2xl p-6 sm:p-8 flex flex-col gap-5 border border-stone-200/80"
+        className="relative w-full max-w-lg rounded-2xl bg-white shadow-2xl p-6 sm:p-8 flex flex-col gap-5 border border-stone-200/80 max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
@@ -55,7 +115,7 @@ export function EnrollmentModal({
             </div>
             <div>
               <h3 className="text-base sm:text-lg font-bold text-stone-900 leading-tight">
-                Solicitar Matrícula
+                Solicitud de Matrícula
               </h3>
               <span className="text-xs text-stone-500 font-medium block truncate max-w-xs">
                 {course.title}
@@ -66,7 +126,7 @@ export function EnrollmentModal({
             type="button"
             onClick={handleClose}
             aria-label="Cerrar modal"
-            className="w-8 h-8 rounded-full hover:bg-stone-100 flex items-center justify-center text-stone-400 hover:text-stone-700 transition-colors"
+            className="w-8 h-8 rounded-full hover:bg-stone-100 flex items-center justify-center text-stone-400 hover:text-stone-700 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -74,21 +134,20 @@ export function EnrollmentModal({
 
         {!isSubmitted ? (
           <>
-            {/* Business Policy Explanatory Note */}
+            {/* Nota de negocio */}
             <div className="p-3.5 rounded-xl bg-[#EFF4FF] text-stone-700 text-xs leading-relaxed border border-[#D5E3FD]/50">
-              Ingresa tus datos para registrar tu postulación. El equipo del{" "}
-              <strong>{course.instructor.name}</strong> te contactará por correo/WhatsApp con los canales de abono local (
-              <strong>{course.priceUsd} USD</strong>) para activar tu aula virtual de inmediato.
+              Ingresa tus datos para registrar tu solicitud. Tu matrícula quedará en estado{" "}
+              <strong className="text-[#FD761A]">«Pendiente de activación»</strong>. Al enviar, recibirás las instrucciones para coordinar el abono manual con el docente.
             </div>
 
-            {/* Form */}
+            {/* Formulario */}
             <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
               <div className="flex flex-col gap-1">
                 <label
                   htmlFor="student_name"
                   className="text-xs font-semibold text-stone-900"
                 >
-                  Nombre completo para el certificado
+                  Nombre completo para la credencial
                 </label>
                 <input
                   id="student_name"
@@ -108,7 +167,7 @@ export function EnrollmentModal({
                   htmlFor="student_email"
                   className="text-xs font-semibold text-stone-900"
                 >
-                  Correo electrónico de contacto
+                  Correo electrónico
                 </label>
                 <input
                   id="student_email"
@@ -123,46 +182,23 @@ export function EnrollmentModal({
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="flex flex-col gap-1">
-                  <label
-                    htmlFor="student_phone"
-                    className="text-xs font-semibold text-stone-900"
-                  >
-                    WhatsApp / Teléfono
-                  </label>
-                  <input
-                    id="student_phone"
-                    type="tel"
-                    required
-                    placeholder="+51 987 654 321"
-                    value={formData.phone}
-                    onChange={(e) =>
-                      setFormData({ ...formData, phone: e.target.value })
-                    }
-                    className="h-10 px-3.5 rounded-xl bg-stone-50 border border-stone-200 text-stone-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#FD761A]/30 focus:border-[#FD761A]"
-                  />
-                </div>
-
-                <div className="flex flex-col gap-1">
-                  <label
-                    htmlFor="student_country"
-                    className="text-xs font-semibold text-stone-900"
-                  >
-                    País de residencia
-                  </label>
-                  <input
-                    id="student_country"
-                    type="text"
-                    required
-                    placeholder="Perú / Chile / México"
-                    value={formData.country}
-                    onChange={(e) =>
-                      setFormData({ ...formData, country: e.target.value })
-                    }
-                    className="h-10 px-3.5 rounded-xl bg-stone-50 border border-stone-200 text-stone-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#FD761A]/30 focus:border-[#FD761A]"
-                  />
-                </div>
+              <div className="flex flex-col gap-1">
+                <label
+                  htmlFor="student_phone"
+                  className="text-xs font-semibold text-stone-900"
+                >
+                  WhatsApp / Teléfono de contacto
+                </label>
+                <input
+                  id="student_phone"
+                  type="tel"
+                  placeholder="+51 987 654 321"
+                  value={formData.phone}
+                  onChange={(e) =>
+                    setFormData({ ...formData, phone: e.target.value })
+                  }
+                  className="h-10 px-3.5 rounded-xl bg-stone-50 border border-stone-200 text-stone-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#FD761A]/30 focus:border-[#FD761A]"
+                />
               </div>
 
               {/* Action Buttons */}
@@ -170,39 +206,113 @@ export function EnrollmentModal({
                 <button
                   type="button"
                   onClick={handleClose}
-                  className="px-4 py-2.5 rounded-xl text-xs font-semibold text-stone-600 hover:bg-stone-100 transition-colors"
+                  className="px-4 py-2.5 rounded-xl text-xs font-semibold text-stone-600 hover:bg-stone-100 transition-colors cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 rounded-xl bg-[#FD761A] hover:bg-[#e05d04] text-white text-xs font-bold transition-colors shadow-xs inline-flex items-center gap-1.5"
+                  disabled={isLoading}
+                  className="px-5 py-2.5 rounded-xl bg-[#FD761A] hover:bg-[#e05d04] disabled:opacity-60 text-white text-xs font-bold transition-colors shadow-xs inline-flex items-center gap-1.5 cursor-pointer"
                 >
-                  <span>Enviar Solicitud</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Procesando...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Solicitar Matrícula</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </>
+                  )}
                 </button>
               </div>
             </form>
           </>
         ) : (
-          /* Confirmation feedback state */
-          <div className="flex flex-col items-center justify-center py-6 text-center gap-3">
-            <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shadow-xs">
-              <CheckCircle2 className="w-8 h-8" />
+          /* AC-11 / RF-20: Instrucciones de pago manual con estado PENDING */
+          <div className="flex flex-col gap-4 text-left">
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-amber-50 border border-amber-200">
+              <Clock className="w-6 h-6 text-amber-600 shrink-0" />
+              <div>
+                <h4 className="text-xs font-bold text-amber-900 uppercase tracking-wide">
+                  Matrícula Pendiente de Activación
+                </h4>
+                <p className="text-[11px] text-amber-800 leading-snug">
+                  Tu solicitud quedó registrada. El acceso a las lecciones del aula se activará una vez que el docente confirme el abono.
+                </p>
+              </div>
             </div>
-            <h4 className="text-lg font-bold text-stone-900">
-              ¡Solicitud Registrada!
-            </h4>
-            <p className="text-xs text-stone-600 max-w-sm leading-relaxed">
-              Hemos notificado a la coordinación académica del curso. En breve recibirás los datos de abono bancario en{" "}
-              <strong className="text-stone-900">{formData.email || "tu correo"}</strong>.
-            </p>
+
+            <div className="space-y-3 bg-stone-50 p-4 rounded-xl border border-stone-200 text-xs">
+              <div className="flex items-center justify-between pb-2 border-b border-stone-200">
+                <span className="font-bold text-stone-700">Canales de abono manual:</span>
+                <span className="text-[11px] font-extrabold text-[#FD761A]">
+                  S/ {paymentData?.instructions?.amountPen || 680} PEN / $180 USD
+                </span>
+              </div>
+
+              {/* Yape / Plin */}
+              <div className="flex items-center justify-between bg-white p-2.5 rounded-lg border border-stone-200">
+                <div>
+                  <p className="font-bold text-stone-900">Yape / Plin</p>
+                  <p className="text-[11px] text-stone-500">
+                    Número: <strong>{paymentData?.instructions?.yapeNumber || "999-999-999"}</strong>
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleCopy(paymentData?.instructions?.yapeNumber || "999-999-999", "yape")
+                  }
+                  className="p-1.5 rounded-md hover:bg-stone-100 text-stone-500 transition-colors"
+                  title="Copiar número"
+                >
+                  {copiedKey === "yape" ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+                </button>
+              </div>
+
+              {/* Transferencia BCP */}
+              <div className="flex items-center justify-between bg-white p-2.5 rounded-lg border border-stone-200">
+                <div>
+                  <p className="font-bold text-stone-900">BCP Soles</p>
+                  <p className="text-[11px] text-stone-500 font-mono">
+                    {paymentData?.instructions?.bcpAccount || "193-98402194-0-12"}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleCopy(paymentData?.instructions?.bcpAccount || "193-98402194-0-12", "bcp")
+                  }
+                  className="p-1.5 rounded-md hover:bg-stone-100 text-stone-500 transition-colors"
+                  title="Copiar cuenta"
+                >
+                  {copiedKey === "bcp" ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            {/* Botón WhatsApp de notificación */}
+            {paymentData?.instructions?.whatsappUrl && (
+              <a
+                href={paymentData.instructions.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full h-11 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors shadow-xs"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span>Avisar abono por WhatsApp</span>
+              </a>
+            )}
+
             <button
               type="button"
               onClick={handleClose}
-              className="mt-4 px-6 py-2.5 rounded-xl bg-[#151B2A] text-white text-xs font-bold hover:bg-stone-800 transition-colors"
+              className="w-full py-2.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-semibold transition-colors cursor-pointer"
             >
-              Entendido
+              Cerrar y continuar explorando
             </button>
           </div>
         )}

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ShieldCheck, QrCode, CheckCircle2, Banknote, ShieldCheckIcon, Share2 } from "lucide-react";
+import { ArrowRight, ShieldCheck, QrCode, CheckCircle2, ShieldCheckIcon, Share2 } from "lucide-react";
 import { InteractivePreviewWindow } from "./interactive-preview-window";
 import { MetricStrip } from "./metric-strip";
 
