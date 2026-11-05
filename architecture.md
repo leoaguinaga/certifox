@@ -1,6 +1,7 @@
 # Certifox — Arquitectura (Full-Stack Next.js)
 
 > Este documento está alineado con el plan maestro de ejecución en [`docs/monorepo-plan.md`](./docs/monorepo-plan.md).
+> Auditoría del backend y arquitectura objetivo para escalar: [`docs/backend-architecture.md`](./docs/backend-architecture.md).
 
 ## Propósito
 
