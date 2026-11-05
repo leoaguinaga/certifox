@@ -108,7 +108,7 @@ lib/env.ts           # Variables de entorno validadas con zod
 | Pieza | Decisión | Puntos a cubrir |
 | --- | --- | --- |
 | ORM | Prisma | `prisma.config.ts`; migraciones con `prisma migrate deploy` en el build |
-| BD | Neon (Postgres) | **Dos URLs**: `DATABASE_URL` (pooler `-pooler`, para runtime serverless) y `DIRECT_URL` (sin pooler, para migraciones). Región de Neon = región de las funciones de Vercel |
+| BD | Neon (Postgres) | **Una sola URL**: `DATABASE_URL` (pooler `-pooler`). `pnpm db:*` deriva la conexión directa para migraciones quitando `-pooler` del host. Región de Neon = región de las funciones de Vercel |
 | Imágenes | Cloudflare R2 | Bucket con dominio propio (p. ej. `media.certifox.…`); **subida con URL prefirmada** desde el navegador; servir directo desde R2 + Cloudflare (`unoptimized` en `next/image` para evitar cuota de Vercel) |
 | Caché | Cloudflare delante de Vercel (DNS con proxy) | Ver reglas abajo |
 | Deploy | Vercel | Env vars por entorno (Production/Preview); mantener `next build --webpack`; Route Handler de PDF en runtime Node |
@@ -120,7 +120,7 @@ lib/env.ts           # Variables de entorno validadas con zod
 4. Opcional: catálogo (`/cursos/*`) con `s-maxage` corto (60–300 s). Recordar que `revalidatePath` **no** purga Cloudflare automáticamente.
 5. SSL en modo *Full (strict)*; leer IP real desde `CF-Connecting-IP` para el rate limit; Better Auth con `trustedOrigins` para dominio de producción y previews.
 
-**Variables de entorno** (`lib/env.ts` las valida con zod): `DATABASE_URL`, `DIRECT_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`, `NEXT_PUBLIC_MEDIA_URL`, `NEXT_PUBLIC_PAYMENT_WHATSAPP` (y datos bancarios/Yape de pago si se parametrizan).
+**Variables de entorno** (`lib/env.ts` las valida con zod): `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`, `NEXT_PUBLIC_MEDIA_URL`, `NEXT_PUBLIC_PAYMENT_WHATSAPP` (y datos bancarios/Yape de pago si se parametrizan).
 
 ---
 
@@ -223,7 +223,7 @@ El MVP se acepta cuando **todos** pasan en el entorno desplegado (Dado / Cuando 
 - **AC-19** Existe una URL desplegada con el flujo de humo funcionando y el procedimiento para restaurar/reseedear la BD documentado en el `README.md`.
 - **AC-20** Un instructor sube la portada de un curso: el navegador sube directo a R2 con URL prefirmada, un archivo > 2 MB o de otro tipo es rechazado, y la imagen se sirve directo desde el dominio de medios de R2.
 - **AC-21** Rutas autenticadas (`/campus/*`) devuelven `no-store` y nunca `cf-cache-status: HIT`; `/_next/static/*` e imágenes de R2 sí salen `HIT` en la segunda petición.
-- **AC-22** El build en Vercel ejecuta migraciones con `DIRECT_URL` y la app corre con el pooler (`DATABASE_URL`); 20 peticiones concurrentes no agotan conexiones.
+- **AC-22** El build en Vercel ejecuta migraciones con `pnpm db:deploy` (conexión directa derivada) y la app corre con el pooler (`DATABASE_URL`); 20 peticiones concurrentes no agotan conexiones.
 - **AC-23** Un registro público no puede obtener rol `INSTRUCTOR`; el script `pnpm make-instructor <email>` sí lo asigna.
 - **AC-24** Ninguna imagen del catálogo ni del seed carga desde dominios de terceros (`lh3.googleusercontent.com` / `images.unsplash.com`).
 
@@ -251,7 +251,7 @@ Cada fase termina con `pnpm lint`, `tsc --noEmit` y `pnpm build` en verde.
 
 | # | Tema | Decisión tomada |
 | --- | --- | --- |
-| D1 | Base de datos | **Neon (Postgres)** con `DATABASE_URL` (pooler) y `DIRECT_URL` (migraciones) |
+| D1 | Base de datos | **Neon (Postgres)** con una sola `DATABASE_URL` (pooler); conexión directa derivada para migraciones |
 | D2 | Alojamiento de video y sesiones | **URL embebida** (YouTube no listado / Vimeo) para lecciones asíncronas y link externo (Zoom/Meet) para sesiones en vivo |
 | D3 | Generación de PDF de certificados | **`@react-pdf/renderer`** en Route Handler Node (`/api/certificados/[codigo]/pdf`) con código QR hacia `/verificar/[codigo]` |
 | D4 | Entregas de tareas | **Texto o enlace (URL)** en `/campus/tareas`; sin subida de archivos por parte del estudiante en el MVP |

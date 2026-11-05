@@ -141,7 +141,7 @@ El MVP es **desechable pero funcional**: lo prioritario es que los flujos críti
 | **Framework** | Next.js 16.3 (App Router) · React 19 · TypeScript | Next 16 cambia convenciones: `proxy.ts` reemplaza a middleware y `params` es asíncrono. Lee `node_modules/next/dist/docs/` antes de usar una API nueva. |
 | **UI** | Tailwind 4 · shadcn/base-ui · Lucide · Manrope | Tokens en `app/globals.css`; ver sección 11. |
 | **Formularios** | React Hook Form + Zod 4 · sonner | El mismo esquema zod se usa en el cliente y en la Server Action. |
-| **Datos** | Prisma 6 · Neon Postgres | `DATABASE_URL` (pooler) en runtime y `DIRECT_URL` en migraciones. |
+| **Datos** | Prisma 6 · Neon Postgres | Una sola variable `DATABASE_URL` (pooler). `pnpm db:*` deriva la conexión directa para migraciones. |
 | **Auth** | Better Auth (email + contraseña) | El registro público siempre crea `STUDENT`. |
 | **Archivos** | Cloudflare R2 (SDK S3) con URLs prefirmadas | Las imágenes se sirven desde el dominio de medios con `unoptimized`. |
 | **PDF y QR** | `@react-pdf/renderer` + `qrcode` | Route Handler en runtime Node. |
@@ -250,12 +250,11 @@ Trabajarás sobre el repo `front-office`. Esta es la foto al 19 oct 2026, para q
 - PDF de certificados, subida a R2 y páginas legales.
 
 ### Primer día
-Clona el repo y sigue el arranque local del `README.md` (≤ 5 comandos: `pnpm i`, `.env`, `prisma migrate dev`, `prisma db seed` y `pnpm dev`). Lee `AGENTS.md`, `architecture.md`, `docs/monorepo-plan.md` y `docs/design.md`. Revisa el código de la Fase 1 y anota tus dudas antes de continuar.
+Clona el repo y sigue el arranque local del `README.md` (≤ 5 comandos: `pnpm i`, `.env`, `pnpm db:migrate`, `pnpm db:seed` y `pnpm dev`). Lee `AGENTS.md`, `architecture.md`, `docs/monorepo-plan.md` y `docs/design.md`. Revisa el código de la Fase 1 y anota tus dudas antes de continuar.
 
 ### Variables de entorno (validadas en `lib/env.ts`)
 ```env
 DATABASE_URL
-DIRECT_URL
 BETTER_AUTH_SECRET
 BETTER_AUTH_URL
 R2_ACCOUNT_ID
@@ -323,7 +322,7 @@ Cada fase indica su objetivo, lo que hay que entregar y los criterios de aceptac
 - **AC-08:** Un email nuevo se registra como `STUDENT` y entra; con credenciales inválidas recibe un mensaje genérico.
 - **AC-09:** Sin sesión, `/campus/*` redirige a `/ingresar`. Un estudiante recibe 403 en `/campus/estudiantes` y en las acciones de instructor.
 - **AC-10:** Pedir por ID los datos de otro estudiante da 404/403 (test de policies).
-- **AC-22:** Las migraciones usan `DIRECT_URL` y el runtime usa el pooler; 20 peticiones concurrentes no agotan conexiones.
+- **AC-22:** Las migraciones usan la conexión directa derivada de `DATABASE_URL` (`pnpm db:deploy`) y el runtime usa el pooler; 20 peticiones concurrentes no agotan conexiones.
 - **AC-23:** El registro público no puede obtener `INSTRUCTOR`; `make-instructor` sí lo asigna.
 
 ---

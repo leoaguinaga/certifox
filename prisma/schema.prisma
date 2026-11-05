@@ -1,7 +1,9 @@
+// Una sola variable: DATABASE_URL (pooler de Neon). Los comandos de migración
+// se ejecutan con `pnpm db:*`, que derivan la conexión directa automáticamente
+// (ver scripts/prisma-direct.ts y lib/database-url.ts).
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 generator client {

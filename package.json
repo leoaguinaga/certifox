@@ -10,7 +10,12 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
-    "make-instructor": "tsx scripts/make-instructor.ts"
+    "make-instructor": "tsx scripts/make-instructor.ts",
+    "db:migrate": "tsx scripts/prisma-direct.ts migrate dev",
+    "db:deploy": "tsx scripts/prisma-direct.ts migrate deploy",
+    "db:push": "tsx scripts/prisma-direct.ts db push",
+    "db:seed": "tsx scripts/prisma-direct.ts db seed",
+    "db:studio": "tsx scripts/prisma-direct.ts studio"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

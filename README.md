@@ -32,8 +32,7 @@ Plataforma de capacitación técnica y acreditación profesional con verificaci�
 
 2. Configurar variables de entorno (`.env`):
    ```env
-   DATABASE_URL="postgresql://..."
-   DIRECT_URL="postgresql://..."
+   DATABASE_URL="postgresql://...-pooler.../certifox?sslmode=require"  # única URL de BD
    BETTER_AUTH_SECRET="tu-clave-secreta-32-bytes"
    BETTER_AUTH_URL="http://localhost:3000"
    
@@ -47,8 +46,8 @@ Plataforma de capacitación técnica y acreditación profesional con verificaci�
 
 3. Restaurar y re-seedear base de datos (Neon PostgreSQL):
    ```bash
-   pnpm prisma db push
-   pnpm prisma db seed
+   pnpm db:deploy   # aplica migraciones (usa la conexión directa derivada de DATABASE_URL)
+   pnpm db:seed
    ```
 
 4. Convertir un usuario en instructor (CLI):
