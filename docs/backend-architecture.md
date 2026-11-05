@@ -2,6 +2,8 @@
 
 > Fecha: 2026-11-05 · Alcance: `server/`, `features/*/actions.ts`, `app/api/*`, `prisma/`, `lib/env.ts`, `proxy.ts`.
 > Objetivo: preparar el monolito Next.js para recibir muchos clientes nuevos sin reescribirlo.
+>
+> **Estado:** las 4 fases están implementadas (ver §5). Configuración pendiente: [`configuracion-produccion.md`](./configuracion-produccion.md).
 
 ## 1. Resumen ejecutivo
 
@@ -194,3 +196,38 @@ Extraer solo si se cumple alguna: un dominio necesita escalar o desplegarse con 
 
 **Fase 3 — Continuo**
 - Réplicas de lectura, RLS, extracción de servicios solo si aparecen las señales de §3.7.
+
+## 5. Estado de implementación
+
+| Hallazgo | Estado | Dónde |
+|---|---|---|
+| S1 código ≥ 80 bits | ✅ | `server/modules/certification/certificate-code.ts` (Crockford base32, `CFX-XXXX-XXXX-XXXX-XXXX`; los códigos antiguos siguen verificando) |
+| S2 PDF público | ✅ | `app/api/certificados/[codigo]/pdf/route.ts`: rate limit por IP, documento enmascarado, 410 si está revocado, redirect a URL firmada de R2 |
+| S3 matrícula anónima | ✅ | `requestEnrollment` exige sesión y matricula al usuario autenticado |
+| S4 env estricto | ✅ | `server/core/env.ts`: sin defaults en runtime de producción |
+| S5 rate limit distribuido | ✅ | `server/core/rate-limit.ts` + `kv.ts` (Upstash REST; memoria como fallback) también para Better Auth (`customStorage`) |
+| S6 fuga de errores | ✅ | `server/core/action.ts` (`runAction`) y `server/core/http.ts` |
+| S7 upload local / trustedOrigins | ✅ | ruta local 404 en producción; `trustedOrigins` y cookies cross-subdominio en `server/core/auth.ts` |
+| D1 índices | ✅ | migración `20261105120000_tenancy_r2_files_outbox` |
+| D2 paginación | ✅ | `server/core/pagination.ts` (cursor) en catálogo, matrículas, entregas, emisión, cursos gestionados |
+| D3 sobre-lectura | ✅ | `select` explícito en todos los módulos; `Course.lessonsCount/totalDurationMin` desnormalizados |
+| D4 sesión | ✅ | `getSession`/`getRequestContext` con `cache()` + `cookieCache` de Better Auth |
+| D5 atomicidad | ✅ | transacciones + transiciones condicionales (`updateMany where status`) + idempotencia por `P2002` |
+| D6 progreso | ✅ | `toggleLessonProgress` en una transacción con contadores |
+| D7 PDF | ✅ | generado por el outbox al emitir y guardado en el bucket privado de R2 |
+| D8 datos ficticios | ✅ | precios y datos de pago por organización; verificación pública solo con el snapshot real |
+| O1 migraciones | ✅ | `vercel-build` → `db:deploy` en Production (previews solo con `MIGRATE_ON_BUILD=1`) |
+| O2 observabilidad | ✅ | logger JSON + `x-request-id` (proxy) + `instrumentation.ts` (`onRequestError`) |
+| O3 tests | ✅ | `tests/unit` + `tests/integration` (Postgres real, migraciones reales), CI, `loadtest/smoke.js` (k6) |
+| M1/M2 tenancy y roles | ✅ | `Organization`, `Membership(OrgRole)`, `User.platformRole`, organización activa, subdominios / dominio propio |
+| M3 auditoría | ✅ | `targetId` siempre id interno, `organizationId`, actor nullable para el sistema |
+| Archivos en R2 | ✅ | modelo `File` (bucket, key, visibilidad, estado) referenciado por portadas, avatares, logos, videos, recursos, adjuntos y PDFs |
+| Outbox + emails | ✅ | `server/core/outbox.ts` (SKIP LOCKED, backoff, dead letter), `server/modules/jobs/jobs.ts`, cron `/api/internal/cron` |
+| Réplica de lectura | ✅ | `dbRead` (opcional vía `DATABASE_READ_REPLICA_URL`) |
+
+**Decisiones conscientes (no implementado):**
+
+- **RLS de Postgres**: no se activó. Prisma se conecta con el rol dueño de las tablas, que ignora RLS salvo `FORCE`, y aplicarlo bien exige `SET LOCAL` en una transacción por consulta (coste de latencia con el pooler). El aislamiento se garantiza en la capa de aplicación (`manageableCoursesWhere`, `assertCanManageCourse`) y está cubierto por tests de integración. Revisitar si aparece un requisito de cumplimiento que lo exija.
+- **Sentry/OTel**: no se añadió la dependencia; `instrumentation.ts` y el logger son el punto único de enganche (ver checklist §7).
+- **Extracción de servicios**: ninguna señal de §3.7 se cumple hoy.
+- **UI de administración de organizaciones**: los casos de uso y Server Actions existen (`features/organization/actions.ts`: miembros, datos de pago, cambio de organización); por ahora la gestión se hace con `pnpm org:*`. Solo el selector de organización activa tiene UI.

@@ -6,61 +6,44 @@ Plataforma de capacitación técnica y acreditación profesional con verificaci�
 
 ## Estructura principal
 
-- `app/(public)`: Sitio público (`/`, `/cursos`, `/cursos/[id]`, `/verificar/[codigo]`, `/ingresar`, `/privacidad`, `/terminos`).
-- `app/(campus)/campus`: Campus virtual unificado por rol (`STUDENT` | `INSTRUCTOR`):
-  - `/campus`: Panel principal de estudiante o docente.
-  - `/campus/cursos`: Cursos matriculados del alumno o cursos asignados/gestionados por el instructor.
-  - `/campus/certificados`: Colección de certificados del alumno o bandeja de emisión/revocación docente.
-  - `/campus/tareas`: Entregas prácticas y bandeja de calificación.
-  - `/campus/estudiantes`: Gestión de matrículas y confirmación de pago (instructor).
-  - `/campus/perfil`: Datos del titular, cambio de clave y avatar seguro en R2 (Ley 29733).
-  - `/campus/mesa-de-ayuda`: Tickets de soporte y consultas con persistencia en PostgreSQL.
-- `features/`: Módulos de dominio (`campus`, `catalog`, `learning`, `certificates`, `courses-management`, `certificates-management`, `profile`, `help-desk`, `auth`, `landing`).
-- `server/`: Cliente Prisma, configuración de Better Auth, políticas de autorización (`policies.ts`), servicios de dominio y generación de PDFs con QR.
+- `app/(public)`: sitio público (`/`, `/cursos`, `/cursos/[id]`, `/verificar/[codigo]`, `/ingresar`, ...). En `<slug>.ROOT_DOMAIN` muestra solo la organización correspondiente.
+- `app/(campus)/campus`: campus por rol dentro de la **organización activa** (staff = OWNER/ADMIN/INSTRUCTOR → panel docente; resto → panel de estudiante).
+- `app/api`: auth, PDF de certificados, subida directa a R2 (`upload/presigned` → PUT → `upload/confirm`) y cron interno.
+- `features/`: UI por dominio + `actions.ts` finas (`runAction`: zod → contexto → rate limit → caso de uso).
+- `server/core/`: infraestructura transversal (env estricto, Prisma, auth, contexto de request, políticas, errores, logger, rate limit, R2, outbox, email, caché).
+- `server/modules/`: casos de uso por dominio (`catalog`, `course-management`, `enrollment`, `learning`, `assessment`, `certification`, `files`, `organization`, `profile`, `support`, `jobs`, `audit`).
+
+Arquitectura y decisiones: [`docs/backend-architecture.md`](./docs/backend-architecture.md). Configuración de producción: [`docs/configuracion-produccion.md`](./docs/configuracion-produccion.md).
 
 ## Requisitos previos
 
-- **Node.js** 20+
+- **Node.js** 22+ (`process.loadEnvFile`)
 - **pnpm** 10+
+- PostgreSQL (Neon en producción; uno local para desarrollo y tests de integración)
 
 ## Arranque local
 
-1. Instalar dependencias:
-   ```bash
-   pnpm install
-   ```
-
-2. Configurar variables de entorno (`.env`):
-   ```env
-   DATABASE_URL="postgresql://...-pooler.../certifox?sslmode=require"  # única URL de BD
-   BETTER_AUTH_SECRET="tu-clave-secreta-32-bytes"
-   BETTER_AUTH_URL="http://localhost:3000"
-   
-   # Cloudflare R2 (Opcional en desarrollo local; usa fallback si está vacío)
-   R2_ACCOUNT_ID="tu-account-id"
-   R2_ACCESS_KEY_ID="tu-access-key-id"
-   R2_SECRET_ACCESS_KEY="tu-secret-access-key"
-   R2_BUCKET="certifox-media"
-   NEXT_PUBLIC_MEDIA_URL="https://media.certifox.edu"
-   ```
-
-3. Restaurar y re-seedear base de datos (Neon PostgreSQL):
+1. `pnpm install`
+2. Copia `.env.example` a `.env`. Para desarrollo basta con `DATABASE_URL`; el resto tiene modo local.
+3. Migraciones y datos demo:
    ```bash
    pnpm db:deploy   # aplica migraciones (usa la conexión directa derivada de DATABASE_URL)
-   pnpm db:seed
+   pnpm db:seed     # organización demo "certifox" + usuarios (Password123!)
    ```
+4. `pnpm dev` y abre [http://localhost:3000](http://localhost:3000).
 
-4. Convertir un usuario en instructor (CLI):
-   ```bash
-   pnpm make-instructor profe@certifox.pe
-   ```
+Usuarios demo: `profe@certifox.pe` (OWNER de la organización demo), `alumno@certifox.pe`, `lucia@certifox.pe`.
 
-5. Iniciar el servidor de desarrollo:
-   ```bash
-   pnpm dev
-   ```
+## Organizaciones (clientes)
 
-6. Abrir [http://localhost:3000](http://localhost:3000).
+```bash
+pnpm org:create <slug> "<Nombre>" <ownerEmail> [dominioPropio]
+pnpm org:member <orgSlug> <email> <OWNER|ADMIN|INSTRUCTOR|STUDENT>
+pnpm org:payments <orgSlug> pagos.json      # Yape/Plin/bancos/WhatsApp (validado con zod)
+pnpm platform:superadmin <email>
+```
+
+El usuario debe haberse registrado antes en `/ingresar`. El registro público nunca otorga roles.
 
 ## Reglas de Caché y Cloudflare (AC-21)
 
@@ -76,11 +59,12 @@ Plataforma de capacitación técnica y acreditación profesional con verificaci�
 
 ## Comandos de verificación (Definition of Done)
 
-Antes de cada commit o deploy deben pasar todos en verde:
-
 ```bash
-pnpm test
 pnpm lint
-pnpm exec tsc --noEmit
+pnpm typecheck
+pnpm test                                                    # unitarios
+TEST_DATABASE_URL=postgresql://... pnpm test:integration     # contra Postgres real (borra esa BD)
 pnpm build
 ```
+
+CI (`.github/workflows/ci.yml`) ejecuta todo lo anterior con un Postgres efímero y verifica que las migraciones no tengan drift. Prueba de carga: `loadtest/smoke.js` (k6).

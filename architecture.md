@@ -20,7 +20,7 @@ Este proyecto contiene toda la plataforma **Certifox** para su MVP en un único 
 1. **Un solo proyecto Next.js, un solo deploy** para visitantes, estudiantes e instructores.
 2. **Rutas unificadas en `/campus`**: las rutas definen navegación y layouts; la lógica y vistas de dominio viven en `features/` y las reglas de negocio críticas en `server/`.
 3. **Server Components por defecto**: los componentes cliente (`"use client"`) solo se usan para interactividad, formularios o APIs del navegador.
-4. **Seguridad y autorización en el servidor (`server/policies.ts`)**: el navegador y el contexto de UI nunca contienen reglas críticas de permisos, certificación, pagos o notas. Todo acceso o mutación verifica rol y propiedad en el servidor.
+4. **Seguridad y autorización en el servidor (`server/core/policies.ts`)**: el navegador y el contexto de UI nunca contienen reglas críticas de permisos, certificación, pagos o notas. Todo acceso o mutación verifica rol y propiedad en el servidor.
 5. **Aislamiento de servidor (`server-only`)**: Prisma, Better Auth server y los servicios de negocio viven exclusivamente en `server/` protegidos con `import "server-only"`. Ningún componente cliente puede importarlos.
 
 ## Estructura de carpetas
@@ -75,10 +75,10 @@ features/
 └── auth/
 
 server/
-├── db.ts
-├── auth.ts
-├── policies.ts
-└── services/
+├── core/          # infraestructura: env, db, auth, request-context, policies, roles, errors,
+│                  # action (runAction), rate-limit, kv, storage (R2), outbox, email, cache, logger
+└── modules/       # casos de uso por dominio: catalog, course-management, enrollment, learning,
+                   # assessment, certification, files, organization, profile, support, jobs, audit
 
 prisma/
 ├── schema.prisma
@@ -102,15 +102,15 @@ lib/
 | `(public)` | Visitantes y usuarios sin sesión | Header y footer público | `/`, `/cursos`, `/verificar/[codigo]`, `/ingresar` |
 | `(campus)` | Estudiantes e instructores autenticados | Sidebar unificado y topbar de `/campus` adaptados por rol | `/campus`, `/campus/cursos`, `/campus/certificados`, `/campus/tareas`, `/campus/estudiantes` |
 
-La comprobación real de sesión y rol se ejecuta en `server/policies.ts` dentro de cada Server Component / Server Action. El archivo `proxy.ts` (convención de Next.js 16) y el layout de `(campus)` redirigen a `/ingresar` cuando no existe sesión activa, pero nunca sustituyen la validación en la capa `server/`.
+La comprobación real de sesión, organización activa y rol se ejecuta en `server/core/policies.ts` dentro de cada Server Component / Server Action. El archivo `proxy.ts` (convención de Next.js 16) y el layout de `(campus)` redirigen a `/ingresar` cuando no existe sesión activa, pero nunca sustituyen la validación en la capa `server/`.
 
 ## Organización por feature y capa `server/`
 
-Cada feature agrupa sus componentes, esquemas de validación (`zod`) y Server Actions que delegan en `server/services/`:
+Cada feature agrupa sus componentes, esquemas de validación (`zod`) y Server Actions que delegan en `server/modules/`:
 
 ```txt
 features/learning/
-├── actions.ts          # "use server": valida con zod → llama a server/policies + server/services → revalidatePath
+├── actions.ts          # "use server": runAction(zod → contexto → rate limit → server/modules) → revalidatePath
 ├── queries.ts          # "server-only": lecturas tipadas para Server Components
 ├── components/
 ├── schemas.ts          # esquemas zod compartidos entre formulario cliente y Server Action
@@ -133,4 +133,4 @@ features/learning/
 4. **Accesibilidad del estado del certificado**: un certificado válido, vencido, observado o revocado conserva siempre su etiqueta textual explícita, nunca solo color.
 5. **Verificación pública**: `/verificar/[codigo]` es pública, no solicita sesión, oculta parcialmente el documento de identidad y responde con `Cache-Control: no-store`.
 6. **Sin comprobantes en plataforma**: no existe subida de comprobantes de pago en el MVP.
-7. **Alta de instructores**: el registro público en `/ingresar` siempre asigna el rol `STUDENT`. El rol `INSTRUCTOR` se asigna mediante seed o el script CLI `pnpm make-instructor <email>`.
+7. **Multi-tenant**: cada curso, matrícula y certificado pertenece a una organización. Los roles (`OWNER`, `ADMIN`, `INSTRUCTOR`, `STUDENT`) viven en `Membership`; el registro público nunca otorga roles (`pnpm org:member`).
