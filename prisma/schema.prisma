@@ -10,9 +10,27 @@ generator client {
   provider = "prisma-client-js"
 }
 
-enum Role {
-  STUDENT
+// -----------------------------------------------------------------------------
+// Enums
+// -----------------------------------------------------------------------------
+
+/// Rol global de plataforma (no depende de la organización).
+enum PlatformRole {
+  USER
+  SUPERADMIN
+}
+
+/// Rol de un usuario dentro de una organización (tenant).
+enum OrgRole {
+  OWNER
+  ADMIN
   INSTRUCTOR
+  STUDENT
+}
+
+enum OrganizationStatus {
+  ACTIVE
+  SUSPENDED
 }
 
 enum EnrollmentStatus {
@@ -39,34 +57,113 @@ enum TicketStatus {
   CLOSED
 }
 
+/// Uso del archivo almacenado en Cloudflare R2.
+enum FileKind {
+  COURSE_COVER
+  USER_AVATAR
+  ORGANIZATION_LOGO
+  LESSON_VIDEO
+  LESSON_RESOURCE
+  SUBMISSION_ATTACHMENT
+  CERTIFICATE_PDF
+}
+
+/// PUBLIC: se sirve desde el dominio de medios (CDN). PRIVATE: solo con URL firmada.
+enum FileVisibility {
+  PUBLIC
+  PRIVATE
+}
+
+/// PENDING: URL de subida emitida, aún sin confirmar. READY: objeto verificado en R2.
+enum FileStatus {
+  PENDING
+  READY
+  DELETED
+}
+
+enum OutboxStatus {
+  PENDING
+  PROCESSING
+  DONE
+  FAILED
+}
+
 // -----------------------------------------------------------------------------
-// Better Auth + User Domain
+// Tenancy
+// -----------------------------------------------------------------------------
+model Organization {
+  id              String             @id @default(cuid())
+  slug            String             @unique // subdominio: <slug>.ROOT_DOMAIN
+  name            String
+  legalName       String?
+  taxId           String? // RUC
+  customDomain    String?            @unique
+  status          OrganizationStatus @default(ACTIVE)
+  /// Datos de cobro manual (Yape/Plin/bancos/WhatsApp). Validado con zod en server/modules/organization.
+  paymentSettings Json?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  logoFileId String? @unique
+  logoFile   File?   @relation("OrganizationLogo", fields: [logoFileId], references: [id], onDelete: SetNull)
+
+  memberships  Membership[]
+  courses      Course[]
+  enrollments  Enrollment[]
+  certificates Certificate[]
+  tickets      Ticket[]
+  auditLogs    AuditLog[]
+  files        File[]        @relation("OrganizationFiles")
+
+  @@map("organizations")
+}
+
+model Membership {
+  id        String   @id @default(cuid())
+  role      OrgRole  @default(STUDENT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId])
+  @@index([userId])
+  @@index([organizationId, role])
+  @@map("memberships")
+}
+
+// -----------------------------------------------------------------------------
+// Better Auth + Usuario
 // -----------------------------------------------------------------------------
 model User {
-  id             String       @id @default(cuid())
-  name           String
-  email          String       @unique
-  emailVerified  Boolean      @default(false)
-  image          String?
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  emailVerified Boolean  @default(false)
+  /// Imagen externa (OAuth). Las subidas propias van a avatarFile (R2).
+  image         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  // Campos específicos de dominio Certifox
-  role           Role         @default(STUDENT)
-  documentType   String?      // DNI, CE, Pasaporte
-  documentNumber String?      // Encriptado o enmascarado en vistas públicas
+  platformRole   PlatformRole @default(USER)
+  documentType   String? // DNI, CE, Pasaporte
+  documentNumber String? // Nunca se expone completo en vistas públicas
   institution    String?
-  avatarUrl      String?
 
-  // Relaciones Better Auth
-  sessions       Session[]
-  accounts       Account[]
+  avatarFileId String? @unique
+  avatarFile   File?   @relation("UserAvatar", fields: [avatarFileId], references: [id], onDelete: SetNull)
 
-  // Relaciones de dominio
+  sessions          Session[]
+  accounts          Account[]
+  memberships       Membership[]
   coursesInstructed Course[]     @relation("InstructorCourses")
   enrollments       Enrollment[]
   tickets           Ticket[]
   auditLogs         AuditLog[]   @relation("ActorAuditLogs")
+  uploadedFiles     File[]       @relation("UploadedFiles")
 
   @@map("users")
 }
@@ -78,10 +175,12 @@ model Session {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   ipAddress String?
-  userAgent String?
   userId    String
+  userAgent String?
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId])
+  @@index([expiresAt])
   @@map("sessions")
 }
 
@@ -101,6 +200,8 @@ model Account {
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
 
+  @@index([userId])
+  @@index([providerId, accountId])
   @@map("accounts")
 }
 
@@ -112,33 +213,86 @@ model Verification {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
+  @@index([identifier])
   @@map("verifications")
+}
+
+// -----------------------------------------------------------------------------
+// Archivos (Cloudflare R2). La BD guarda metadatos y la clave del objeto;
+// la URL pública se deriva de NEXT_PUBLIC_MEDIA_URL + key (PUBLIC) o se firma (PRIVATE).
+// -----------------------------------------------------------------------------
+model File {
+  id             String         @id @default(cuid())
+  kind           FileKind
+  visibility     FileVisibility @default(PUBLIC)
+  status         FileStatus     @default(PENDING)
+  bucket         String
+  key            String         @unique // p. ej. org_x/covers/uuid.webp
+  contentType    String
+  sizeBytes      Int
+  checksumSha256 String?
+  originalName   String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  deletedAt      DateTime?
+
+  organizationId String?
+  organization   Organization? @relation("OrganizationFiles", fields: [organizationId], references: [id], onDelete: SetNull)
+  uploadedById   String?
+  uploadedBy     User?         @relation("UploadedFiles", fields: [uploadedById], references: [id], onDelete: SetNull)
+
+  // Back-relations (1:1 por uso)
+  userAvatar           User?            @relation("UserAvatar")
+  organizationLogo     Organization?    @relation("OrganizationLogo")
+  courseCover          Course?          @relation("CourseCover")
+  lessonVideo          Lesson?          @relation("LessonVideo")
+  certificatePdf       Certificate?     @relation("CertificatePdf")
+  submissionAttachment Submission?      @relation("SubmissionAttachment")
+  lessonResources      LessonResource[]
+
+  @@index([organizationId, kind])
+  @@index([status, createdAt])
+  @@index([uploadedById])
+  @@map("files")
 }
 
 // -----------------------------------------------------------------------------
 // Cursos, Módulos y Lecciones
 // -----------------------------------------------------------------------------
 model Course {
-  id              String        @id @default(cuid())
-  slug            String        @unique
-  title           String
-  summary         String
-  category        String
-  level           String        // Básico, Intermedio, Avanzado
-  hours           Int           @default(0)
-  coverUrl        String?
-  liveSessionUrl  String?
-  published       Boolean       @default(false)
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  id               String   @id @default(cuid())
+  slug             String   @unique
+  title            String
+  summary          String
+  category         String
+  level            String // Básico, Intermedio, Avanzado
+  hours            Int      @default(0)
+  /// Precio en la unidad mínima de la moneda (céntimos). 0 = gratuito.
+  priceCents       Int      @default(0)
+  currency         String   @default("PEN")
+  liveSessionUrl   String?
+  published        Boolean  @default(false)
+  /// Contadores desnormalizados (se actualizan en la misma transacción que módulos/lecciones).
+  lessonsCount     Int      @default(0)
+  totalDurationMin Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
-  instructorId    String
-  instructor      User          @relation("InstructorCourses", fields: [instructorId], references: [id])
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  instructorId   String
+  instructor     User         @relation("InstructorCourses", fields: [instructorId], references: [id])
 
-  modules         Module[]
-  enrollments     Enrollment[]
-  assessments     Assessment[]
+  coverFileId String? @unique
+  coverFile   File?   @relation("CourseCover", fields: [coverFileId], references: [id], onDelete: SetNull)
 
+  modules     Module[]
+  enrollments Enrollment[]
+  assessments Assessment[]
+
+  @@index([organizationId, published, createdAt])
+  @@index([organizationId, category])
+  @@index([instructorId])
   @@map("courses")
 }
 
@@ -149,11 +303,12 @@ model Module {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  courseId  String
-  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
-  lessons   Lesson[]
+  lessons Lesson[]
 
+  @@index([courseId, order])
   @@map("modules")
 }
 
@@ -161,17 +316,40 @@ model Lesson {
   id          String   @id @default(cuid())
   title       String
   order       Int      @default(0)
+  /// Video externo (YouTube/Vimeo). Si hay videoFile en R2, tiene prioridad.
   videoUrl    String?
   durationMin Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  moduleId    String
-  module      Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  moduleId String
+  module   Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
 
-  progress    LessonProgress[]
+  videoFileId String? @unique
+  videoFile   File?   @relation("LessonVideo", fields: [videoFileId], references: [id], onDelete: SetNull)
 
+  progress  LessonProgress[]
+  resources LessonResource[]
+
+  @@index([moduleId, order])
   @@map("lessons")
+}
+
+/// Material descargable de una lección (PDF, planos, etc.) almacenado en R2.
+model LessonResource {
+  id        String   @id @default(cuid())
+  title     String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  lessonId String
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  fileId   String
+  file     File   @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  @@index([lessonId, order])
+  @@index([fileId])
+  @@map("lesson_resources")
 }
 
 // -----------------------------------------------------------------------------
@@ -180,36 +358,44 @@ model Lesson {
 model Enrollment {
   id          String           @id @default(cuid())
   status      EnrollmentStatus @default(PENDING)
+  /// Precio acordado al matricular (snapshot).
+  priceCents  Int              @default(0)
+  currency    String           @default("PEN")
   activatedAt DateTime?
   completedAt DateTime?
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
 
-  userId      String
-  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  courseId    String
-  course      Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  /// Denormalizado desde Course para listar por tenant sin JOIN.
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId       String
+  course         Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   progress    LessonProgress[]
   submissions Submission[]
   certificate Certificate?
 
   @@unique([userId, courseId])
+  @@index([courseId, status])
+  @@index([organizationId, status, createdAt])
+  @@index([userId, createdAt])
   @@map("enrollments")
 }
 
 model LessonProgress {
-  id           String     @id @default(cuid())
-  completedAt  DateTime   @default(now())
+  id          String   @id @default(cuid())
+  completedAt DateTime @default(now())
 
   enrollmentId String
   enrollment   Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
-
   lessonId     String
   lesson       Lesson     @relation(fields: [lessonId], references: [id], onDelete: Cascade)
 
   @@unique([enrollmentId, lessonId])
+  @@index([lessonId])
   @@map("lesson_progress")
 }
 
@@ -217,36 +403,41 @@ model LessonProgress {
 // Tareas y Evaluaciones
 // -----------------------------------------------------------------------------
 model Assessment {
-  id           String       @id @default(cuid())
+  id           String   @id @default(cuid())
   title        String
   description  String?
-  passingScore Int          @default(14) // Escala 0-20 común en Perú
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  passingScore Int      @default(14) // Escala 0-20
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  courseId     String
-  course       Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
-  submissions  Submission[]
+  submissions Submission[]
 
+  @@index([courseId])
   @@map("assessments")
 }
 
 model Submission {
-  id                String           @id @default(cuid())
-  contentUrlOrText  String           // URL o texto de entrega
-  score             Int?
-  feedback          String?
-  status            SubmissionStatus @default(PENDING)
-  submittedAt       DateTime         @default(now())
-  gradedAt          DateTime?
+  id               String           @id @default(cuid())
+  contentUrlOrText String
+  score            Int?
+  feedback         String?
+  status           SubmissionStatus @default(PENDING)
+  submittedAt      DateTime         @default(now())
+  gradedAt         DateTime?
 
-  assessmentId      String
-  assessment        Assessment       @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  assessmentId String
+  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  enrollmentId String
+  enrollment   Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
 
-  enrollmentId      String
-  enrollment        Enrollment       @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  attachmentFileId String? @unique
+  attachmentFile   File?   @relation("SubmissionAttachment", fields: [attachmentFileId], references: [id], onDelete: SetNull)
 
+  @@unique([enrollmentId, assessmentId])
+  @@index([assessmentId, status])
   @@map("submissions")
 }
 
@@ -255,22 +446,35 @@ model Submission {
 // -----------------------------------------------------------------------------
 model Certificate {
   id               String            @id @default(cuid())
-  code             String            @unique // ≥ 96 bits de entropía (cuid/nanoid/hex aleatorio)
-  sha256           String            // Hash criptográfico de validación
+  code             String            @unique // ≥ 80 bits aleatorios (Crockford base32)
+  sha256           String
   status           CertificateStatus @default(VALID)
   issuedAt         DateTime          @default(now())
   expiresAt        DateTime?
   revokedAt        DateTime?
   revocationReason String?
 
-  enrollmentId     String            @unique
-  enrollment       Enrollment        @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  /// Snapshot inmutable de lo certificado (no cambia si luego se edita el curso o el usuario).
+  holderName  String
+  courseTitle String
+  hours       Int
+  finalScore  Int?
 
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  enrollmentId   String       @unique
+  enrollment     Enrollment   @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+
+  pdfFileId String? @unique
+  pdfFile   File?   @relation("CertificatePdf", fields: [pdfFileId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, issuedAt])
+  @@index([organizationId, status])
   @@map("certificates")
 }
 
 // -----------------------------------------------------------------------------
-// Soporte y Auditoría
+// Soporte, Auditoría y Outbox
 // -----------------------------------------------------------------------------
 model Ticket {
   id        String       @id @default(cuid())
@@ -281,22 +485,51 @@ model Ticket {
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
 
-  userId    String
-  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
 
+  @@index([userId, createdAt])
+  @@index([organizationId, status, createdAt])
   @@map("tickets")
 }
 
 model AuditLog {
   id         String   @id @default(cuid())
-  action     String   // "CONFIRM_PAYMENT", "GRADE_SUBMISSION", "ISSUE_CERTIFICATE", "REVOKE_CERTIFICATE"
-  targetType String   // "Enrollment", "Submission", "Certificate"
-  targetId   String
+  action     String // CONFIRM_PAYMENT, GRADE_SUBMISSION, ISSUE_CERTIFICATE, ...
+  targetType String // Enrollment, Submission, Certificate, Course
+  targetId   String // Siempre el id interno
   metadata   Json?
   createdAt  DateTime @default(now())
 
-  actorId    String
-  actor      User     @relation("ActorAuditLogs", fields: [actorId], references: [id])
+  /// Null = acción del sistema (worker/outbox).
+  actorId        String?
+  actor          User?         @relation("ActorAuditLogs", fields: [actorId], references: [id], onDelete: SetNull)
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
 
+  @@index([targetType, targetId])
+  @@index([actorId, createdAt])
+  @@index([organizationId, createdAt])
   @@map("audit_logs")
+}
+
+/// Patrón outbox: eventos escritos en la misma transacción que el cambio de dominio
+/// y procesados de forma asíncrona (PDF, emails) con reintentos.
+model OutboxEvent {
+  id          String       @id @default(cuid())
+  type        String
+  payload     Json
+  status      OutboxStatus @default(PENDING)
+  attempts    Int          @default(0)
+  maxAttempts Int          @default(8)
+  availableAt DateTime     @default(now())
+  lockedAt    DateTime?
+  lastError   String?
+  createdAt   DateTime     @default(now())
+  processedAt DateTime?
+
+  @@index([status, availableAt])
+  @@map("outbox_events")
 }

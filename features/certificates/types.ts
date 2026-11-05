@@ -4,7 +4,6 @@ export interface CertificateStudent {
   name: string;
   documentMasked: string;
   documentLawNotice: string;
-  biometricValidated: boolean;
 }
 
 export interface CertificateCourse {
@@ -15,16 +14,14 @@ export interface CertificateCourse {
   issuingEntity: string;
   instructor: {
     name: string;
-    license: string;
   };
 }
 
 export interface CertificateEvaluation {
-  finalGrade: number;
+  /** Promedio de evaluaciones aprobadas (0–20); null si el curso no tiene evaluaciones. */
+  finalGrade: number | null;
   maxGrade: number;
-  gradeScale: string;
   hours: number;
-  hoursDescription: string;
   issueDate: string;
   validity: string;
   expirationDate: string;
@@ -33,8 +30,8 @@ export interface CertificateEvaluation {
 export interface CertificateCryptography {
   sha256: string;
   timestampUtc: string;
-  ledgerBlock: string;
-  ledgerId: string;
+  /** Id interno del registro de emisión. */
+  recordId: string;
 }
 
 export interface CertificateCompetencyRubric {
@@ -45,7 +42,6 @@ export interface CertificateCompetencyRubric {
 
 export interface CertificateRevocation {
   revocationDate: string;
-  resolution: string;
   auditorResponsible: string;
   reason: string;
   instruction: string;

@@ -2,29 +2,34 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 /**
- * Proxy en Next.js 16 para redirecciones optimistas de UX.
- * IMPORTANTE (Regla A1): Este proxy solo redirige por UX;
- * la verdadera barrera de seguridad reside en server/policies.ts.
+ * Proxy (Next.js 16):
+ *  1. Asigna un x-request-id a cada request (correlación de logs de punta a punta).
+ *  2. Redirección optimista de /campus sin cookie de sesión (solo UX).
+ * La barrera real de seguridad está en server/core/policies.ts.
  */
 export function proxy(request: NextRequest) {
+  const requestId = request.headers.get("x-request-id") ?? crypto.randomUUID();
   const { pathname } = request.nextUrl;
 
-  const sessionCookie =
-    request.cookies.get("better-auth.session_token") ||
-    request.cookies.get("__Secure-better-auth.session_token");
-
-  // Si intenta entrar al campus sin cookie de sesión, redirige al login
   if (pathname.startsWith("/campus")) {
-    if (!sessionCookie) {
+    const hasSession =
+      request.cookies.has("better-auth.session_token") || request.cookies.has("__Secure-better-auth.session_token");
+    if (!hasSession) {
       const loginUrl = new URL("/ingresar", request.url);
       loginUrl.searchParams.set("from", pathname);
-      return NextResponse.redirect(loginUrl);
+      const res = NextResponse.redirect(loginUrl);
+      res.headers.set("x-request-id", requestId);
+      return res;
     }
   }
 
-  return NextResponse.next();
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-request-id", requestId);
+  const res = NextResponse.next({ request: { headers: requestHeaders } });
+  res.headers.set("x-request-id", requestId);
+  return res;
 }
 
 export const config = {
-  matcher: ["/campus/:path*"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|images/|.*\\.(?:svg|png|jpg|jpeg|webp|ico)$).*)"],
 };

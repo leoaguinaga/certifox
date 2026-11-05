@@ -1,5 +1,8 @@
 import { Metadata } from "next";
-import { getCatalogCourses, getCatalogCategoryCounts } from "@/server/services/course.service";
+import { getCatalogCategoryCounts, getCatalogPage } from "@/server/modules/catalog/catalog.service";
+import { resolvePublicTenant } from "@/server/modules/organization/organization.service";
+import { cursorParam } from "@/server/core/page-guards";
+import { LoadMoreLink } from "@/components/shared/load-more-link";
 import { CatalogHeader } from "@/features/catalog/components/catalog-header";
 import { CourseCatalogExplorer } from "@/features/catalog/components/course-catalog-explorer";
 
@@ -16,26 +19,38 @@ interface CursosPageProps {
     categoria?: string;
     nivel?: string;
     buscar?: string;
+    cursor?: string;
   }>;
 }
 
 export default async function CursosPage({ searchParams }: CursosPageProps) {
-  const { categoria, nivel, buscar } = await searchParams;
+  const { categoria, nivel, buscar, cursor } = await searchParams;
+  const tenant = await resolvePublicTenant();
 
-  const courses = await getCatalogCourses({
-    category: categoria,
-    level: nivel,
-    search: buscar,
-  });
-
-  const categoryCounts = await getCatalogCategoryCounts();
+  const [page, categoryCounts] = await Promise.all([
+    getCatalogPage({
+      organizationId: tenant?.id ?? null,
+      category: categoria,
+      level: nivel,
+      search: buscar?.slice(0, 100),
+      cursor: cursorParam(cursor),
+      limit: 24,
+    }),
+    getCatalogCategoryCounts(tenant?.id ?? null),
+  ]);
 
   return (
     <div className="flex flex-col w-full min-h-screen bg-[#f8f9ff]">
       <CatalogHeader />
       <CourseCatalogExplorer
-        initialCourses={courses}
+        initialCourses={page.items}
         categoryCounts={categoryCounts}
+      />
+      <LoadMoreLink
+        basePath="/cursos"
+        nextCursor={page.nextCursor}
+        params={{ categoria, nivel, buscar }}
+        label="Ver más programas"
       />
     </div>
   );

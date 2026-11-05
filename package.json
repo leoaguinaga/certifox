@@ -8,14 +8,22 @@
     "build": "prisma generate && next build --webpack",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest run",
+    "test": "vitest run --project unit",
     "test:watch": "vitest",
-    "make-instructor": "tsx scripts/make-instructor.ts",
     "db:migrate": "tsx scripts/prisma-direct.ts migrate dev",
     "db:deploy": "tsx scripts/prisma-direct.ts migrate deploy",
     "db:push": "tsx scripts/prisma-direct.ts db push",
     "db:seed": "tsx scripts/prisma-direct.ts db seed",
-    "db:studio": "tsx scripts/prisma-direct.ts studio"
+    "db:studio": "tsx scripts/prisma-direct.ts studio",
+    "org:create": "tsx scripts/prisma-direct.ts --run scripts/org-admin.ts create",
+    "org:member": "tsx scripts/prisma-direct.ts --run scripts/org-admin.ts member",
+    "org:payments": "tsx scripts/prisma-direct.ts --run scripts/org-admin.ts payments",
+    "platform:superadmin": "tsx scripts/prisma-direct.ts --run scripts/org-admin.ts superadmin",
+    "test:integration": "vitest run --project integration",
+    "test:all": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "db:migrate:status": "tsx scripts/prisma-direct.ts migrate status",
+    "vercel-build": "tsx scripts/vercel-build.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

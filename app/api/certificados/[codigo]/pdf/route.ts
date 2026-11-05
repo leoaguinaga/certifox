@@ -1,90 +1,62 @@
-import { notFound } from "next/navigation";
-import { prisma } from "@/server/db";
-import QRCode from "qrcode";
-import { renderToBuffer } from "@react-pdf/renderer";
-import React from "react";
-import { CertificatePdfDocument } from "@/server/pdf/certificate-pdf-document";
+import { NextResponse } from "next/server";
+import { headers } from "next/headers";
+import { clientIp } from "@/server/core/request-context";
+import { consume, RATE_LIMITS } from "@/server/core/rate-limit";
+import { handleRouteError } from "@/server/core/http";
+import { isPlausibleCertificateCode, normalizeCertificateCode } from "@/server/modules/certification/certificate-code";
+import {
+  findCertificateForPdf,
+  renderCertificatePdf,
+  storedCertificatePdf,
+} from "@/server/modules/certification/certificate-pdf";
+import { signedFileUrl } from "@/server/modules/files/files.service";
 
 export const dynamic = "force-dynamic";
 
-interface RouteParams {
-  params: Promise<{
-    codigo: string;
-  }>;
-}
+const NO_STORE = { "Cache-Control": "private, no-store, max-age=0" };
 
-export async function GET(request: Request, { params }: RouteParams) {
-  const { codigo } = await params;
+/**
+ * PDF del certificado. Público por código (como la verificación) pero:
+ *  - S2: limitado por IP y con el documento de identidad enmascarado
+ *  - certificados revocados no se descargan (410)
+ *  - si el PDF ya está en R2 (pre-generado al emitir) se redirige a una URL firmada
+ *    de 2 minutos; si no, se renderiza bajo demanda.
+ */
+export async function GET(_req: Request, { params }: { params: Promise<{ codigo: string }> }) {
+  try {
+    const ip = clientIp(await headers());
+    const limit = await consume(`pdf:${ip}`, RATE_LIMITS.certificatePdf);
+    if (!limit.allowed) {
+      return NextResponse.json(
+        { error: "Demasiadas solicitudes" },
+        { status: 429, headers: { ...NO_STORE, "Retry-After": String(limit.retryAfter ?? 60) } }
+      );
+    }
 
-  if (!codigo) {
-    notFound();
-  }
+    const code = normalizeCertificateCode((await params).codigo);
+    if (!isPlausibleCertificateCode(code)) return NextResponse.json({ error: "No encontrado" }, { status: 404, headers: NO_STORE });
 
-  const certificate = await prisma.certificate.findUnique({
-    where: { code: codigo.toUpperCase() },
-    include: {
-      enrollment: {
-        include: {
-          user: true,
-          course: {
-            include: {
-              instructor: true,
-            },
-          },
-        },
+    const cert = await findCertificateForPdf(code);
+    if (!cert) return NextResponse.json({ error: "No encontrado" }, { status: 404, headers: NO_STORE });
+    if (cert.status === "REVOKED") {
+      return NextResponse.json({ error: "Certificado revocado" }, { status: 410, headers: NO_STORE });
+    }
+
+    const stored = await storedCertificatePdf(cert.pdfFileId);
+    if (stored) {
+      const url = await signedFileUrl(stored, { expiresInSeconds: 120, downloadName: `Certificado-${cert.code}.pdf` });
+      return NextResponse.redirect(url, { status: 302, headers: NO_STORE });
+    }
+
+    const pdf = await renderCertificatePdf(cert);
+    return new Response(Buffer.from(pdf), {
+      headers: {
+        ...NO_STORE,
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `inline; filename="Certificado-${cert.code}.pdf"`,
       },
-    },
-  });
-
-  if (!certificate) {
-    notFound();
+    });
+  } catch (err) {
+    return handleRouteError(err);
   }
-
-  const student = certificate.enrollment.user;
-  const course = certificate.enrollment.course;
-  const instructor = course.instructor;
-
-  // AC-07: El QR del PDF abre la verificación del mismo código
-  const origin =
-    process.env.NEXT_PUBLIC_APP_URL ||
-    request.headers.get("origin") ||
-    "http://localhost:3000";
-
-  const verificationUrl = `${origin}/verificar/${certificate.code}`;
-  const qrDataUrl = await QRCode.toDataURL(verificationUrl, {
-    margin: 1,
-    width: 256,
-    color: {
-      dark: "#0D1C2F",
-      light: "#FFFFFF",
-    },
-  });
-
-  const pdfBuffer = await renderToBuffer(
-    React.createElement(CertificatePdfDocument, {
-      code: certificate.code,
-      studentName: student.name,
-      documentType: student.documentType || "DNI",
-      documentNumber: student.documentNumber || "No registrado",
-      courseTitle: course.title,
-      hours: course.hours,
-      instructorName: instructor.name,
-      institution: instructor.institution || "Centro de Capacitación Técnica",
-      issuedAt: new Date(certificate.issuedAt).toLocaleDateString("es-PE", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      }),
-      sha256: certificate.sha256,
-      qrDataUrl,
-    }) as Parameters<typeof renderToBuffer>[0]
-  );
-
-  return new Response(new Uint8Array(pdfBuffer), {
-    headers: {
-      "Content-Type": "application/pdf",
-      "Content-Disposition": `inline; filename="Certificado-${certificate.code}.pdf"`,
-      "Cache-Control": "private, no-cache, no-store, must-revalidate",
-    },
-  });
 }

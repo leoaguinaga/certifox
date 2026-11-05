@@ -4,6 +4,7 @@
  * variable de entorno para runtime y migraciones.
  *
  * Uso: tsx scripts/prisma-direct.ts migrate deploy
+ *      tsx scripts/prisma-direct.ts --run scripts/otro-script.ts [args]   (script propio con la URL directa)
  */
 import { spawnSync } from "node:child_process";
 import { resolveDirectDatabaseUrl } from "../lib/database-url";
@@ -23,7 +24,10 @@ if (!directUrl) {
   process.exit(1);
 }
 
-const result = spawnSync("prisma", process.argv.slice(2), {
+const args = process.argv.slice(2);
+const [bin, binArgs] = args[0] === "--run" ? ["tsx", args.slice(1)] : ["prisma", args];
+
+const result = spawnSync(bin, binArgs, {
   stdio: "inherit",
   shell: process.platform === "win32",
   env: { ...process.env, DATABASE_URL: directUrl },

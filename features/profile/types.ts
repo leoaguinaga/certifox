@@ -13,7 +13,7 @@ export interface UserProfileData {
 export interface UpdateProfileInput {
   name: string;
   institution?: string;
-  avatarUrl?: string;
+  avatarFileId?: string;
 }
 
 export interface ChangePasswordInput {

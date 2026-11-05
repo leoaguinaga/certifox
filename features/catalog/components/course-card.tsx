@@ -1,3 +1,4 @@
+import { formatPrice } from "@/lib/utils";
 import { sanitizeMediaUrl } from '@/lib/image-utils';
 import Link from "next/link";
 import Image from "next/image";
@@ -62,7 +63,7 @@ export function CourseCard({ course }: CourseCardProps) {
               Inversión
             </span>
             <span className="text-lg font-extrabold text-stone-900 font-mono">
-              {course.priceUsd} USD
+              {formatPrice(course.price, course.currency)}
             </span>
           </div>
           <Link

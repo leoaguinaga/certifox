@@ -76,12 +76,12 @@ export function CourseCatalogExplorer({
     }
 
     // Sorting
-    if (sortBy === "rating") {
-      result.sort((a, b) => b.rating - a.rating);
+    if (sortBy === "hours") {
+      result.sort((a, b) => b.hours - a.hours);
     } else if (sortBy === "price-asc") {
-      result.sort((a, b) => a.priceUsd - b.priceUsd);
+      result.sort((a, b) => a.price - b.price);
     } else if (sortBy === "price-desc") {
-      result.sort((a, b) => b.priceUsd - a.priceUsd);
+      result.sort((a, b) => b.price - a.price);
     }
 
     return result;
@@ -153,7 +153,7 @@ export function CourseCatalogExplorer({
                 className="bg-white text-stone-800 text-xs font-semibold py-2 pl-3 pr-8 rounded-xl shadow-xs border border-stone-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#FD761A]/20"
               >
                 <option value="recent">Más recientes</option>
-                <option value="rating">Mayor valoración</option>
+                <option value="hours">Más horas lectivas</option>
                 <option value="price-asc">Precio: menor a mayor</option>
                 <option value="price-desc">Precio: mayor a menor</option>
               </select>

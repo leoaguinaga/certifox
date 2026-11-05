@@ -1,6 +1,12 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getCourseDetailBySlugOrId } from "@/server/services/course.service";
+import { getCourseDetail } from "@/server/modules/catalog/catalog.service";
+import { resolvePublicTenant } from "@/server/modules/organization/organization.service";
+
+async function loadCourse(id: string) {
+  const tenant = await resolvePublicTenant();
+  return getCourseDetail(id, tenant?.id ?? null);
+}
 import { CourseDetailHero } from "@/features/catalog/components/course-detail-hero";
 import { CourseCompetencies } from "@/features/catalog/components/course-competencies";
 import { CourseCurriculumAccordion } from "@/features/catalog/components/course-curriculum-accordion";
@@ -17,7 +23,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
-  const course = await getCourseDetailBySlugOrId(id);
+  const course = await loadCourse(id);
 
   if (!course) {
     return {
@@ -33,7 +39,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function CourseDetailPage({ params }: PageProps) {
   const { id } = await params;
-  const course = await getCourseDetailBySlugOrId(id);
+  const course = await loadCourse(id);
 
   if (!course) {
     notFound();

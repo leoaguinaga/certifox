@@ -11,24 +11,13 @@ import {
   Loader2,
   Clock,
 } from "lucide-react";
-import { Course } from "../types";
+import { useRouter } from "next/navigation";
+import { Course, EnrollmentRequestResult } from "../types";
 import { requestEnrollmentAction } from "../actions";
 import { toast } from "sonner";
+import { formatPrice } from "@/lib/utils";
 
-interface PaymentEnrollmentData {
-  enrollmentId: string;
-  status: string;
-  courseTitle: string;
-  instructions: {
-    yapeNumber: string;
-    yapeName: string;
-    bcpAccount: string;
-    bcpCci: string;
-    whatsappUrl: string;
-    amountUsd: number;
-    amountPen: number;
-  };
-}
+type PaymentEnrollmentData = EnrollmentRequestResult;
 
 interface EnrollmentModalProps {
   course: Course;
@@ -41,16 +30,11 @@ export function EnrollmentModal({
   isOpen,
   onClose,
 }: EnrollmentModalProps) {
+  const router = useRouter();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [paymentData, setPaymentData] = useState<PaymentEnrollmentData | null>(null);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
-
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-  });
 
   if (!isOpen) return null;
 
@@ -59,22 +43,21 @@ export function EnrollmentModal({
     setIsLoading(true);
 
     try {
-      const response = await requestEnrollmentAction({
-        courseId: course.id,
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-      });
+      const response = await requestEnrollmentAction({ courseId: course.id });
 
-      if (!response.success || !response.data) {
-        toast.error(response.error || "No se pudo registrar la solicitud");
-        setIsLoading(false);
+      if (!response.success) {
+        if (response.code === "UNAUTHENTICATED") {
+          toast.info("Inicia sesión o crea tu cuenta para matricularte");
+          router.push(`/ingresar?from=${encodeURIComponent(`/cursos/${course.slug}`)}`);
+          return;
+        }
+        toast.error(response.error);
         return;
       }
 
-      setPaymentData(response.data as PaymentEnrollmentData);
+      setPaymentData(response.data);
       setIsSubmitted(true);
-      toast.success("Solicitud de matrícula generada");
+      toast.success(response.data.status === "ACTIVE" ? "¡Matrícula activa!" : "Solicitud de matrícula generada");
     } catch {
       toast.error("Ocurrió un error al procesar la matrícula");
     } finally {
@@ -92,9 +75,20 @@ export function EnrollmentModal({
   const handleClose = () => {
     setIsSubmitted(false);
     setPaymentData(null);
-    setFormData({ name: "", email: "", phone: "" });
     onClose();
   };
+
+  const instructions = paymentData?.instructions ?? null;
+  const payChannels: { key: string; label: string; value: string; detail?: string }[] = instructions
+    ? [
+        ...(instructions.yape ? [{ key: "yape", label: "Yape", value: instructions.yape.number, detail: instructions.yape.holder }] : []),
+        ...(instructions.plin ? [{ key: "plin", label: "Plin", value: instructions.plin.number, detail: instructions.plin.holder }] : []),
+        ...instructions.bankAccounts.flatMap((acc, i) => [
+          { key: `bank-${i}`, label: acc.bank, value: acc.accountNumber, detail: acc.holder },
+          ...(acc.cci ? [{ key: `cci-${i}`, label: `${acc.bank} · CCI`, value: acc.cci }] : []),
+        ]),
+      ]
+    : [];
 
   return (
     <div
@@ -136,69 +130,15 @@ export function EnrollmentModal({
           <>
             {/* Nota de negocio */}
             <div className="p-3.5 rounded-xl bg-[#EFF4FF] text-stone-700 text-xs leading-relaxed border border-[#D5E3FD]/50">
-              Ingresa tus datos para registrar tu solicitud. Tu matrícula quedará en estado{" "}
-              <strong className="text-[#FD761A]">«Pendiente de activación»</strong>. Al enviar, recibirás las instrucciones para coordinar el abono manual con el docente.
+              Tu matrícula se registrará con los datos de tu cuenta y quedará en estado{" "}
+              <strong className="text-[#FD761A]">«Pendiente de activación»</strong> hasta que la institución confirme tu abono. Si aún no tienes cuenta, te pediremos iniciar sesión.
             </div>
 
-            {/* Formulario */}
+            {/* Confirmación (la matrícula se registra a nombre del usuario autenticado) */}
             <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
-              <div className="flex flex-col gap-1">
-                <label
-                  htmlFor="student_name"
-                  className="text-xs font-semibold text-stone-900"
-                >
-                  Nombre completo para la credencial
-                </label>
-                <input
-                  id="student_name"
-                  type="text"
-                  required
-                  placeholder="Ej. Carlos Mendoza Salas"
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                  className="h-10 px-3.5 rounded-xl bg-stone-50 border border-stone-200 text-stone-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#FD761A]/30 focus:border-[#FD761A]"
-                />
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <label
-                  htmlFor="student_email"
-                  className="text-xs font-semibold text-stone-900"
-                >
-                  Correo electrónico
-                </label>
-                <input
-                  id="student_email"
-                  type="email"
-                  required
-                  placeholder="carlos.mendoza@empresa.com"
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                  className="h-10 px-3.5 rounded-xl bg-stone-50 border border-stone-200 text-stone-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#FD761A]/30 focus:border-[#FD761A]"
-                />
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <label
-                  htmlFor="student_phone"
-                  className="text-xs font-semibold text-stone-900"
-                >
-                  WhatsApp / Teléfono de contacto
-                </label>
-                <input
-                  id="student_phone"
-                  type="tel"
-                  placeholder="+51 987 654 321"
-                  value={formData.phone}
-                  onChange={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
-                  }
-                  className="h-10 px-3.5 rounded-xl bg-stone-50 border border-stone-200 text-stone-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#FD761A]/30 focus:border-[#FD761A]"
-                />
+              <div className="flex items-center justify-between rounded-xl border border-stone-200 bg-stone-50 p-3.5 text-xs">
+                <span className="font-semibold text-stone-700">Inversión del programa</span>
+                <span className="font-extrabold text-stone-900">{formatPrice(course.price, course.currency)}</span>
               </div>
 
               {/* Action Buttons */}
@@ -233,71 +173,70 @@ export function EnrollmentModal({
         ) : (
           /* AC-11 / RF-20: Instrucciones de pago manual con estado PENDING */
           <div className="flex flex-col gap-4 text-left">
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-amber-50 border border-amber-200">
-              <Clock className="w-6 h-6 text-amber-600 shrink-0" />
-              <div>
-                <h4 className="text-xs font-bold text-amber-900 uppercase tracking-wide">
-                  Matrícula Pendiente de Activación
-                </h4>
-                <p className="text-[11px] text-amber-800 leading-snug">
-                  Tu solicitud quedó registrada. El acceso a las lecciones del aula se activará una vez que el docente confirme el abono.
+            {paymentData?.status === "ACTIVE" ? (
+              <div className="flex items-center gap-3 p-3 rounded-xl bg-emerald-50 border border-emerald-200">
+                <Check className="w-6 h-6 text-emerald-600 shrink-0" />
+                <p className="text-[11px] text-emerald-900 leading-snug">
+                  Tu matrícula está activa. Ya puedes ingresar al aula desde tu campus.
                 </p>
               </div>
-            </div>
-
-            <div className="space-y-3 bg-stone-50 p-4 rounded-xl border border-stone-200 text-xs">
-              <div className="flex items-center justify-between pb-2 border-b border-stone-200">
-                <span className="font-bold text-stone-700">Canales de abono manual:</span>
-                <span className="text-[11px] font-extrabold text-[#FD761A]">
-                  S/ {paymentData?.instructions?.amountPen || 680} PEN / $180 USD
-                </span>
-              </div>
-
-              {/* Yape / Plin */}
-              <div className="flex items-center justify-between bg-white p-2.5 rounded-lg border border-stone-200">
+            ) : (
+              <div className="flex items-center gap-3 p-3 rounded-xl bg-amber-50 border border-amber-200">
+                <Clock className="w-6 h-6 text-amber-600 shrink-0" />
                 <div>
-                  <p className="font-bold text-stone-900">Yape / Plin</p>
+                  <h4 className="text-xs font-bold text-amber-900 uppercase tracking-wide">
+                    Matrícula Pendiente de Activación
+                  </h4>
+                  <p className="text-[11px] text-amber-800 leading-snug">
+                    Tu solicitud quedó registrada. El acceso a las lecciones se activará cuando {instructions?.organizationName ?? "la institución"} confirme el abono.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {instructions && (
+              <div className="space-y-3 bg-stone-50 p-4 rounded-xl border border-stone-200 text-xs">
+                <div className="flex items-center justify-between pb-2 border-b border-stone-200">
+                  <span className="font-bold text-stone-700">Canales de abono:</span>
+                  <span className="text-[11px] font-extrabold text-[#FD761A]">
+                    {formatPrice(instructions.amount, instructions.currency)}
+                  </span>
+                </div>
+
+                {payChannels.length === 0 && (
                   <p className="text-[11px] text-stone-500">
-                    Número: <strong>{paymentData?.instructions?.yapeNumber || "999-999-999"}</strong>
+                    La institución te contactará con los datos de pago.
                   </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() =>
-                    handleCopy(paymentData?.instructions?.yapeNumber || "999-999-999", "yape")
-                  }
-                  className="p-1.5 rounded-md hover:bg-stone-100 text-stone-500 transition-colors"
-                  title="Copiar número"
-                >
-                  {copiedKey === "yape" ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
-                </button>
-              </div>
+                )}
 
-              {/* Transferencia BCP */}
-              <div className="flex items-center justify-between bg-white p-2.5 rounded-lg border border-stone-200">
-                <div>
-                  <p className="font-bold text-stone-900">BCP Soles</p>
-                  <p className="text-[11px] text-stone-500 font-mono">
-                    {paymentData?.instructions?.bcpAccount || "193-98402194-0-12"}
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() =>
-                    handleCopy(paymentData?.instructions?.bcpAccount || "193-98402194-0-12", "bcp")
-                  }
-                  className="p-1.5 rounded-md hover:bg-stone-100 text-stone-500 transition-colors"
-                  title="Copiar cuenta"
-                >
-                  {copiedKey === "bcp" ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
-                </button>
+                {payChannels.map((ch) => (
+                  <div key={ch.key} className="flex items-center justify-between bg-white p-2.5 rounded-lg border border-stone-200">
+                    <div>
+                      <p className="font-bold text-stone-900">{ch.label}</p>
+                      <p className="text-[11px] text-stone-500 font-mono">{ch.value}</p>
+                      {ch.detail && <p className="text-[10px] text-stone-400">{ch.detail}</p>}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleCopy(ch.value, ch.key)}
+                      className="p-1.5 rounded-md hover:bg-stone-100 text-stone-500 transition-colors"
+                      title="Copiar"
+                    >
+                      {copiedKey === ch.key ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+                    </button>
+                  </div>
+                ))}
+
+                {instructions.instructions && (
+                  <p className="text-[11px] text-stone-600 whitespace-pre-line">{instructions.instructions}</p>
+                )}
               </div>
-            </div>
+            )}
 
             {/* Botón WhatsApp de notificación */}
-            {paymentData?.instructions?.whatsappUrl && (
+            {instructions?.whatsappUrl && (
               <a
-                href={paymentData.instructions.whatsappUrl}
+                href={instructions.whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full h-11 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors shadow-xs"

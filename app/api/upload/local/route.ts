@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
+/**
+ * Solo desarrollo local sin R2: acepta el PUT y descarta los bytes.
+ * En producción no existe (404) para que nadie lo confunda con almacenamiento real.
+ */
 export async function PUT(req: NextRequest) {
-  // En desarrollo local sin Cloudflare R2, aceptamos la subida de bytes y respondemos 200 OK
-  const key = req.nextUrl.searchParams.get("key");
-  if (!key) {
-    return NextResponse.json({ error: "Key requerida." }, { status: 400 });
+  if (process.env.NODE_ENV === "production") {
+    return NextResponse.json({ error: "No encontrado" }, { status: 404 });
   }
-
-  return NextResponse.json({ success: true, key });
+  const fileId = req.nextUrl.searchParams.get("fileId");
+  if (!fileId) return NextResponse.json({ error: "fileId requerido." }, { status: 400 });
+  return NextResponse.json({ success: true, fileId });
 }

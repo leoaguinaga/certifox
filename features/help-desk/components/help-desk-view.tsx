@@ -48,12 +48,12 @@ export function HelpDeskView({ initialTickets }: HelpDeskViewProps) {
         message,
       });
 
-      if (!res.success || !res.ticket) {
-        toast.error(res.error || "No se pudo registrar el ticket.");
+      if (!res.success) {
+        toast.error(res.error);
         return;
       }
 
-      setTickets([res.ticket, ...tickets]);
+      setTickets([res.data, ...tickets]);
       toast.success("Ticket de soporte registrado correctamente.");
       setShowModal(false);
       setSubject("");

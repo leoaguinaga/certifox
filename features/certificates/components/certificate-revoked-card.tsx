@@ -71,16 +71,11 @@ export function CertificateRevokedCard({
           <div className="flex flex-wrap gap-x-6 gap-y-2 pt-1 text-xs text-[#45474C]">
             <div>
               <strong>Fecha de Revocación:</strong>{" "}
-              {revocationDetails?.revocationDate || "31 de Enero de 2025"}
-            </div>
-            <div>
-              <strong>Resolución Técnica:</strong>{" "}
-              {revocationDetails?.resolution || "REV-MAQOPS-2025-09"}
+              {revocationDetails?.revocationDate ?? "N/D"}
             </div>
             <div>
               <strong>Responsable:</strong>{" "}
-              {revocationDetails?.auditorResponsible ||
-                "Comité Técnico de Calidad"}
+              {revocationDetails?.auditorResponsible ?? "Institución emisora"}
             </div>
           </div>
         </div>

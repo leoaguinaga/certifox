@@ -46,13 +46,16 @@ export interface Course {
   title: string;
   shortDescription?: string;
   fullDescription?: string;
-  category: "Seguridad y Minería" | "Maquinaria" | "Electricidad" | "Gestión e ISO";
-  level: "Principiante" | "Intermedio" | "Avanzado";
+  category: string;
+  level: string;
   hours: number;
   lessonsCount: number;
-  priceUsd: number;
-  rating: number;
-  reviewsCount: number;
+  /** Precio en unidades de la moneda (no céntimos). 0 = gratuito. */
+  price: number;
+  currency: string;
+  rating?: number;
+  reviewsCount?: number;
+  organizationName?: string;
   accessNote?: string;
   hasVerifiableCertificate: boolean;
   hasQrCertificate: boolean;
@@ -66,4 +69,22 @@ export interface Course {
   prerequisites?: Prerequisite[];
   faqs?: CourseFaq[];
   includes?: string[];
+}
+
+export interface PaymentInstructions {
+  organizationName: string;
+  amount: number;
+  currency: string;
+  yape?: { number: string; holder: string };
+  plin?: { number: string; holder: string };
+  bankAccounts: { bank: string; accountNumber: string; cci?: string; holder: string }[];
+  instructions?: string;
+  whatsappUrl: string | null;
+}
+
+export interface EnrollmentRequestResult {
+  enrollmentId: string;
+  status: "PENDING" | "ACTIVE" | "COMPLETED";
+  courseTitle: string;
+  instructions: PaymentInstructions | null;
 }

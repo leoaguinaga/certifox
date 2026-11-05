@@ -1,7 +1,8 @@
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getSession } from "@/server/auth";
-import { getClassroomData } from "@/server/services/classroom.service";
+import { campusContext } from "@/server/core/page-guards";
+import { getClassroomData } from "@/server/modules/learning/classroom.service";
+import { getMyPaymentInstructions } from "@/server/modules/enrollment/enrollment.service";
 import { ClassroomView } from "@/features/classroom/components/classroom-view";
 import { Clock, ArrowLeft, MessageCircle, BookOpen } from "lucide-react";
 
@@ -15,13 +16,8 @@ interface PageProps {
 
 export default async function CampusClassroomPage({ params }: PageProps) {
   const { cursoSlug } = await params;
-  const session = await getSession();
-
-  if (!session) {
-    redirect(`/ingresar?from=/campus/cursos/${cursoSlug}`);
-  }
-
-  const classroomData = await getClassroomData(session, cursoSlug);
+  const ctx = await campusContext(`/campus/cursos/${cursoSlug}`);
+  const classroomData = await getClassroomData(ctx, cursoSlug);
 
   if (!classroomData) {
     notFound();
@@ -29,6 +25,9 @@ export default async function CampusClassroomPage({ params }: PageProps) {
 
   // AC-11: Matrícula pendiente no permite reproducir lecciones
   if (classroomData.accessStatus === "PENDING_PAYMENT") {
+    const payment = classroomData.enrollmentId
+      ? await getMyPaymentInstructions(ctx, classroomData.enrollmentId).catch(() => null)
+      : null;
     return (
       <div className="max-w-2xl mx-auto py-12 px-4 sm:px-6">
         <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 p-8 shadow-sm text-center space-y-6">
@@ -71,10 +70,9 @@ export default async function CampusClassroomPage({ params }: PageProps) {
               <span>Volver a Mis Cursos</span>
             </Link>
 
+            {payment?.whatsappUrl && (
             <a
-              href={`https://wa.me/51987654321?text=${encodeURIComponent(
-                `Hola, acabo de matricularme en ${classroomData.course.title} y quiero coordinar la validación de mi pago.`
-              )}`}
+              href={payment.whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors inline-flex items-center justify-center gap-2 shadow-sm"
@@ -82,6 +80,7 @@ export default async function CampusClassroomPage({ params }: PageProps) {
               <MessageCircle className="w-4 h-4" />
               <span>Coordinar activación por WhatsApp</span>
             </a>
+            )}
           </div>
         </div>
       </div>

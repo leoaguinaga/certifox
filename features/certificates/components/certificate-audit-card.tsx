@@ -167,7 +167,7 @@ export function CertificateAuditCard({
             </div>
             <div className="flex items-center gap-1 text-[#45474C] text-[11px] font-bold uppercase tracking-wider">
               <Database className="w-3.5 h-3.5 text-[#FD761A]" />
-              <span>Ledger ID: {activeCert.cryptography.ledgerId}</span>
+              <span>Registro: {activeCert.cryptography.recordId}</span>
             </div>
           </div>
 
@@ -190,11 +190,6 @@ export function CertificateAuditCard({
                       {activeCert.student.documentMasked}
                     </strong>
                     <span>({activeCert.student.documentLawNotice})</span>
-                  </span>
-                  <span>•</span>
-                  <span className="text-emerald-700 font-semibold flex items-center gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                    <span>Identidad Biométrica Validada</span>
                   </span>
                 </div>
               </div>
@@ -232,9 +227,6 @@ export function CertificateAuditCard({
                     <span className="font-bold text-[#0D1C2F]">
                       {activeCert.course.instructor.name}
                     </span>
-                    <span className="text-[11px] text-stone-500">
-                      {activeCert.course.instructor.license}
-                    </span>
                   </div>
                 </div>
               </div>
@@ -245,17 +237,18 @@ export function CertificateAuditCard({
                   <span className="text-[11px] font-bold text-[#45474C] uppercase tracking-wider block">
                     Calificación Final
                   </span>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-2xl font-extrabold text-[#0D1C2F]">
-                      {activeCert.evaluation.finalGrade.toFixed(1)}
-                    </span>
-                    <span className="text-xs text-stone-500">
-                      / {activeCert.evaluation.maxGrade.toFixed(1)}
-                    </span>
-                  </div>
-                  <span className="text-[10px] font-bold text-emerald-800 uppercase block">
-                    {activeCert.evaluation.gradeScale}
-                  </span>
+                  {activeCert.evaluation.finalGrade !== null ? (
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-2xl font-extrabold text-[#0D1C2F]">
+                        {activeCert.evaluation.finalGrade.toFixed(1)}
+                      </span>
+                      <span className="text-xs text-stone-500">
+                        / {activeCert.evaluation.maxGrade.toFixed(1)}
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="text-sm font-bold text-[#0D1C2F] block mt-1">Sin evaluación calificada</span>
+                  )}
                 </div>
 
                 <div className="space-y-0.5">
@@ -268,9 +261,6 @@ export function CertificateAuditCard({
                     </span>
                     <span className="text-xs text-stone-500">horas</span>
                   </div>
-                  <span className="text-xs text-[#45474C]">
-                    {activeCert.evaluation.hoursDescription}
-                  </span>
                 </div>
 
                 <div className="space-y-0.5">
@@ -299,10 +289,7 @@ export function CertificateAuditCard({
                 </p>
                 <div className="flex flex-wrap items-center justify-between text-[11px] text-stone-400 pt-1 font-sans">
                   <span>Timestamp UTC: {activeCert.cryptography.timestampUtc}</span>
-                  <span>
-                    Bloque Transaccional:{" "}
-                    {activeCert.cryptography.ledgerBlock}
-                  </span>
+                  <span>Registro: {activeCert.cryptography.recordId}</span>
                 </div>
               </div>
             </div>
@@ -486,6 +473,8 @@ export function CertificateAuditCard({
 
           {/* Competencies Rubric Grid */}
           <div className="mt-8 pt-8 border-t border-stone-200/80 space-y-6">
+            {activeCert.competencies.length > 0 && (
+            <>
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
               <div>
                 <h4 className="text-lg font-bold text-[#0D1C2F]">
@@ -522,6 +511,9 @@ export function CertificateAuditCard({
                 </div>
               ))}
             </div>
+
+            </>
+            )}
 
             {/* Corporate Notice & Print */}
             <div className="p-5 rounded-2xl bg-[#F8F9FF] border border-stone-200/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">

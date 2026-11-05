@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Clock, QrCode, Star, Lock, ArrowRight } from "lucide-react";
 import { Course } from "../types";
-import { cn } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 import { sanitizeMediaUrl } from "@/lib/image-utils";
 
 interface CourseCatalogCardProps {
@@ -98,15 +98,17 @@ export function CourseCatalogCard({
               </span>
             </div>
 
-            <div className="flex items-center gap-1 shrink-0">
-              <Star className="w-3.5 h-3.5 fill-[#FD761A] text-[#FD761A]" />
-              <span className="text-xs font-bold text-stone-900 font-mono">
-                {course.rating.toFixed(1)}
-              </span>
-              <span className="text-[11px] text-stone-400 font-mono">
-                ({course.reviewsCount})
-              </span>
-            </div>
+            {course.rating !== undefined && (
+              <div className="flex items-center gap-1 shrink-0">
+                <Star className="w-3.5 h-3.5 fill-[#FD761A] text-[#FD761A]" />
+                <span className="text-xs font-bold text-stone-900 font-mono">
+                  {course.rating.toFixed(1)}
+                </span>
+                <span className="text-[11px] text-stone-400 font-mono">
+                  ({course.reviewsCount ?? 0})
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -125,8 +127,7 @@ export function CourseCatalogCard({
           </span>
           <div className="text-right">
             <span className="text-sm font-extrabold text-stone-900 font-mono">
-              ${course.priceUsd}{" "}
-              <span className="text-[10px] text-stone-500 font-normal">USD</span>
+              {formatPrice(course.price, course.currency)}
             </span>
           </div>
         </div>

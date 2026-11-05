@@ -1,8 +1,10 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
-import { getPublicCertificateByCode } from "@/server/services/certificate.service";
-import { checkRateLimit } from "@/server/rate-limit";
+import { getPublicCertificate } from "@/server/modules/certification/verification.service";
+import { normalizeCertificateCode } from "@/server/modules/certification/certificate-code";
+import { clientIp } from "@/server/core/request-context";
+import { consume, RATE_LIMITS } from "@/server/core/rate-limit";
 import { CertificateAuditCard } from "@/features/certificates/components/certificate-audit-card";
 import { ShieldAlert } from "lucide-react";
 
@@ -19,8 +21,8 @@ export async function generateMetadata({
   params,
 }: VerificarCodigoPageProps): Promise<Metadata> {
   const { codigo } = await params;
-  const clean = decodeURIComponent(codigo).trim().toUpperCase();
-  const cert = await getPublicCertificateByCode(clean);
+  const clean = normalizeCertificateCode(codigo);
+  const cert = await getPublicCertificate(clean);
 
   // RNF-10: noindex en /verificar
   if (!cert) {
@@ -42,17 +44,11 @@ export default async function VerificarCodigoPage({
   params,
 }: VerificarCodigoPageProps) {
   const { codigo } = await params;
-  const clean = decodeURIComponent(codigo).trim().toUpperCase();
+  const clean = normalizeCertificateCode(codigo);
 
   // RNF-04: Rate limiting de 30 consultas/min por IP
-  const reqHeaders = await headers();
-  const ip =
-    reqHeaders.get("cf-connecting-ip") ||
-    reqHeaders.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    reqHeaders.get("x-real-ip") ||
-    "127.0.0.1";
-
-  const rateCheck = checkRateLimit(ip, 30, 60_000);
+  const ip = clientIp(await headers());
+  const rateCheck = await consume(`verify:${ip}`, RATE_LIMITS.verifyCertificate);
   if (!rateCheck.allowed) {
     return (
       <div className="w-full min-h-[calc(100vh-4rem)] bg-[#F8F9FF] flex items-center justify-center p-4">
@@ -77,7 +73,7 @@ export default async function VerificarCodigoPage({
   }
 
   // RF-02 / RF-23: Lectura real desde Prisma con cálculo de vigencia
-  const certificate = await getPublicCertificateByCode(clean);
+  const certificate = await getPublicCertificate(clean);
 
   // AC-06: Un código inexistente muestra «no encontrado» con HTTP 404
   if (!certificate) {

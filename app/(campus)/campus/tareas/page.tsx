@@ -1,25 +1,24 @@
-import { getSession } from "@/server/auth";
-import { redirect } from "next/navigation";
-import { getAssignmentsForUser } from "@/server/services/assignment.service";
+import { campusContext, cursorParam } from "@/server/core/page-guards";
+import { listMyAssignments, listSubmissionsToGrade } from "@/server/modules/assessment/assessment.service";
 import { AssignmentsView } from "@/features/assignments/components/assignments-view";
+import { LoadMoreLink } from "@/components/shared/load-more-link";
 
 export const dynamic = "force-dynamic";
 
-export default async function CampusTareasPage() {
-  const session = await getSession();
+export default async function CampusTareasPage({ searchParams }: { searchParams: Promise<{ cursor?: string }> }) {
+  const ctx = await campusContext("/campus/tareas");
 
-  if (!session) {
-    redirect("/ingresar?from=/campus/tareas");
+  if (ctx.view === "STUDENT") {
+    const studentAssignments = await listMyAssignments(ctx);
+    return <AssignmentsView role="STUDENT" studentAssignments={studentAssignments} instructorSubmissions={[]} />;
   }
 
-  const { role, studentAssignments, instructorSubmissions } =
-    await getAssignmentsForUser(session);
-
+  const { cursor } = await searchParams;
+  const page = await listSubmissionsToGrade(ctx, { cursor: cursorParam(cursor), limit: 50 });
   return (
-    <AssignmentsView
-      role={role}
-      studentAssignments={studentAssignments}
-      instructorSubmissions={instructorSubmissions}
-    />
+    <>
+      <AssignmentsView role="INSTRUCTOR" studentAssignments={[]} instructorSubmissions={page.items} />
+      <LoadMoreLink basePath="/campus/tareas" nextCursor={page.nextCursor} />
+    </>
   );
 }

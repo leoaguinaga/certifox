@@ -1,96 +1,52 @@
 "use server";
 
 import { z } from "zod";
-import { getSession } from "@/server/auth";
 import { revalidatePath } from "next/cache";
-import {
-  submitAssignment,
-  gradeAssignment,
-} from "@/server/services/assignment.service";
+import { runAction } from "@/server/core/action";
+import { gradeAssignment, submitAssignment } from "@/server/modules/assessment/assessment.service";
 
-const SubmitAssignmentSchema = z.object({
-  enrollmentId: z.string().min(1, "ID de matrícula requerido"),
-  assessmentId: z.string().min(1, "ID de evaluación requerido"),
+const submitSchema = z.object({
+  enrollmentId: z.string().min(1, "ID de matrícula requerido").max(64),
+  assessmentId: z.string().min(1, "ID de evaluación requerido").max(64),
   contentUrlOrText: z
     .string()
     .min(5, "El contenido o URL debe tener al menos 5 caracteres")
     .max(3000, "El contenido no debe exceder los 3000 caracteres"),
+  attachmentFileId: z.string().max(64).optional(),
 });
 
-const GradeAssignmentSchema = z.object({
-  submissionId: z.string().min(1, "ID de entrega requerido"),
-  score: z.number().min(0, "Nota mínima es 0").max(20, "Nota máxima es 20"),
+const gradeSchema = z.object({
+  submissionId: z.string().min(1, "ID de entrega requerido").max(64),
+  score: z.number().int("La nota debe ser un número entero").min(0, "Nota mínima es 0").max(20, "Nota máxima es 20"),
   feedback: z.string().max(2000, "El feedback no debe exceder 2000 caracteres").optional(),
 });
 
-export async function submitAssignmentAction(input: {
-  enrollmentId: string;
-  assessmentId: string;
-  contentUrlOrText: string;
-}) {
-  try {
-    const validated = SubmitAssignmentSchema.parse(input);
-    const session = await getSession();
-
-    if (!session) {
-      return {
-        success: false,
-        error: "Debes iniciar sesión para entregar la tarea",
-      };
-    }
-
-    const result = await submitAssignment(session, validated);
-
-    revalidatePath("/campus/tareas");
-    revalidatePath("/campus");
-    revalidatePath("/campus/cursos");
-
-    return {
-      success: true,
-      data: result,
-    };
-  } catch (err: unknown) {
-    const errorMsg =
-      err instanceof Error ? err.message : "Error al enviar la entrega";
-    return {
-      success: false,
-      error: errorMsg,
-    };
-  }
+export async function submitAssignmentAction(input: z.input<typeof submitSchema>) {
+  return runAction(
+    {
+      name: "assessment.submit",
+      schema: submitSchema,
+      handler: async (ctx, data) => {
+        const result = await submitAssignment(ctx, data);
+        revalidatePath("/campus/tareas");
+        return result;
+      },
+    },
+    input
+  );
 }
 
-export async function gradeAssignmentAction(input: {
-  submissionId: string;
-  score: number;
-  feedback?: string;
-}) {
-  try {
-    const validated = GradeAssignmentSchema.parse(input);
-    const session = await getSession();
-
-    if (!session) {
-      return {
-        success: false,
-        error: "Debes iniciar sesión como docente para calificar",
-      };
-    }
-
-    const result = await gradeAssignment(session, validated);
-
-    revalidatePath("/campus/tareas");
-    revalidatePath("/campus/estudiantes");
-    revalidatePath("/campus");
-
-    return {
-      success: true,
-      data: result,
-    };
-  } catch (err: unknown) {
-    const errorMsg =
-      err instanceof Error ? err.message : "Error al calificar la entrega";
-    return {
-      success: false,
-      error: errorMsg,
-    };
-  }
+export async function gradeAssignmentAction(input: z.input<typeof gradeSchema>) {
+  return runAction(
+    {
+      name: "assessment.grade",
+      schema: gradeSchema,
+      handler: async (ctx, data) => {
+        const result = await gradeAssignment(ctx, data);
+        revalidatePath("/campus/tareas");
+        return result;
+      },
+    },
+    input
+  );
 }

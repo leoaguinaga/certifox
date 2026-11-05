@@ -1,4 +1,5 @@
 "use client";
+import { formatPrice } from "@/lib/utils";
 
 import { useState } from "react";
 import {
@@ -37,7 +38,7 @@ export function StickyEnrollmentCard({ course }: StickyEnrollmentCardProps) {
             </span>
             <div className="flex items-baseline gap-2 mt-1">
               <span className="text-3xl sm:text-4xl font-black text-stone-900 font-mono">
-                {course.priceUsd} USD
+                {formatPrice(course.price, course.currency)}
               </span>
               <span className="text-xs text-stone-500 font-medium">
                 pago único

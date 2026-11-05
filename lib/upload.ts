@@ -1,58 +1,45 @@
+/**
+ * Subida directa del navegador a Cloudflare R2 (3 pasos):
+ *  1. POST /api/upload/presigned → registra el archivo y devuelve URL prefirmada
+ *  2. PUT directo a R2 (el archivo nunca pasa por el servidor de la app)
+ *  3. POST /api/upload/confirm   → el servidor verifica el objeto y lo marca READY
+ * Devuelve el `fileId` que luego se envía a la Server Action (portada, avatar, etc.).
+ */
+export type UploadKind =
+  | "COURSE_COVER"
+  | "USER_AVATAR"
+  | "ORGANIZATION_LOGO"
+  | "LESSON_VIDEO"
+  | "LESSON_RESOURCE"
+  | "SUBMISSION_ATTACHMENT";
+
 export interface UploadOptions {
-  type: "cover" | "avatar";
+  kind: UploadKind;
   file: File;
 }
 
-export async function uploadFileToR2({
-  type,
-  file,
-}: UploadOptions): Promise<{ publicUrl: string; fileKey: string }> {
-  // Validación de tamaño en el cliente
-  const MAX_SIZE = 2 * 1024 * 1024;
-  if (file.size > MAX_SIZE) {
-    throw new Error(
-      `El archivo "${file.name}" supera el límite de 2 MB (${(file.size / 1024 / 1024).toFixed(2)} MB).`
-    );
-  }
+async function errorMessage(res: Response, fallback: string): Promise<string> {
+  const data = (await res.json().catch(() => ({}))) as { error?: string };
+  return data.error || fallback;
+}
 
-  // Validación de tipo en el cliente
-  const allowed = ["image/jpeg", "image/png", "image/webp"];
-  if (!allowed.includes(file.type)) {
-    throw new Error(
-      `Formato "${file.type}" no permitido. Solo se aceptan imágenes JPEG, PNG o WEBP.`
-    );
-  }
-
-  // 1. Obtener URL prefirmada
-  const presignedRes = await fetch("/api/upload/presigned", {
+export async function uploadFile({ kind, file }: UploadOptions): Promise<{ fileId: string; url: string | null }> {
+  const presigned = await fetch("/api/upload/presigned", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      type,
-      mimeType: file.type,
-      sizeBytes: file.size,
-    }),
+    body: JSON.stringify({ kind, mimeType: file.type, sizeBytes: file.size, originalName: file.name }),
   });
+  if (!presigned.ok) throw new Error(await errorMessage(presigned, "No se pudo autorizar la subida del archivo."));
+  const { fileId, uploadUrl } = (await presigned.json()) as { fileId: string; uploadUrl: string };
 
-  if (!presignedRes.ok) {
-    const data = await presignedRes.json().catch(() => ({}));
-    throw new Error(data.error || "No se pudo autorizar la subida del archivo.");
-  }
+  const put = await fetch(uploadUrl, { method: "PUT", headers: { "Content-Type": file.type }, body: file });
+  if (!put.ok) throw new Error("Error al transmitir el archivo al almacenamiento.");
 
-  const { uploadUrl, fileKey, publicUrl } = await presignedRes.json();
-
-  // 2. Subir directamente a Cloudflare R2 con PUT
-  const uploadRes = await fetch(uploadUrl, {
-    method: "PUT",
-    headers: {
-      "Content-Type": file.type,
-    },
-    body: file,
+  const confirm = await fetch("/api/upload/confirm", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ fileId }),
   });
-
-  if (!uploadRes.ok) {
-    throw new Error("Error al transmitir los datos al almacenamiento R2.");
-  }
-
-  return { publicUrl, fileKey };
+  if (!confirm.ok) throw new Error(await errorMessage(confirm, "No se pudo verificar el archivo subido."));
+  return (await confirm.json()) as { fileId: string; url: string | null };
 }

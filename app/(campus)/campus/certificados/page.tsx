@@ -1,78 +1,27 @@
-import { getSession } from "@/server/auth";
-import { redirect } from "next/navigation";
+import { campusContext, cursorParam } from "@/server/core/page-guards";
 import {
-  getStudentCertificatesCollection,
-  getInstructorCertificatesDashboard,
-} from "@/server/services/certificate-management.service";
+  listCompletedEnrollmentsForIssuing,
+  listMyCertificates,
+} from "@/server/modules/certification/certification.service";
 import { CertificatesManagementView } from "@/features/certificates-management/components/certificates-management-view";
-import { maskDocumentNumber } from "@/server/services/certificate.service";
-import {
-  StudentCertificateItem,
-  EligibleEnrollmentItem,
-} from "@/features/certificates-management/types";
+import { LoadMoreLink } from "@/components/shared/load-more-link";
 
 export const dynamic = "force-dynamic";
 
-export default async function CampusCertificadosPage() {
-  const session = await getSession();
+export default async function CampusCertificadosPage({ searchParams }: { searchParams: Promise<{ cursor?: string }> }) {
+  const ctx = await campusContext("/campus/certificados");
 
-  if (!session) {
-    redirect("/ingresar?from=/campus/certificados");
+  if (ctx.view === "STUDENT") {
+    const studentCertificates = await listMyCertificates(ctx);
+    return <CertificatesManagementView role="STUDENT" studentCertificates={studentCertificates} eligibleEnrollments={[]} />;
   }
 
-  const role = session.user.role;
-
-  if (role === "STUDENT") {
-    const rawCerts = await getStudentCertificatesCollection(session);
-    const studentCertificates: StudentCertificateItem[] = rawCerts.map((c) => ({
-      id: c.id,
-      code: c.code,
-      sha256: c.sha256,
-      status: c.status,
-      issuedAt: c.issuedAt.toISOString(),
-      expiresAt: c.expiresAt ? c.expiresAt.toISOString() : null,
-      revokedAt: c.revokedAt ? c.revokedAt.toISOString() : null,
-      revocationReason: c.revocationReason,
-      courseTitle: c.enrollment.course.title,
-      courseSlug: c.enrollment.course.slug,
-      hours: c.enrollment.course.hours,
-      instructorName: c.enrollment.course.instructor.name,
-      institution: c.enrollment.course.instructor.institution,
-      studentName: session.user.name || "Estudiante",
-      studentDocumentMasked: "72****03",
-    }));
-
-    return (
-      <CertificatesManagementView
-        role="STUDENT"
-        studentCertificates={studentCertificates}
-        eligibleEnrollments={[]}
-      />
-    );
-  }
-
-  // Instructor
-  const rawEnrollments = await getInstructorCertificatesDashboard(session);
-  const eligibleEnrollments: EligibleEnrollmentItem[] = rawEnrollments.map((enr) => ({
-    enrollmentId: enr.id,
-    studentId: enr.user.id,
-    studentName: enr.user.name,
-    studentEmail: enr.user.email,
-    studentDocumentMasked: enr.user.documentNumber
-      ? maskDocumentNumber(enr.user.documentNumber)
-      : "Sin DNI",
-    courseId: enr.course.id,
-    courseTitle: enr.course.title,
-    completedAt: enr.completedAt ? enr.completedAt.toISOString() : "",
-    certificateCode: enr.certificate?.code || null,
-    certificateStatus: enr.certificate?.status || null,
-  }));
-
+  const { cursor } = await searchParams;
+  const page = await listCompletedEnrollmentsForIssuing(ctx, { cursor: cursorParam(cursor), limit: 50 });
   return (
-    <CertificatesManagementView
-      role="INSTRUCTOR"
-      studentCertificates={[]}
-      eligibleEnrollments={eligibleEnrollments}
-    />
+    <>
+      <CertificatesManagementView role="INSTRUCTOR" studentCertificates={[]} eligibleEnrollments={page.items} />
+      <LoadMoreLink basePath="/campus/certificados" nextCursor={page.nextCursor} />
+    </>
   );
 }

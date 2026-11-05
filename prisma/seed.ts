@@ -1,4 +1,5 @@
-import { PrismaClient, Role, EnrollmentStatus, CertificateStatus } from "@prisma/client";
+import { createHash } from "node:crypto";
+import { PrismaClient, EnrollmentStatus, CertificateStatus } from "@prisma/client";
 import { hashPassword } from "better-auth/crypto";
 
 const prisma = new PrismaClient();
@@ -6,7 +7,12 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("🌱 Iniciando seed de la base de datos...");
 
+  if (process.env.NODE_ENV === "production" && process.env.ALLOW_PRODUCTION_SEED !== "1") {
+    throw new Error("El seed borra datos: no se ejecuta en producción (usa ALLOW_PRODUCTION_SEED=1 si es intencional)");
+  }
+
   // Limpiar datos previos si existen (en orden inverso de dependencias)
+  await prisma.outboxEvent.deleteMany();
   await prisma.auditLog.deleteMany();
   await prisma.certificate.deleteMany();
   await prisma.submission.deleteMany();
@@ -19,16 +25,36 @@ async function main() {
   await prisma.ticket.deleteMany();
   await prisma.session.deleteMany();
   await prisma.account.deleteMany();
+  await prisma.membership.deleteMany();
+  await prisma.file.deleteMany();
+  await prisma.organization.deleteMany();
   await prisma.user.deleteMany();
+
+  // 0. Organización demo (tenant) con datos de cobro manual
+  const org = await prisma.organization.create({
+    data: {
+      id: "org_default",
+      slug: "certifox",
+      name: "Centro Técnico MaqOps & FoxCode",
+      legalName: "FoxCode Capacitación Técnica S.A.C.",
+      taxId: "20600000001",
+      paymentSettings: {
+        whatsapp: "51999999999",
+        yape: { number: "999 999 999", holder: "FoxCode Capacitación" },
+        bankAccounts: [
+          { bank: "BCP Soles", accountNumber: "193-0000000-0-00", cci: "002-193-000000000000-00", holder: "FoxCode Capacitación Técnica S.A.C." },
+        ],
+        instructions: "Envía la constancia por WhatsApp indicando tu nombre y el curso.",
+      },
+    },
+  });
 
   // 1. Usuarios demo
   const instructor = await prisma.user.create({
     data: {
       name: "Ing. Marco Viteri Valdivia",
       email: "profe@certifox.pe",
-      role: Role.INSTRUCTOR,
       institution: "Centro Técnico MaqOps & FoxCode Industrial",
-      avatarUrl: "/images/avatars/instructor.svg",
     },
   });
 
@@ -36,7 +62,6 @@ async function main() {
     data: {
       name: "Alejandro Morales Peñaloza",
       email: "alumno@certifox.pe",
-      role: Role.STUDENT,
       documentType: "DNI",
       documentNumber: "72499203",
       institution: "Minera Las Bambas",
@@ -47,14 +72,21 @@ async function main() {
     data: {
       name: "Lucía Fernández Torres",
       email: "lucia@certifox.pe",
-      role: Role.STUDENT,
       documentType: "DNI",
       documentNumber: "45891204",
       institution: "Sociedad Minera Cerro Verde",
     },
   });
 
-  console.log("✅ Usuarios creados: 1 Instructor, 2 Estudiantes");
+  await prisma.membership.createMany({
+    data: [
+      { organizationId: org.id, userId: instructor.id, role: "OWNER" },
+      { organizationId: org.id, userId: student.id, role: "STUDENT" },
+      { organizationId: org.id, userId: student2.id, role: "STUDENT" },
+    ],
+  });
+
+  console.log("✅ Usuarios creados: 1 OWNER/instructor, 2 Estudiantes");
 
   // Configurar credenciales Better Auth (Password123!)
   const demoHashedPassword = await hashPassword("Password123!");
@@ -80,7 +112,9 @@ async function main() {
       hours: 48,
       published: true,
       instructorId: instructor.id,
-      coverUrl: "/images/courses/course-haccp.svg",
+      organizationId: org.id,
+      priceCents: 68000,
+      currency: "PEN",
       modules: {
         create: [
           {
@@ -92,13 +126,11 @@ async function main() {
                   title: "Normativa OSHA e ISO 45001 en Operaciones",
                   order: 1,
                   durationMin: 25,
-                  videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
                 },
                 {
                   title: "Inspección Pre-Uso y Checklist Crítico",
                   order: 2,
                   durationMin: 35,
-                  videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
                 },
               ],
             },
@@ -112,13 +144,11 @@ async function main() {
                   title: "Cálculo de Radio de Giro y Puntos Ciegos",
                   order: 1,
                   durationMin: 40,
-                  videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
                 },
                 {
                   title: "Procedimientos de Emergencia y Volcamiento",
                   order: 2,
                   durationMin: 30,
-                  videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
                 },
               ],
             },
@@ -149,7 +179,9 @@ async function main() {
       hours: 60,
       published: true,
       instructorId: instructor.id,
-      coverUrl: "/images/courses/course-iso9001.svg",
+      organizationId: org.id,
+      priceCents: 85000,
+      currency: "PEN",
       modules: {
         create: [
           {
@@ -161,7 +193,6 @@ async function main() {
                   title: "Elaboración de Matriz IPERC de Alto Impacto",
                   order: 1,
                   durationMin: 45,
-                  videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
                 },
               ],
             },
@@ -171,7 +202,27 @@ async function main() {
     },
   });
 
+  for (const c of [course1, course2]) {
+    const agg = await prisma.lesson.aggregate({
+      where: { module: { courseId: c.id } },
+      _count: { _all: true },
+      _sum: { durationMin: true },
+    });
+    await prisma.course.update({
+      where: { id: c.id },
+      data: { lessonsCount: agg._count._all, totalDurationMin: agg._sum.durationMin ?? 0 },
+    });
+  }
+
   console.log("✅ Cursos demo creados con módulos y lecciones");
+
+  const snapshot = (holderName: string, course: { title: string; hours: number }) => ({
+    holderName,
+    courseTitle: course.title,
+    hours: course.hours,
+    organizationId: org.id,
+  });
+  const fingerprint = (code: string) => createHash("sha256").update(`seed|${code}`).digest("hex");
 
   // 3. Matrículas y Certificados en cada estado
   // 3a. Matrícula 1: COMPLETADA con Certificado VÁLIDO
@@ -179,13 +230,16 @@ async function main() {
     data: {
       userId: student.id,
       courseId: course1.id,
+      organizationId: org.id,
+      priceCents: 68000,
       status: EnrollmentStatus.COMPLETED,
       activatedAt: new Date("2024-09-01T10:00:00Z"),
       completedAt: new Date("2024-10-14T18:00:00Z"),
       certificate: {
         create: {
           code: "CFX-2025-9831",
-          sha256: "8a9fe409b3628e811c0f0f49c01742de8b7c4270f92275ba2c4b8e2cb927c24e",
+          sha256: fingerprint("CFX-2025-9831"),
+          ...snapshot(student.name, course1),
           status: CertificateStatus.VALID,
           issuedAt: new Date("2026-10-14T18:42:00Z"),
           expiresAt: new Date("2028-10-14T18:42:00Z"), // Vigente por 2 años
@@ -199,13 +253,16 @@ async function main() {
     data: {
       userId: student2.id,
       courseId: course1.id,
+      organizationId: org.id,
+      priceCents: 68000,
       status: EnrollmentStatus.COMPLETED,
       activatedAt: new Date("2023-01-01T10:00:00Z"),
       completedAt: new Date("2023-01-10T12:00:00Z"),
       certificate: {
         create: {
           code: "CFX-2024-4412",
-          sha256: "3f82d1c990b764a2e5840d210fa094d1b827e1f409581a0b368412e09841f391",
+          sha256: fingerprint("CFX-2024-4412"),
+          ...snapshot(student2.name, course1),
           status: CertificateStatus.EXPIRED,
           issuedAt: new Date("2023-01-10T11:15:00Z"),
           expiresAt: new Date("2024-01-10T11:15:00Z"), // Vencido
@@ -219,13 +276,16 @@ async function main() {
     data: {
       userId: student.id,
       courseId: course2.id,
+      organizationId: org.id,
+      priceCents: 85000,
       status: EnrollmentStatus.COMPLETED,
       activatedAt: new Date("2022-10-01T10:00:00Z"),
       completedAt: new Date("2022-11-12T14:00:00Z"),
       certificate: {
         create: {
           code: "CFX-2023-1102",
-          sha256: "e7c2a5d99214b60f1b218412e873400192a71f021e8432a901f4c718b209e992",
+          sha256: fingerprint("CFX-2023-1102"),
+          ...snapshot(student.name, course2),
           status: CertificateStatus.REVOKED,
           issuedAt: new Date("2022-11-12T14:20:00Z"),
           revokedAt: new Date("2025-01-31T09:00:00Z"),
@@ -235,29 +295,34 @@ async function main() {
     },
   });
 
-  // 4. Registro de Auditoría
+  // 4. Registro de Auditoría (targetId = id interno)
+  const certs = await prisma.certificate.findMany({ select: { id: true, code: true } });
+  const certId = (code: string) => certs.find((c) => c.code === code)!.id;
   await prisma.auditLog.createMany({
     data: [
       {
         actorId: instructor.id,
+        organizationId: org.id,
         action: "CONFIRM_PAYMENT",
         targetType: "Enrollment",
         targetId: enrollment1.id,
-        metadata: { method: "Yape", studentEmail: student.email },
+        metadata: { method: "Yape" },
       },
       {
         actorId: instructor.id,
+        organizationId: org.id,
         action: "ISSUE_CERTIFICATE",
         targetType: "Certificate",
-        targetId: "CFX-2025-9831",
+        targetId: certId("CFX-2025-9831"),
         metadata: { code: "CFX-2025-9831" },
       },
       {
         actorId: instructor.id,
+        organizationId: org.id,
         action: "REVOKE_CERTIFICATE",
         targetType: "Certificate",
-        targetId: "CFX-2023-1102",
-        metadata: { reason: "Recertificación Anual Vencida", resolution: "REV-MAQOPS-2025-09" },
+        targetId: certId("CFX-2023-1102"),
+        metadata: { reason: "Recertificación Anual Vencida" },
       },
     ],
   });

@@ -1,28 +1,22 @@
-import { getSession } from "@/server/auth";
-import { redirect } from "next/navigation";
 import { BookOpen } from "lucide-react";
-import { getStudentEnrolledCourses } from "@/server/services/student.service";
+import { campusContext, cursorParam } from "@/server/core/page-guards";
+import { getMyEnrolledCourses } from "@/server/modules/learning/student.service";
+import { listManagedCourses } from "@/server/modules/course-management/course-management.service";
+import { LoadMoreLink } from "@/components/shared/load-more-link";
 import { ActiveCoursesGrid } from "@/features/learning/components/active-courses-grid";
 import { CompletedCoursesSection } from "@/features/learning/components/completed-courses-section";
 import { StudentSupportSection } from "@/features/learning/components/student-support-section";
-import { InstructorCoursesView, InstructorCourseItem } from "@/features/courses-management/components/instructor-courses-view";
-import { prisma } from "@/server/db";
+import { InstructorCoursesView } from "@/features/courses-management/components/instructor-courses-view";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
-export default async function CampusCursosPage() {
-  const session = await getSession();
-
-  if (!session) {
-    redirect("/ingresar?from=/campus/cursos");
-  }
-
-  const role = session.user.role;
+export default async function CampusCursosPage({ searchParams }: { searchParams: Promise<{ cursor?: string }> }) {
+  const ctx = await campusContext("/campus/cursos");
 
   // 1. Vista de Estudiante (AC-13: progreso real calculado desde PostgreSQL)
-  if (role === "STUDENT") {
-    const enrolledCourses = await getStudentEnrolledCourses(session);
+  if (ctx.view === "STUDENT") {
+    const enrolledCourses = await getMyEnrolledCourses(ctx);
     const activeCourses = enrolledCourses.filter((c) => c.status !== "completed");
     const completedCourses = enrolledCourses.filter((c) => c.status === "completed");
 
@@ -69,49 +63,14 @@ export default async function CampusCursosPage() {
     );
   }
 
-  // 2. Vista de Docente / Instructor (AC-18: Gestión completa y publicación)
-  const instructorCourses = await prisma.course.findMany({
-    where: { instructorId: session.user.id },
-    include: {
-      modules: {
-        orderBy: { order: "asc" },
-        include: {
-          lessons: {
-            orderBy: { order: "asc" },
-          },
-        },
-      },
-      enrollments: true,
-    },
-    orderBy: { createdAt: "desc" },
-  });
+  // 2. Vista de staff (AC-18): cursos gestionables en la organización activa, paginados
+  const { cursor } = await searchParams;
+  const page = await listManagedCourses(ctx, { cursor: cursorParam(cursor) });
 
-  const formattedCourses: InstructorCourseItem[] = instructorCourses.map((c) => ({
-    id: c.id,
-    slug: c.slug,
-    title: c.title,
-    category: c.category,
-    level: c.level,
-    hours: c.hours,
-    summary: c.summary,
-    coverUrl: c.coverUrl,
-    published: c.published,
-    modules: c.modules.map((m) => ({
-      id: m.id,
-      title: m.title,
-      order: m.order,
-      lessons: m.lessons.map((l) => ({
-        id: l.id,
-        title: l.title,
-        order: l.order,
-        durationMin: l.durationMin,
-        videoUrl: l.videoUrl,
-      })),
-    })),
-    activeStudentsCount: c.enrollments.filter(
-      (e) => e.status === "ACTIVE" || e.status === "COMPLETED"
-    ).length,
-  }));
-
-  return <InstructorCoursesView initialCourses={formattedCourses} />;
+  return (
+    <>
+      <InstructorCoursesView initialCourses={page.items} />
+      <LoadMoreLink basePath="/campus/cursos" nextCursor={page.nextCursor} />
+    </>
+  );
 }

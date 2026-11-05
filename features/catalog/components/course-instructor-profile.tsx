@@ -59,10 +59,12 @@ export function CourseInstructorProfile({
                 <span>{instructor.accreditedStudents.toLocaleString()} Alumnos Acreditados</span>
               </div>
             )}
-            <div className="flex items-center gap-1.5">
-              <Star className="w-4 h-4 fill-[#FD761A] text-[#FD761A]" />
-              <span>{instructor.rating || 4.9}/5.0 Calificación Docente</span>
-            </div>
+            {instructor.rating !== undefined && (
+              <div className="flex items-center gap-1.5">
+                <Star className="w-4 h-4 fill-[#FD761A] text-[#FD761A]" />
+                <span>{instructor.rating}/5.0 Calificación Docente</span>
+              </div>
+            )}
             <div className="flex items-center gap-1.5">
               <ShieldCheck className="w-4 h-4 text-emerald-600" />
               <span>Firma Digital Oficial Registrada</span>

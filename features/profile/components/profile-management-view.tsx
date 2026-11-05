@@ -17,7 +17,7 @@ import {
 import { toast } from "sonner";
 import { UserProfileData } from "../types";
 import { updateProfileServerAction, changePasswordServerAction } from "../actions";
-import { uploadFileToR2 } from "@/lib/upload";
+import { uploadFile } from "@/lib/upload";
 
 interface ProfileManagementViewProps {
   initialProfile: UserProfileData;
@@ -43,18 +43,14 @@ export function ProfileManagementView({ initialProfile }: ProfileManagementViewP
     e.preventDefault();
     setIsSaving(true);
     try {
-      const res = await updateProfileServerAction({
-        name,
-        institution,
-        avatarUrl,
-      });
+      const res = await updateProfileServerAction({ name, institution });
 
-      if (!res.success || !res.profile) {
-        toast.error(res.error || "No se pudo actualizar el perfil.");
+      if (!res.success) {
+        toast.error(res.error);
         return;
       }
 
-      setProfile(res.profile);
+      setProfile(res.data);
       toast.success("Perfil actualizado con éxito.");
     } catch {
       toast.error("Ocurrió un error inesperado al guardar los cambios.");
@@ -72,24 +68,18 @@ export function ProfileManagementView({ initialProfile }: ProfileManagementViewP
     toast.info("Validando y transmitiendo imagen a almacenamiento seguro...");
 
     try {
-      const { publicUrl } = await uploadFileToR2({
-        type: "avatar",
-        file,
-      });
+      const { fileId, url } = await uploadFile({ kind: "USER_AVATAR", file });
 
-      setAvatarUrl(publicUrl);
+      // Asociar el archivo (ya verificado en R2) al perfil
+      const res = await updateProfileServerAction({ name, institution, avatarFileId: fileId });
 
-      // Auto guardar avatar actualizado en el perfil
-      const res = await updateProfileServerAction({
-        name,
-        institution,
-        avatarUrl: publicUrl,
-      });
-
-      if (res.success && res.profile) {
-        setProfile(res.profile);
-        toast.success("Foto de perfil actualizada.");
+      if (!res.success) {
+        toast.error(res.error);
+        return;
       }
+      setProfile(res.data);
+      setAvatarUrl(url ?? res.data.avatarUrl);
+      toast.success("Foto de perfil actualizada.");
     } catch (err: unknown) {
       const error = err as Error;
       toast.error(error.message || "Error al subir la imagen.");
@@ -120,11 +110,11 @@ export function ProfileManagementView({ initialProfile }: ProfileManagementViewP
       });
 
       if (!res.success) {
-        toast.error(res.error || "No se pudo cambiar la contraseña.");
+        toast.error(res.error);
         return;
       }
 
-      toast.success(res.message || "Contraseña cambiada exitosamente.");
+      toast.success(res.data.message);
       setShowPasswordModal(false);
       setCurrentPassword("");
       setNewPassword("");

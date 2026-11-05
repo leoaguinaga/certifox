@@ -1,128 +1,125 @@
 "use server";
 
 import { z } from "zod";
-import { getSession } from "@/server/auth";
 import { revalidatePath } from "next/cache";
+import { runAction } from "@/server/core/action";
 import {
-  createCourse,
-  toggleCoursePublish,
-  addModuleToCourse,
   addLessonToModule,
-  deleteLessonFromModule,
-} from "@/server/services/course-management.service";
+  addModuleToCourse,
+  createCourse,
+  deleteLesson,
+  getManagedCourseItem,
+  toggleCoursePublish,
+  updateCourse,
+} from "@/server/modules/course-management/course-management.service";
 
-const CreateCourseSchema = z.object({
-  title: z.string().min(5, "El título debe tener al menos 5 caracteres"),
-  category: z.string().min(2, "Categoría requerida"),
-  level: z.string().min(2, "Nivel requerido"),
-  hours: z.number().min(1, "Las horas deben ser al menos 1"),
-  summary: z.string().optional(),
-  coverUrl: z.string().optional(),
+const id = z.string().min(1).max(64);
+
+const courseSchema = z.object({
+  title: z.string().min(5, "El título debe tener al menos 5 caracteres").max(160),
+  category: z.string().min(2, "Categoría requerida").max(60),
+  level: z.string().min(2, "Nivel requerido").max(30),
+  hours: z.number().int().min(1, "Las horas deben ser al menos 1").max(2000),
+  summary: z.string().max(2000).optional(),
+  price: z.number().min(0).max(100_000).optional(),
+  currency: z.enum(["PEN", "USD"]).optional(),
+  coverFileId: z.string().max(64).optional(),
   published: z.boolean().optional(),
 });
 
-export async function createCourseAction(input: z.infer<typeof CreateCourseSchema>) {
-  try {
-    const validated = CreateCourseSchema.parse(input);
-    const session = await getSession();
+export async function createCourseAction(input: z.input<typeof courseSchema>) {
+  return runAction(
+    {
+      name: "course.create",
+      schema: courseSchema,
+      handler: async (ctx, data) => {
+        const created = await createCourse(ctx, data);
+        revalidatePath("/campus/cursos");
+        return getManagedCourseItem(ctx, created.id);
+      },
+    },
+    input
+  );
+}
 
-    if (!session) {
-      return { success: false, error: "Debes iniciar sesión como instructor" };
-    }
-
-    const course = await createCourse(session, validated);
-
-    revalidatePath("/campus/cursos");
-    revalidatePath("/cursos");
-
-    return { success: true, data: course };
-  } catch (err: unknown) {
-    return {
-      success: false,
-      error: err instanceof Error ? err.message : "Error al crear curso",
-    };
-  }
+export async function updateCourseAction(courseId: string, input: z.input<typeof courseSchema>) {
+  return runAction(
+    {
+      name: "course.update",
+      schema: z.object({ courseId: id, data: courseSchema.partial().extend({ coverFileId: z.string().max(64).nullable().optional() }) }),
+      handler: async (ctx, { courseId, data }) => {
+        await updateCourse(ctx, courseId, data);
+        revalidatePath("/campus/cursos");
+        return getManagedCourseItem(ctx, courseId);
+      },
+    },
+    { courseId, data: input }
+  );
 }
 
 export async function togglePublishCourseAction(courseId: string) {
-  try {
-    const session = await getSession();
-    if (!session) {
-      return { success: false, error: "Debes iniciar sesión como instructor" };
-    }
-
-    const updated = await toggleCoursePublish(session, courseId);
-
-    revalidatePath("/campus/cursos");
-    revalidatePath("/cursos");
-    revalidatePath(`/campus/cursos/${updated.slug}`);
-    revalidatePath(`/cursos/${updated.slug}`);
-
-    return { success: true, data: updated };
-  } catch (err: unknown) {
-    return {
-      success: false,
-      error: err instanceof Error ? err.message : "Error al cambiar estado de publicación",
-    };
-  }
+  return runAction(
+    {
+      name: "course.toggle_publish",
+      schema: id,
+      handler: async (ctx, cid) => {
+        const updated = await toggleCoursePublish(ctx, cid);
+        revalidatePath("/campus/cursos");
+        return updated;
+      },
+    },
+    courseId
+  );
 }
 
 export async function addModuleAction(courseId: string, title: string) {
-  try {
-    const session = await getSession();
-    if (!session) {
-      return { success: false, error: "No autorizado" };
-    }
-
-    const moduleRecord = await addModuleToCourse(session, courseId, title);
-    revalidatePath("/campus/cursos");
-
-    return { success: true, data: moduleRecord };
-  } catch (err: unknown) {
-    return {
-      success: false,
-      error: err instanceof Error ? err.message : "Error al agregar módulo",
-    };
-  }
+  return runAction(
+    {
+      name: "course.add_module",
+      schema: z.object({ courseId: id, title: z.string().min(3, "Título muy corto").max(160) }),
+      handler: async (ctx, data) => {
+        const mod = await addModuleToCourse(ctx, data.courseId, data.title);
+        revalidatePath("/campus/cursos");
+        return mod;
+      },
+    },
+    { courseId, title }
+  );
 }
 
-export async function addLessonAction(
-  moduleId: string,
-  input: { title: string; durationMin: number; videoUrl?: string }
-) {
-  try {
-    const session = await getSession();
-    if (!session) {
-      return { success: false, error: "No autorizado" };
-    }
+const lessonSchema = z.object({
+  title: z.string().min(3, "Título muy corto").max(160),
+  durationMin: z.number().int().min(1).max(600),
+  videoUrl: z.string().url("URL de video inválida").max(500).optional().or(z.literal("")),
+  videoFileId: z.string().max(64).optional(),
+});
 
-    const lesson = await addLessonToModule(session, moduleId, input);
-    revalidatePath("/campus/cursos");
-
-    return { success: true, data: lesson };
-  } catch (err: unknown) {
-    return {
-      success: false,
-      error: err instanceof Error ? err.message : "Error al agregar lección",
-    };
-  }
+export async function addLessonAction(moduleId: string, input: z.input<typeof lessonSchema>) {
+  return runAction(
+    {
+      name: "course.add_lesson",
+      schema: z.object({ moduleId: id, lesson: lessonSchema }),
+      handler: async (ctx, data) => {
+        const lesson = await addLessonToModule(ctx, data.moduleId, data.lesson);
+        revalidatePath("/campus/cursos");
+        return lesson;
+      },
+    },
+    { moduleId, lesson: input }
+  );
 }
 
 export async function deleteLessonAction(lessonId: string) {
-  try {
-    const session = await getSession();
-    if (!session) {
-      return { success: false, error: "No autorizado" };
-    }
-
-    await deleteLessonFromModule(session, lessonId);
-    revalidatePath("/campus/cursos");
-
-    return { success: true };
-  } catch (err: unknown) {
-    return {
-      success: false,
-      error: err instanceof Error ? err.message : "Error al eliminar lección",
-    };
-  }
+  return runAction(
+    {
+      name: "course.delete_lesson",
+      schema: id,
+      handler: async (ctx, lid) => {
+        await deleteLesson(ctx, lid);
+        revalidatePath("/campus/cursos");
+        return { deleted: true };
+      },
+    },
+    lessonId
+  );
 }

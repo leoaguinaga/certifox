@@ -1,32 +1,44 @@
 "use server";
 
-import { headers } from "next/headers";
+import { z } from "zod";
 import { revalidatePath } from "next/cache";
-import { getSession } from "@/server/auth";
-import { updateUserProfile, changeUserPassword } from "@/server/services/profile.service";
-import { UpdateProfileInput, ChangePasswordInput } from "./types";
+import { runAction } from "@/server/core/action";
+import { changeMyPassword, updateMyProfile } from "@/server/modules/profile/profile.service";
 
-export async function updateProfileServerAction(input: UpdateProfileInput) {
-  try {
-    const session = await getSession();
-    const updated = await updateUserProfile(session, input);
-    revalidatePath("/campus/perfil");
-    revalidatePath("/campus");
-    return { success: true, profile: updated };
-  } catch (err: unknown) {
-    const error = err as Error;
-    return { success: false, error: error.message || "Error al actualizar el perfil." };
-  }
+const profileSchema = z.object({
+  name: z.string().min(3, "El nombre completo debe tener al menos 3 caracteres").max(120),
+  institution: z.string().max(160).optional(),
+  avatarFileId: z.string().max(64).optional(),
+});
+
+const passwordSchema = z.object({
+  currentPassword: z.string().min(1, "Debe ingresar su contraseña actual"),
+  newPassword: z.string().min(8, "La nueva contraseña debe tener al menos 8 caracteres").max(128),
+});
+
+export async function updateProfileServerAction(input: z.input<typeof profileSchema>) {
+  return runAction(
+    {
+      name: "profile.update",
+      schema: profileSchema,
+      handler: async (ctx, data) => {
+        const profile = await updateMyProfile(ctx, data);
+        revalidatePath("/campus/perfil");
+        return profile;
+      },
+    },
+    input
+  );
 }
 
-export async function changePasswordServerAction(input: ChangePasswordInput) {
-  try {
-    const session = await getSession();
-    const reqHeaders = await headers();
-    const res = await changeUserPassword(session, reqHeaders, input);
-    return { success: true, message: res.message };
-  } catch (err: unknown) {
-    const error = err as Error;
-    return { success: false, error: error.message || "Error al cambiar la contraseña." };
-  }
+export async function changePasswordServerAction(input: z.input<typeof passwordSchema>) {
+  return runAction(
+    {
+      name: "profile.change_password",
+      schema: passwordSchema,
+      rateLimit: { rule: { window: 600, max: 5 }, name: "change-password" },
+      handler: async (_ctx, data) => changeMyPassword(data),
+    },
+    input
+  );
 }

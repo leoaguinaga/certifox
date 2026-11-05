@@ -24,31 +24,10 @@ import {
 } from "@/features/courses-management/actions";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { uploadFile } from "@/lib/upload";
+import type { InstructorCourseItem } from "@/features/courses-management/types";
 
-export interface InstructorCourseItem {
-  id: string;
-  slug: string;
-  title: string;
-  category: string;
-  level: string;
-  hours: number;
-  summary: string | null;
-  coverUrl: string | null;
-  published: boolean;
-  modules: {
-    id: string;
-    title: string;
-    order: number;
-    lessons: {
-      id: string;
-      title: string;
-      order: number;
-      durationMin: number;
-      videoUrl: string | null;
-    }[];
-  }[];
-  activeStudentsCount: number;
-}
+export type { InstructorCourseItem };
 
 interface InstructorCoursesViewProps {
   initialCourses: InstructorCourseItem[];
@@ -65,7 +44,9 @@ export function InstructorCoursesView({ initialCourses }: InstructorCoursesViewP
   const [newLevel, setNewLevel] = useState("Intermedio");
   const [newHours, setNewHours] = useState(40);
   const [newSummary, setNewSummary] = useState("");
-  const [newCoverUrl] = useState("");
+  const [newPrice, setNewPrice] = useState(0);
+  const [newCoverFileId, setNewCoverFileId] = useState<string | null>(null);
+  const [isUploadingCover, setIsUploadingCover] = useState(false);
   const [newPublished, setNewPublished] = useState(true);
 
   // Edit syllabus modal state
@@ -75,7 +56,7 @@ export function InstructorCoursesView({ initialCourses }: InstructorCoursesViewP
   const [selectedModuleForLesson, setSelectedModuleForLesson] = useState<string | null>(null);
   const [newLessonTitle, setNewLessonTitle] = useState("");
   const [newLessonDuration, setNewLessonDuration] = useState(30);
-  const [newLessonVideo, setNewLessonVideo] = useState("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+  const [newLessonVideo, setNewLessonVideo] = useState("");
 
   // Handle Toggle Publish (AC-18)
   const handleTogglePublish = (courseId: string) => {
@@ -112,7 +93,9 @@ export function InstructorCoursesView({ initialCourses }: InstructorCoursesViewP
         level: newLevel,
         hours: Number(newHours),
         summary: newSummary.trim() || undefined,
-        coverUrl: newCoverUrl.trim() || undefined,
+        price: Number(newPrice) || 0,
+        currency: "PEN",
+        coverFileId: newCoverFileId ?? undefined,
         published: newPublished,
       });
 
@@ -120,26 +103,9 @@ export function InstructorCoursesView({ initialCourses }: InstructorCoursesViewP
         toast.error(res.error || "Error al crear curso");
       } else {
         toast.success("¡Curso creado con éxito!");
-        const created = res.data;
-        if (created) {
-          const raw = created as unknown as InstructorCourseItem;
-          setCourses((prev) => [
-            {
-              id: raw.id,
-              slug: raw.slug,
-              title: raw.title,
-              category: raw.category,
-              level: raw.level,
-              hours: raw.hours,
-              summary: raw.summary,
-              coverUrl: raw.coverUrl,
-              published: raw.published,
-              modules: raw.modules || [],
-              activeStudentsCount: 0,
-            },
-            ...prev,
-          ]);
-        }
+        setCourses((prev) => [res.data, ...prev]);
+        setNewCoverFileId(null);
+        setNewPrice(0);
         setIsCreateModalOpen(false);
         setNewTitle("");
         setNewSummary("");
@@ -465,6 +431,48 @@ export function InstructorCoursesView({ initialCourses }: InstructorCoursesViewP
                   onChange={(e) => setNewHours(Number(e.target.value))}
                   className="w-full p-2.5 rounded-xl border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-950 text-xs text-stone-900 dark:text-white outline-none focus:ring-2 focus:ring-[#FD761A]"
                 />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                    Precio (S/)
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    step="0.01"
+                    value={newPrice}
+                    onChange={(e) => setNewPrice(Number(e.target.value))}
+                    className="w-full p-2.5 rounded-xl border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-950 text-xs text-stone-900 dark:text-white outline-none focus:ring-2 focus:ring-[#FD761A]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                    Portada (JPG/PNG/WEBP, máx. 2 MB)
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    disabled={isUploadingCover}
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      setIsUploadingCover(true);
+                      try {
+                        const uploaded = await uploadFile({ kind: "COURSE_COVER", file });
+                        setNewCoverFileId(uploaded.fileId);
+                        toast.success("Portada subida");
+                      } catch (err) {
+                        toast.error(err instanceof Error ? err.message : "Error al subir la portada");
+                        e.target.value = "";
+                      } finally {
+                        setIsUploadingCover(false);
+                      }
+                    }}
+                    className="w-full text-[11px] text-stone-600"
+                  />
+                </div>
               </div>
 
               <div>
